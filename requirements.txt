@@ -1,2 +1,5 @@
 selenium
 beautifulsoup4
+langchain
+langchain-google-genai
+python-dotenv
