@@ -55,10 +55,22 @@ def parse_image(image_url):
     # Try downloading the image first
     try:
         print(f"  Đang tải xuống hình ảnh: {image_url}")
-        image_data = base64.b64encode(httpx.get(image_url).content).decode("utf-8")
+        response = httpx.get(image_url, timeout=30)  # Thêm timeout
+        
+        # Kiểm tra status code
+        if response.status_code != 200:
+            print(f"  Lỗi khi tải hình ảnh: HTTP status code {response.status_code}")
+            return None
+            
+        image_data = base64.b64encode(response.content).decode("utf-8")
         print("  Đã tải hình ảnh thành công")
     except Exception as e:
         print(f"  Lỗi khi tải hình ảnh: {e}")
+        return None  # Trả về None ngay lập tức nếu không tải được hình ảnh
+    
+    # Kiểm tra kích thước hình ảnh
+    if len(image_data) < 100:  # Hình ảnh quá nhỏ hoặc trống
+        print("  Hình ảnh không hợp lệ hoặc trống")
         return None
     
     # Create a message with the image
@@ -97,7 +109,12 @@ def parse_image(image_url):
                 model = get_model(current_key_index)
             else:
                 print(f"  Lỗi không phải rate limit khi xử lý hình ảnh: {e}")
-                # For other errors, try the next key
+                # Thêm kiểm tra lỗi invalid image
+                if "invalid image" in error_message or "cannot process" in error_message:
+                    print("  Hình ảnh không được hỗ trợ bởi Gemini")
+                    return None  # Trả về None cho hình ảnh không được hỗ trợ
+                
+                # Với các lỗi khác, vẫn thử key tiếp theo
                 current_key_index = (current_key_index + 1) % len(API_KEYS)
                 model = get_model(current_key_index)
     
