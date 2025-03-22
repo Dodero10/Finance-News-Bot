@@ -1,3 +1,7 @@
 venv_crawl/
 __pycache__/
 chromedriver-win64/
+.env
+index_store/
+indexing.log
+"indexing.log" 
