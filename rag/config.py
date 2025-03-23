@@ -7,7 +7,8 @@ load_dotenv()
 # Data paths
 DATA_PATHS = {
     "trai_phieu": "data/trai_phieu.json",
-    "quoc_te": "data/quoc_te.json"
+    "quoc_te": "data/quoc_te.json",
+    "test": "data/test.json"
 }
 
 # Index paths
