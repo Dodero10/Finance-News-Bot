@@ -1,0 +1,39 @@
+site_name: Finance News Bot
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.tracking
+    - navigation.expand
+    - header.autohide
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+# Define navigation structure (only in left sidebar)
+nav:
+  - Introduction: 'index.md'
+  - Project Proposal: 'proposal.md'
+  - Project Plan: 'plan.md'
+  - Weekly Progress: 'weekly.md'
+
+# Additional customization
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - tables
