@@ -1,1 +1,0 @@
-python run_indexing.py --dataset ten_moi --save-docs --output-dir saved_documents

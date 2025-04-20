@@ -1,1 +1,0 @@
-python run_indexing.py --dataset all
