@@ -3,3 +3,8 @@ beautifulsoup4
 langchain
 langchain-google-genai
 python-dotenv
+langgraph
+chromadb
+langchain-community
+numpy<2.0.0
+pydantic

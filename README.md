@@ -1,23 +1,50 @@
-# Finance News Crawler
+# Finance News Bot
 
-A component for crawling financial news articles from [TinNhanhChungKhoan](https://www.tinnhanhchungkhoan.vn).
+Finance News Bot is an end-to-end pipeline for crawling, processing, and enriching financial news articles, with a focus on Vietnamese sources such as [TinNhanhChungKhoan](https://www.tinnhanhchungkhoan.vn).
 
-## Quick Setup
+## Features
 
-1. Install dependencies:
-```bash
-pip install selenium beautifulsoup4
-```
+- **Automated Crawling**: Scrapes news articles (text, metadata, images) using Selenium and BeautifulSoup.
+- **Image Content Extraction**: Uses Google Gemini (via Langchain) to parse image content and enrich articles with structured image metadata.
+- **Data Preprocessing**: Utilities for cleaning, fixing, and transforming JSON datasets, including handling missing or problematic images.
+- **Modular Design**: Clear separation of crawling, preprocessing, and workflow components for easy extension and maintenance.
 
-2. Setup ChromeDriver:
+## Project Structure
+
+- `crawl/` — Contains the main crawler (`crawl.py`) for collecting articles.
+- `preprocessing/` — Scripts for image extraction, fixing null images, and other data enrichment tasks. Includes its own README for details.
+- `data/` — Stores raw and processed JSON datasets.
+- `workflow/` — Advanced agentic and RAG pipelines (under development).
+- `requirements.txt` — Python dependencies.
+- `.env` — Store your Google Gemini API keys here.
+
+## Quick Start
+
+1. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Set up ChromeDriver:**
    - Download ChromeDriver matching your Chrome version
-   - Place at: `E:\Thesis\Crawl\chromedriver-win64\chromedriver.exe`
+   - Place it at: `E:\Thesis\Crawl\chromedriver-win64\chromedriver.exe`
 
-3. Run:
-```bash
-python crawl.py
-```
+3. **Add your Google Gemini API key:**
+   - Create a `.env` file in the project root:
+     ```
+     GOOGLE_API_KEY=your_api_key_here
+     ```
 
-Output will be saved to `tinnhanhchungkhoan_quoc_te.json`
+4. **Run the crawler:**
+   ```bash
+   python crawl/crawl.py
+   ```
+   Output will be saved to `data/tinnhanhchungkhoan_quoc_te.json`
 
-*Note: This is part of a larger project under development. Documentation will be updated as the project evolves.*
+5. **Process images in crawled data (optional):**
+   See `preprocessing/README.md` for advanced image processing and metadata enrichment using Gemini.
+
+## Notes
+
+- This project is under active development. For advanced features and workflows, check the `workflow/` and `preprocessing/` directories.
+- For details on image parsing and metadata, see `preprocessing/README.md`.
