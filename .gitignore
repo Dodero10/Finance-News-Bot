@@ -2,3 +2,5 @@ venv_crawl/
 __pycache__/
 chromedriver-win64/
 .env
+
+.cursor
