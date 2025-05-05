@@ -3,3 +3,7 @@
 SYSTEM_PROMPT = """You are a helpful AI assistant.
 
 System time: {system_time}"""
+
+REACT_AGENT_PRONPT="""
+
+"""
