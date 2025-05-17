@@ -2,11 +2,8 @@ venv_crawl/
 __pycache__/
 chromedriver-win64/
 .env
-<<<<<<< HEAD
 index_store/
 indexing.log
 "indexing.log" 
-=======
-
 .cursor
->>>>>>> feat/preprocessing
+finance_news_vector_db/

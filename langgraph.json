@@ -2,7 +2,9 @@
     "dependencies": ["."],
     "graphs": {
       "react_agent": "./src/react_agent/react_agent_graph.py:graph",
-      "memory_agent": "./src/memory_agent/graph.py:graph"
+      "memory_agent": "./src/memory_agent/graph.py:graph",
+      "reflection_agent": "./src/react_agent/reflection_agent_graph.py:graph",
+      "rewoo_agent": "./src/react_agent/rewoo_agent_graph.py:graph"
     },
     "env": ".env"
   }

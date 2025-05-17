@@ -21,6 +21,7 @@ langfuse_handler = CallbackHandler(
     host=os.getenv("LANGFUSE_HOST"),
 )
 
+
 async def react_agent(state: State) -> Dict[str, List[AIMessage]]:
     """Call the LLM powering our "agent".
 
@@ -60,14 +61,6 @@ async def react_agent(state: State) -> Dict[str, List[AIMessage]]:
     return {"messages": [response]}
 
 
-builder = StateGraph(State, input=InputState, config_schema=Configuration)
-
-builder.add_node(react_agent)
-builder.add_node("tools", ToolNode(TOOLS))
-
-builder.add_edge("__start__", "react_agent")
-
-
 def route_model_output(state: State) -> Literal["__end__", "tools"]:
     """Determine the next node based on the model's output.
 
@@ -89,6 +82,14 @@ def route_model_output(state: State) -> Literal["__end__", "tools"]:
         return "__end__"
     # Otherwise we execute the requested actions
     return "tools"
+
+
+builder = StateGraph(State, input=InputState, config_schema=Configuration)
+
+builder.add_node(react_agent)
+builder.add_node("tools", ToolNode(TOOLS))
+
+builder.add_edge("__start__", "react_agent")
 
 builder.add_edge("tools", "react_agent")
 builder.add_conditional_edges(
