@@ -5,11 +5,11 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 
-from react_agent.configuration import Configuration
-from react_agent.state import InputState, State
-from react_agent.tools import TOOLS
-from react_agent.utils import load_chat_model
-from react_agent.prompts import REFLECTION_PROMPT
+from agents.configuration import Configuration
+from agents.state import InputState, State
+from agents.tools import TOOLS
+from agents.utils import load_chat_model
+from agents.prompts import REFLECTION_PROMPT
 from dotenv import load_dotenv
 from langfuse.callback import CallbackHandler
 import os

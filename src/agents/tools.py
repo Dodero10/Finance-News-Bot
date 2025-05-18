@@ -1,6 +1,6 @@
 from typing import Any, Callable, List, Optional, cast
 from langchain_tavily import TavilySearch 
-from react_agent.configuration import Configuration
+from agents.configuration import Configuration
 from vnstock import Listing, Quote, Company, Finance, Trading, Screener, Vnstock
 from typing_extensions import Literal
 from datetime import datetime
