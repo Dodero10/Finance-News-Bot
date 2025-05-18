@@ -10,6 +10,7 @@ from langchain_openai import OpenAIEmbeddings
 import os
 from langchain_core.documents import Document
 import asyncio
+from src.rag.embedding_utils import retrieve_from_db
 
 
 async def search_web(query: str) -> Optional[dict[str, Any]]:
@@ -40,99 +41,32 @@ async def retrival_vector_db(query: str) -> Optional[dict[str, Any]]:
     try:
         configuration = Configuration.from_context()
         
-        # Sử dụng đường dẫn tương đối thay vì os.getcwd()
-        persist_directory = "finance_news_vector_db"
-        collection_name = "finance_news_test"
-        
-        # Initialize OpenAI embeddings
-        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-        
-        # Tạo hàm đồng bộ để bọc vào asyncio.to_thread
-        def load_or_create_vectorstore():
-            import os
+        def perform_retrieval():
+            max_results = configuration.max_search_results
             
-            if os.path.exists(persist_directory):
-                # Load existing vector store
-                vectorstore = Chroma(
-                    persist_directory=persist_directory,
-                    embedding_function=embeddings,
-                    collection_name=collection_name
-                )
-                
-                # Perform similarity search
-                max_results = configuration.max_search_results
-                documents = vectorstore.similarity_search(query, k=max_results)
-                
-                # Format results
-                results = []
-                for doc in documents:
-                    result = {
-                        "content": doc.page_content,
-                        "metadata": doc.metadata
-                    }
-                    results.append(result)
-                
-                return {
-                    "query": query,
-                    "results": results,
-                    "source": "finance_news_vector_db"
+            chunks = retrieve_from_db(
+                query=query,
+                db_path="finance_news_vector_db",
+                collection_name="finance_news",
+                n_results=max_results,
+                return_formatted=False
+            )
+            
+            results = []
+            for chunk in chunks:
+                result = {
+                    "content": chunk["content"],
+                    "metadata": chunk["metadata"]
                 }
-            else:
-                # Create a new vector store
-                # Only using test.json_improved_chunks.json for testing
-                test_chunks_file = os.path.join("chunks", "test.json_improved_chunks.json")
-                
-                if os.path.exists(test_chunks_file):
-                    import json
-                    
-                    # Load only the test file
-                    with open(test_chunks_file, 'r', encoding='utf-8') as f:
-                        chunks = json.load(f)
-                        
-                    documents = []
-                    for chunk in chunks:
-                        doc = Document(
-                            page_content=chunk.get("content", ""),
-                            metadata=chunk.get("metadata", {})
-                        )
-                        documents.append(doc)
-                    
-                    # Create the vector store
-                    vectorstore = Chroma.from_documents(
-                        documents=documents,
-                        embedding=embeddings,
-                        persist_directory=persist_directory,
-                        collection_name=collection_name
-                    )
-                    vectorstore.persist()
-                    
-                    # Perform similarity search
-                    max_results = configuration.max_search_results
-                    results_docs = vectorstore.similarity_search(query, k=max_results)
-                    
-                    # Format results
-                    results = []
-                    for doc in results_docs:
-                        result = {
-                            "content": doc.page_content,
-                            "metadata": doc.metadata
-                        }
-                        results.append(result)
-                    
-                    return {
-                        "query": query,
-                        "results": results,
-                        "source": "finance_news_vector_db_test"
-                    }
-                else:
-                    return {
-                        "query": query,
-                        "results": [],
-                        "error": f"Test file not found at {test_chunks_file}"
-                    }
+                results.append(result)
+            
+            return {
+                "query": query,
+                "results": results,
+                "source": "finance_news_vector_db"
+            }
         
-        # Sử dụng asyncio.to_thread để chạy hàm chặn trong một thread riêng biệt
-        return await asyncio.to_thread(load_or_create_vectorstore)
+        return await asyncio.to_thread(perform_retrieval)
         
     except Exception as e:
         return {
