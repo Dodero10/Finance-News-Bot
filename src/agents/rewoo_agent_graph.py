@@ -1,173 +1,217 @@
-from __future__ import annotations
-
-"""ReWOO‑style LangGraph agent that is drop‑in for the existing `State` schema.
-Input ⇢ `{ "messages": [...] }` & output the same, so you can switch between
-ReAct and ReWOO without changing client code.
-
-**Fix v3:** use `getattr` / `setattr` (no `dict.get`) because `State` is a
-`@dataclass`, and allow dynamic attributes.  Tested locally.
-"""
-
-from typing import Any, Dict, List, Tuple, Literal, cast
-import asyncio
+from datetime import UTC, datetime
+from typing import Dict, List, Literal, cast, Tuple, Optional
 import re
 
-from langchain_core.messages import AIMessage, AnyMessage, HumanMessage
-from langgraph.graph import StateGraph, START, END
+from langchain_core.messages import AIMessage, ToolMessage, HumanMessage
+from langgraph.graph import StateGraph, END
+from langgraph.prebuilt import ToolNode
 
-from agents.configuration import Configuration
-from agents.state import InputState, State
-from agents.utils import load_chat_model
-from agents.tools import (
-    search_web,
-    retrival_vector_db,
-    listing_symbol,
-    history_price,
-    time_now,
-)
+from src.agents.configuration import Configuration
+from src.agents.state import InputState, ReWOOState
+from src.agents.tools import TOOLS
+from src.agents.utils import load_chat_model
+from src.agents.prompts import REWOO_PLANNER_PROMPT, REWOO_SOLVER_PROMPT
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
 
-def _latest_human_task(messages: List[AnyMessage]) -> str:
-    for msg in reversed(messages):
-        if isinstance(msg, HumanMessage):
-            return cast(str, msg.content)
-    return cast(str, messages[-1].content if messages else "")
+async def planner(state: ReWOOState) -> Dict:
+    """Create a plan for solving the task.
+    
+    Args:
+        state (ReWOOState): The current state of the agent.
+        
+    Returns:
+        Dict: Updated state with plan and steps.
+    """
+    # Extract task from the user's message
+    if not state.task and state.messages:
+        for message in reversed(state.messages):
+            if isinstance(message, HumanMessage):
+                state.task = message.content
+                break
+    
+    # Configure the planner
+    configuration = Configuration(
+        model="openai/gpt-4o-mini",
+        system_prompt=REWOO_PLANNER_PROMPT,
+    )
+    
+    # Load the model
+    model = load_chat_model(configuration.model)
+    
+    # Generate plan
+    response = cast(
+        AIMessage,
+        await model.ainvoke(
+            [
+                {"role": "system", "content": configuration.system_prompt},
+                {"role": "user", "content": state.task}
+            ]
+        ),
+    )
+    
+    # Parse the plan
+    plan_string = response.content
+    
+    # Extract steps using regex
+    steps = []
+    pattern = r"Plan: (.*?)\n#(E\d+) = (\w+)\[(.*?)\]"
+    matches = re.findall(pattern, plan_string, re.DOTALL)
+    
+    for match in matches:
+        plan_desc, step_name, tool_name, tool_input = match
+        steps.append((plan_desc.strip(), f"#{step_name}", tool_name, tool_input.strip()))
+    
+    # Update state with plan
+    return {
+        "plan_string": plan_string,
+        "steps": steps,
+        "messages": [AIMessage(content=f"I've created a plan to solve your question:\n\n{plan_string}")]
+    }
 
-# ---------------------------------------------------------------------------
-# Planner
-# ---------------------------------------------------------------------------
 
-_PLAN_PROMPT = (
-    "Bạn là **Planner** theo kiến trúc ReWOO.  Hãy tách \"Task\" dưới đây thành kế hoạch"
-    " ngắn gọn gồm các bước gọi công cụ.  Trả về đúng định dạng:\n\n"
-    "Plan: <một câu mô tả ngắn cách giải quyết>\n"
-    "#E1 = <tool>[<argument>]\n#E2 = <tool>[…]\n…\n\n"
-    "*Các tool hợp lệ*: search_web, retrival_vector_db, listing_symbol, history_price, time_now.\n"
-    "Chỉ dùng số bước cần thiết, tránh dư thừa.  Nếu cần dùng kết quả từ bước trước hãy dùng #E biến.\n\n"
-    "Task: {task}"
-)
+async def executor(state: ReWOOState) -> Dict:
+    """Execute the current tool in the plan.
+    
+    Args:
+        state (ReWOOState): The current state.
+        
+    Returns:
+        Dict: Updated state with new results.
+    """
+    # Find how many results we've already collected
+    result_count = len(state.results) if state.results else 0
+    
+    # If we've completed all steps or have no steps, we're done
+    if not state.steps or result_count >= len(state.steps):
+        return {"messages": [AIMessage(content="All steps executed.")]}
+    
+    # Get the current step details
+    plan_desc, step_name, tool_name, tool_input = state.steps[result_count]
+    
+    # Replace any references to previous results in the tool input
+    results = state.results or {}
+    for k, v in results.items():
+        if isinstance(v, str):
+            tool_input = tool_input.replace(k, v)
+    
+    # Find the tool to execute
+    tool_to_use = None
+    for tool in TOOLS:
+        if tool.__name__ == tool_name:
+            tool_to_use = tool
+            break
+    
+    if not tool_to_use:
+        error_message = f"Tool '{tool_name}' not found."
+        return {"messages": [AIMessage(content=error_message)]}
+    
+    # Execute the tool
+    try:
+        result = await tool_to_use(tool_input)
+        result_str = str(result)
+        
+        # Update results
+        updated_results = dict(results)
+        updated_results[step_name] = result_str
+        
+        return {
+            "results": updated_results,
+            "messages": [
+                AIMessage(content=f"Executed step {result_count + 1}: {step_name} using {tool_name}"),
+                ToolMessage(content=result_str, tool_call_id=f"step_{result_count + 1}", name=tool_name)
+            ]
+        }
+    except Exception as e:
+        error_message = f"Error executing tool '{tool_name}': {str(e)}"
+        return {"messages": [AIMessage(content=error_message)]}
 
-_PLANNER_RE = re.compile(r"^(#E\d+)\s*=\s*(\w+)\[(.*)]$")
 
-async def planner(state: State) -> Dict[str, Any]:
-    task = _latest_human_task(list(state.messages))
+async def solver(state: ReWOOState) -> Dict:
+    """Generate the final answer based on the plan and collected evidence.
+    
+    Args:
+        state (ReWOOState): The current state with all tool results.
+        
+    Returns:
+        Dict: Updated state with final result.
+    """
+    # Generate a formatted plan string with all steps and results
+    plan = ""
+    for plan_desc, step_name, tool_name, tool_input in state.steps:
+        # Add formatted step to plan
+        result_value = state.results.get(step_name, "No result") if state.results else "No result"
+        plan += f"Plan: {plan_desc}\n{step_name} = {tool_name}[{tool_input}]\nEvidence from {tool_name}: {result_value}\n\n"
+    
+    # Configure the solver
+    configuration = Configuration(
+        model="openai/gpt-4o-mini",
+        system_prompt=REWOO_SOLVER_PROMPT,
+    )
+    
+    # Load the model
+    model = load_chat_model(configuration.model)
+    
+    # Format the prompt for the solver
+    prompt = REWOO_SOLVER_PROMPT.format(plan=plan, task=state.task or "Unknown task")
+    
+    # Generate solution
+    response = cast(
+        AIMessage,
+        await model.ainvoke(
+            [
+                {"role": "system", "content": prompt},
+            ]
+        ),
+    )
+    
+    final_answer = response.content
+    
+    return {
+        "result": final_answer,
+        "messages": [AIMessage(content=final_answer)]
+    }
 
-    cfg = Configuration.from_context() if hasattr(Configuration, "from_context") else Configuration()
-    model = load_chat_model(cfg.model)
-    plan_msg = await model.ainvoke([{"role": "user", "content": _PLAN_PROMPT.format(task=task)}])
-    plan_str = plan_msg.content.strip()
 
-    steps: List[Tuple[str, str, str]] = []
-    for line in plan_str.splitlines():
-        if m := _PLANNER_RE.match(line.strip()):
-            steps.append(cast(Tuple[str, str, str], m.groups()))
+def router(state: ReWOOState) -> Literal["solver", "executor"]:
+    """Route to the next node based on the state.
+    
+    Args:
+        state (ReWOOState): The current state.
+        
+    Returns:
+        str: The next node to execute.
+    """
+    # Find how many results we've already collected
+    result_count = len(state.results) if state.results else 0
+    
+    # If we've completed all steps or have no steps, move to solver
+    if not state.steps or result_count >= len(state.steps):
+        return "solver"
+    
+    # Otherwise, continue executing steps
+    return "executor"
 
-    if not steps:
-        steps = [("#E1", "search_web", task)]
-        plan_str = f"Plan: Tìm kiếm câu trả lời\n#E1 = search_web[{task}]"
 
-    # Attach dynamic attrs on the dataclass instance
-    setattr(state, "plan_string", plan_str)
-    setattr(state, "steps", steps)
-    setattr(state, "results", {})
-    return {}
-
-# ---------------------------------------------------------------------------
-# Worker
-# ---------------------------------------------------------------------------
-
-_TOOL_MAP = {
-    "search_web": search_web,
-    "retrival_vector_db": retrival_vector_db,
-    "listing_symbol": listing_symbol,
-    "history_price": history_price,
-    "time_now": time_now,
-    "LLM": None,
-}
-
-def _current_step_index(state: State) -> int | None:
-    steps: List[Tuple[str, str, str]] = getattr(state, "steps", [])
-    executed = len(getattr(state, "results", {}))
-    return None if executed >= len(steps) else executed
-
-async def worker(state: State) -> Dict[str, Any]:
-    idx = _current_step_index(state)
-    if idx is None:
-        return {}
-
-    steps: List[Tuple[str, str, str]] = getattr(state, "steps")
-    results: Dict[str, str] = getattr(state, "results")
-    step_name, tool_name, raw_tool_input = steps[idx]
-
-    # Variable substitution
-    tool_input = raw_tool_input
-    for var, val in results.items():
-        tool_input = tool_input.replace(var, val)
-
-    # Execute tool
-    if tool_name == "LLM":
-        cfg = Configuration.from_context() if hasattr(Configuration, "from_context") else Configuration()
-        model = load_chat_model(cfg.model)
-        resp = await model.ainvoke([{"role": "user", "content": tool_input}])
-        tool_output = resp.content
-    else:
-        tool_fn = _TOOL_MAP.get(tool_name)
-        if tool_fn is None:
-            raise ValueError(f"Unknown tool: {tool_name}")
-        tool_output = await tool_fn(tool_input) if asyncio.iscoroutinefunction(tool_fn) else await asyncio.to_thread(tool_fn, tool_input)
-
-    results[step_name] = str(tool_output)
-    setattr(state, "results", results)
-    return {}
-
-# ---------------------------------------------------------------------------
-# Solver
-# ---------------------------------------------------------------------------
-
-_SOLVE_PROMPT = (
-    "Bạn là **Solver** theo kiến trúc ReWOO.  Dựa trên *Plan* và *Evidence* bên dưới,"
-    " hãy trả lời ngắn gọn, chính xác câu hỏi ở dòng **Task**. Không thêm bình luận thừa.\n\n"
-    "{plan_block}\n\nTask: {task}\nAnswer:"
-)
-
-async def solver(state: State) -> Dict[str, Any]:
-    steps: List[Tuple[str, str, str]] = getattr(state, "steps", [])
-    results: Dict[str, str] = getattr(state, "results", {})
-    plan_string: str = getattr(state, "plan_string", "")
-
-    plan_lines = [plan_string.strip()]
-    for step_name, tool_name, tool_input in steps:
-        plan_lines.append(f"{step_name} = {tool_name}[{tool_input}]\nEvidence: {results.get(step_name, '')}")
-    plan_block = "\n".join(plan_lines)
-    task = _latest_human_task(list(state.messages))
-
-    cfg = Configuration.from_context() if hasattr(Configuration, "from_context") else Configuration()
-    model = load_chat_model(cfg.model)
-    answer_msg = await model.ainvoke([{"role": "user", "content": _SOLVE_PROMPT.format(plan_block=plan_block, task=task)}])
-
-    return {"messages": [AIMessage(content=answer_msg.content.strip())]}
-
-# ---------------------------------------------------------------------------
-# Routing & graph
-# ---------------------------------------------------------------------------
-
-def _route(state: State) -> Literal["solver", "worker"]:
-    return "solver" if _current_step_index(state) is None else "worker"
-
-builder = StateGraph(State, input=InputState, config_schema=Configuration)
-
+# Build the graph
+builder = StateGraph(ReWOOState, input=InputState)
 builder.add_node("planner", planner)
-builder.add_node("worker", worker)
+builder.add_node("executor", executor)
 builder.add_node("solver", solver)
 
-builder.add_edge(START, "planner")
-builder.add_edge("planner", "worker")
-builder.add_conditional_edges("worker", _route)
-builder.add_edge("solver", END)
+# Add edges
+builder.add_edge("__start__", "planner")
+builder.add_edge("planner", "executor")
+builder.add_edge("solver", "__end__")
 
+# Add conditional edge
+builder.add_conditional_edges(
+    "executor",
+    router,
+    {
+        "solver": "solver",
+        "executor": "executor"
+    }
+)
+
+# Compile the graph
 graph = builder.compile(name="ReWOO Agent")
-
-__all__ = ["graph"]
