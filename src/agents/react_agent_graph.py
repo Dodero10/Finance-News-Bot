@@ -11,6 +11,7 @@ from agents.tools import TOOLS
 from agents.utils import load_chat_model
 from dotenv import load_dotenv
 from langfuse.callback import CallbackHandler
+from agents.prompts import REACT_AGENT_PROMPT
 import os
 
 load_dotenv()
@@ -34,12 +35,13 @@ async def react_agent(state: State) -> Dict[str, List[AIMessage]]:
     Returns:
         dict: A dictionary containing the model's response message.
     """
-    configuration = Configuration.from_context()
+    configuration = Configuration(
+        model="openai/gpt-4o-mini",
+        system_prompt=REACT_AGENT_PROMPT,
+    )
 
     model = load_chat_model(configuration.model).bind_tools(TOOLS)
-    system_message = configuration.system_prompt.format(
-        system_time=datetime.now(tz=UTC).isoformat()
-    )
+    system_message = configuration.system_prompt
 
     response = cast(
         AIMessage,
@@ -88,9 +90,7 @@ builder = StateGraph(State, input=InputState, config_schema=Configuration)
 
 builder.add_node(react_agent)
 builder.add_node("tools", ToolNode(TOOLS))
-
 builder.add_edge("__start__", "react_agent")
-
 builder.add_edge("tools", "react_agent")
 builder.add_conditional_edges(
     "react_agent",

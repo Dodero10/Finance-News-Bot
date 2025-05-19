@@ -32,12 +32,13 @@ async def generate_agent(state: State) -> Dict[str, List[AIMessage]]:
     Returns:
         dict: A dictionary containing the model's response message.
     """
-    configuration = Configuration.from_context()
+    configuration = Configuration(
+        model="openai/gpt-4o-mini",
+        system_prompt=REFLECTION_PROMPT,
+    )
 
     model = load_chat_model(configuration.model).bind_tools(TOOLS)
-    system_message = configuration.system_prompt.format(
-        system_time=datetime.now(tz=UTC).isoformat()
-    )
+    system_message = configuration.system_prompt
 
     response = cast(
         AIMessage,
@@ -68,8 +69,11 @@ async def reflect_on_response(state: State) -> Dict[str, List[AIMessage]]:
     Returns:
         dict: A dictionary containing the reflection message.
     """
-    configuration = Configuration.from_context()
-    reflect_prompt = REFLECTION_PROMPT
+    configuration = Configuration(
+        model="openai/gpt-4o-mini",
+        system_prompt=REFLECTION_PROMPT,
+    )
+    reflect_prompt = configuration.system_prompt
     model = load_chat_model(configuration.model)
 
     reflection_messages = [state.messages[0]]
@@ -148,13 +152,10 @@ def should_continue_after_reflection(state: State) -> Literal["__end__", "genera
 
 
 builder = StateGraph(State, input=InputState, config_schema=Configuration)
-
 builder.add_node("generate", generate_agent)
 builder.add_node("reflect", reflect_on_response)
 builder.add_node("tools", ToolNode(TOOLS))
-
 builder.add_edge("__start__", "generate")
-
 builder.add_edge("tools", "generate")
 builder.add_conditional_edges(
     "generate",
@@ -164,6 +165,5 @@ builder.add_conditional_edges(
     "reflect",
     should_continue_after_reflection,
 )
-
 # Compile the builder into an executable graph
 graph = builder.compile(name="Reflection Agent")
