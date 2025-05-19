@@ -3,7 +3,8 @@
     "graphs": {
       "react_agent": "./src/agents/react_agent_graph.py:graph",
       "reflection_agent": "./src/agents/reflection_agent_graph.py:graph",
-      "rewoo_agent": "./src/agents/rewoo_agent_graph.py:graph"
+      "rewoo_agent": "./src/agents/rewoo_agent_graph.py:graph",
+      "reflexion_agent": "./src/agents/reflexion_agent_graph.py:graph"
     },
     "env": ".env"
   }

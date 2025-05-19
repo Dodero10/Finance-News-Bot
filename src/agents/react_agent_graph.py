@@ -5,22 +5,11 @@ from langchain_core.messages import AIMessage
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 
-from agents.configuration import Configuration
-from agents.state import InputState, State
-from agents.tools import TOOLS
-from agents.utils import load_chat_model
-from dotenv import load_dotenv
-from langfuse.callback import CallbackHandler
-from agents.prompts import REACT_AGENT_PROMPT
-import os
-
-load_dotenv()
-
-langfuse_handler = CallbackHandler(
-    secret_key=os.getenv("LANGFUSE_API_KEY"),
-    public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
-    host=os.getenv("LANGFUSE_HOST"),
-)
+from src.agents.configuration import Configuration
+from src.agents.state import InputState, State
+from src.agents.tools import TOOLS
+from src.agents.utils import load_chat_model
+from src.agents.prompts import REACT_AGENT_PROMPT
 
 
 async def react_agent(state: State) -> Dict[str, List[AIMessage]]:
