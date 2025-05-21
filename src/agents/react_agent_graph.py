@@ -111,36 +111,38 @@ builder.add_conditional_edges(
 graph = builder.compile(name="ReAct Agent")
 
 async def main():
-    initial_state = InputState(
-        messages=[
-            HumanMessage(content="Hôm nay có tin tức tài chính gì hot ở Việt Nam không?")
-        ]
-    )
-    result = await graph.ainvoke(initial_state, config={"callbacks": [langfuse_handler]})
+    test_query = "Tin tức về giá cả cổ phiếu của công ty FPT trong tuần vừa qua"
     
-    print("\nInput:")
-    print("------")
-    for msg in initial_state.messages:
-        print(f"User: {msg.content}")
+    # Print the input query
+    print("\n=== INPUT ===")
+    print(f"User: {test_query}")
     
-    print("\nOutput:")
-    print("-------")
-    # The result is a dictionary with 'messages' key
-    if 'messages' in result:
-        # Get only the last message which contains the final response
-        messages = result['messages']
+    # Get final result using invoke instead of stream
+    result = await graph.ainvoke({
+        "messages": [HumanMessage(content=test_query)]
+    }, config={"callbacks": [langfuse_handler]})
+    
+    print("\n=== FINAL OUTPUT ===")
+    
+    # Access the final message in the result
+    if "messages" in result:
+        messages = result["messages"]
         if messages:
-            last_message = messages[-1]
-            if hasattr(last_message, 'content'):
-                print(f"AI: {last_message.content}")
-            if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
-                print("\nTool Calls:")
-                for tool_call in last_message.tool_calls:
-                    print(f"- Tool: {tool_call.function.name}")
-                    print(f"  Arguments: {tool_call.function.arguments}")
+            # Get the last message which contains the final response
+            final_message = messages[-1]
+            if isinstance(final_message, AIMessage):
+                print(f"AI: {final_message.content}")
+                
+    # Show tools used during the conversation
+    tool_messages = [msg for msg in result.get("messages", []) 
+                    if hasattr(msg, "name") and getattr(msg, "name", None)]
+    
+    if tool_messages:
+        print("\n=== TOOLS USED ===")
+        for i, msg in enumerate(tool_messages, 1):
+            print(f"{i}. {msg.name}")
     else:
-        print("No messages in result")
-        print("Result structure:", result)
+        print("\nNo tools were used in this interaction.")
 
 if __name__ == "__main__":
     import asyncio
