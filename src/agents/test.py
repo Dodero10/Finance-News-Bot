@@ -7,10 +7,11 @@ project_root = str(Path(__file__).parent.parent.parent)
 sys.path.insert(0, project_root)
 
 from langfuse.callback import CallbackHandler
-from src.agents.react_agent_graph import graph
+from src.agents.react_agent_graph import graph as react_graph
 from src.agents.reflection_agent_graph import graph as reflection_graph
 from src.agents.rewoo_agent_graph import graph as rewoo_graph
 from src.agents.reflexion_agent_graph import graph as reflexion_graph
+from src.agents.multi_agent import multi_agent_graph
 from langchain_core.messages import HumanMessage
 import asyncio
 from dotenv import load_dotenv
@@ -25,14 +26,16 @@ os.environ["LANGFUSE_HOST"] = os.getenv("LANGFUSE_HOST")
 langfuse_handler = CallbackHandler()
 
 async def main():
+    
     test_query = "Cho tôi biết Thống kê thị trường trái phiếu doanh nghiệp riêng lẻ tháng 4/2025"
     
-    # print("==== TESTING REACT AGENT ====")
-    # # Test RAG with a query about corporate bonds
-    # result = await graph.ainvoke({
-    #     "messages": [HumanMessage(content = test_query)]
-    # }, config={"callbacks": [langfuse_handler]})
-    # print("Results from ReAct Agent:", result)
+    print("==== TESTING REACT AGENT ====")
+
+    async for s in react_graph.astream({
+        "messages": [HumanMessage(content=test_query)]
+    }, config={"callbacks": [langfuse_handler]}):
+        print(s)
+        print("--------------------------------")
     
     # print("\n==== TESTING REFLECTION AGENT ====")
     # # Test the same query with the reflection agent
@@ -48,12 +51,18 @@ async def main():
     # }, config={"callbacks": [langfuse_handler]})
     # print("Results from ReWOO Agent:", rewoo_result)
 
-    print("\n==== TESTING REFLEXION AGENT ====")
-    # Test the same query with the ReWOO agent
-    reflexion_result = await reflexion_graph.ainvoke({
-        "task": test_query
-    }, config={"callbacks": [langfuse_handler]})
-    print("Results from Reflexion Agent:", reflexion_result)    
+    # print("\n==== TESTING REFLEXION AGENT ====")
+    # # Test the same query with the ReWOO agent
+    # reflexion_result = await reflexion_graph.ainvoke({
+    #     "task": test_query
+    # }, config={"callbacks": [langfuse_handler]})
+    # print("Results from Reflexion Agent:", reflexion_result)    
+
+    # print("\n==== TESTING MULTI AGENT ====")
+    # multi_agent_result = await multi_agent_graph.ainvoke({
+    #     "task": test_query
+    # }, config={"callbacks": [langfuse_handler]})
+    # print("Results from Multi Agent:", multi_agent_result)
 
     # Uncomment to test stock history
     # result = await graph.ainvoke({
