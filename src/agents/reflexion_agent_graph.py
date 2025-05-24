@@ -1,289 +1,335 @@
+import os
+import sys
 from datetime import UTC, datetime
-from typing import Dict, List, Literal, cast, Optional
-import json
+from typing import Dict, List, Literal, cast
 
-from langchain_core.messages import AIMessage, ToolMessage, HumanMessage
-from langgraph.graph import StateGraph, END, START
+from dotenv import load_dotenv
+from langchain_core.messages import AIMessage, HumanMessage, BaseMessage
+from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 
+# Add the project root to Python path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.insert(0, project_root)
+
+from langfuse import Langfuse
+from langfuse.callback import CallbackHandler   
+
 from src.agents.configuration import Configuration
-from src.agents.state import InputState, ReflexionState
+from src.agents.state import InputState, State
 from src.agents.tools import TOOLS
 from src.agents.utils import load_chat_model
-from src.agents.prompts import REFLEXION_FIRST_RESPONDER_PROMPT, REFLEXION_REVISION_PROMPT
 
-# Maximum number of reflective iterations
-MAX_ITERATIONS = 3
 
-async def first_responder_agent(state: ReflexionState) -> Dict[str, List[AIMessage]]:
-    """Generate the initial draft answer with self-reflection and search queries.
-    
-    Args:
-        state (ReflexionState): The current state of the conversation.
-        
-    Returns:
-        dict: A dictionary containing the model's response message.
-    """
+# Load environment variables
+load_dotenv()
+
+langfuse = Langfuse(
+    public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+    secret_key=os.getenv("LANGFUSE_API_KEY"),
+    host=os.getenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
+)
+
+langfuse_handler = CallbackHandler()
+
+# Reflexion prompts
+REFLEXION_ACTOR_PROMPT = """You are an expert financial news agent. Your task is to provide accurate and up-to-date information about financial markets, stocks, companies, and economic news.
+
+You have access to various tools to search for financial information. Use these tools to gather relevant data and provide comprehensive answers.
+
+When searching for information:
+1. Use specific and relevant search terms
+2. Look for recent news and data
+3. Provide context and analysis when possible
+4. Cite your sources when available
+
+If you make any mistakes or need to correct your approach, you will be given feedback to improve your response."""
+
+REFLEXION_REFLECTOR_PROMPT = """You are a reflector that evaluates the quality of responses from a financial news agent. 
+
+Evaluate the response based on:
+1. Accuracy of information
+2. Relevance to the user's query
+3. Completeness of the answer
+4. Use of appropriate tools and sources
+5. Clarity and organization
+
+If the response has issues, provide specific feedback on:
+- What information is missing
+- What could be improved
+- What specific actions should be taken to provide a better answer
+
+If the response is good enough, simply respond with "The response is satisfactory."
+
+Response to evaluate: {response}
+User query: {query}"""
+
+REFLEXION_ACTOR_REFLECT_PROMPT = """You are an expert financial news agent. You previously provided a response, but received feedback for improvement.
+
+Original query: {query}
+Your previous response: {previous_response}
+Feedback: {reflection}
+
+Based on the feedback, provide an improved response. Use the available tools to gather additional information if needed."""
+
+
+async def reflexion_actor(state: State) -> Dict[str, List[AIMessage]]:
+    """Main actor that generates responses using tools"""
     configuration = Configuration(
         model="openai/gpt-4o-mini",
-        system_prompt=REFLEXION_FIRST_RESPONDER_PROMPT,
+        system_prompt=REFLEXION_ACTOR_PROMPT,
     )
 
-    model = load_chat_model(configuration.model).bind_tools([
-        {
-            "name": "AnswerQuestion",
-            "description": "Generate an answer to the user's question with reflection",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "answer": {
-                        "type": "string",
-                        "description": "Your comprehensive answer to the user's question"
-                    },
-                    "reflection": {
-                        "type": "object",
-                        "properties": {
-                            "missing": {
-                                "type": "string",
-                                "description": "What important information is missing from your answer"
-                            },
-                            "superfluous": {
-                                "type": "string", 
-                                "description": "What unnecessary information could be removed from your answer"
-                            }
-                        },
-                        "required": ["missing", "superfluous"]
-                    },
-                    "search_queries": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "Search queries to find information to improve your answer"
-                    }
-                },
-                "required": ["answer", "reflection", "search_queries"]
-            }
-        }
-    ])
-    
-    system_message = configuration.system_prompt
+    model = load_chat_model(configuration.model).bind_tools(TOOLS)
     
     response = cast(
         AIMessage,
         await model.ainvoke(
-            [{"role": "system", "content": system_message}, *state.messages]
+            [{"role": "system", "content": configuration.system_prompt}, *state.messages]
         ),
     )
-    
-    # Extract information from the tool call
-    if response.tool_calls and len(response.tool_calls) > 0:
-        tool_call = response.tool_calls[0]
-        if tool_call["name"] == "AnswerQuestion":
-            args = tool_call["args"]
-            # Store the draft answer, reflection, and search queries in the state
-            state.draft_answer = args.get("answer")
-            state.reflection = args.get("reflection")
-            state.search_queries = args.get("search_queries")
-    
-    return {"messages": [response]}
 
-
-async def revision_agent(state: ReflexionState) -> Dict[str, List[AIMessage]]:
-    """Refine the answer based on reflection and new information.
-    
-    Args:
-        state (ReflexionState): The current state of the conversation.
-        
-    Returns:
-        dict: A dictionary containing the model's response message.
-    """
-    configuration = Configuration(
-        model="openai/gpt-4o-mini",
-        system_prompt=REFLEXION_REVISION_PROMPT,
-    )
-    
-    model = load_chat_model(configuration.model).bind_tools([
-        {
-            "name": "ReviseAnswer",
-            "description": "Revise the answer to the user's question based on reflection and new information",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "answer": {
-                        "type": "string",
-                        "description": "Your revised, comprehensive answer to the user's question"
-                    },
-                    "reflection": {
-                        "type": "object",
-                        "properties": {
-                            "missing": {
-                                "type": "string",
-                                "description": "What important information is missing from your revised answer"
-                            },
-                            "superfluous": {
-                                "type": "string", 
-                                "description": "What unnecessary information could be removed from your revised answer"
-                            }
-                        },
-                        "required": ["missing", "superfluous"]
-                    },
-                    "search_queries": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "Additional search queries to further improve your answer"
-                    },
-                    "references": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "Citations supporting your answer"
-                    }
-                },
-                "required": ["answer", "reflection", "search_queries", "references"]
-            }
-        }
-    ])
-    
-    system_message = configuration.system_prompt
-    
-    response = cast(
-        AIMessage,
-        await model.ainvoke(
-            [{"role": "system", "content": system_message}, *state.messages]
-        ),
-    )
-    
-    # Extract information from the tool call
-    if response.tool_calls and len(response.tool_calls) > 0:
-        tool_call = response.tool_calls[0]
-        if tool_call["name"] == "ReviseAnswer":
-            args = tool_call["args"]
-            # Update the state with the revised answer, reflection, and search queries
-            state.draft_answer = args.get("answer")
-            state.reflection = args.get("reflection")
-            state.search_queries = args.get("search_queries")
-            state.references = args.get("references")
-    
-    return {"messages": [response]}
-
-
-async def run_queries(state: ReflexionState) -> Dict[str, List[ToolMessage]]:
-    """Execute search queries to gather additional information using available tools.
-    
-    Args:
-        state (ReflexionState): The current state containing search queries.
-        
-    Returns:
-        dict: A dictionary containing tool messages with search results.
-    """
-    tool_messages = []
-    
-    # Get the search queries from the state
-    search_queries = state.search_queries or []
-    
-    # Import all necessary tools
-    from src.agents.tools import search_web, retrival_vector_db, listing_symbol, history_price, time_now
-    import asyncio
-    import re
-    
-    for query in search_queries:
-        # Parse the query to determine which tool to use
-        tool_to_use = "search_web"  # Default tool
-        
-        # Simple heuristic to determine the appropriate tool based on keywords in the query
-        if re.search(r'finance|news|financial|stock|market', query, re.IGNORECASE):
-            tool_to_use = "retrival_vector_db"
-        elif re.search(r'symbol|ticker|company|stock code', query, re.IGNORECASE):
-            tool_to_use = "listing_symbol"
-        elif re.search(r'price history|historical price|stock price|chart', query, re.IGNORECASE):
-            # For history_price we need more parameters, so we'll use a simplified approach here
-            # In a real implementation, we would need better NLP to extract parameters
-            tool_to_use = "search_web"  # Fallback for now
-        elif re.search(r'time|date|current time', query, re.IGNORECASE):
-            tool_to_use = "time_now"
-        
-        # Execute the appropriate tool
-        result = None
-        try:
-            if tool_to_use == "search_web":
-                result = await search_web(query)
-            elif tool_to_use == "retrival_vector_db":
-                result = await retrival_vector_db(query)
-            elif tool_to_use == "listing_symbol":
-                result = listing_symbol()
-            elif tool_to_use == "time_now":
-                result = time_now()
-            
-            # Create a ToolMessage with the result
-            if result is not None:
-                tool_message = ToolMessage(
-                    tool_call_id=f"{tool_to_use}_{hash(query)}",
-                    content=json.dumps(result),
-                    name=tool_to_use
+    if state.is_last_step and response.tool_calls:
+        return {
+            "messages": [
+                AIMessage(
+                    id=response.id,
+                    content="Sorry, I could not find an answer to your question in the specified number of steps.",
                 )
-                tool_messages.append(tool_message)
-                
-        except Exception as e:
-            # Handle any errors in tool execution
-            error_message = {
-                "error": str(e),
-                "query": query,
-                "tool": tool_to_use
-            }
-            error_tool_message = ToolMessage(
-                tool_call_id=f"error_{hash(query)}",
-                content=json.dumps(error_message),
-                name="error"
-            )
-            tool_messages.append(error_tool_message)
-    
-    return {"messages": tool_messages}
+            ]
+        }
+
+    return {"messages": [response]}
 
 
-def route_output(state: ReflexionState) -> Literal["revise", END]:
-    """Determine the next node based on the current iteration count.
+async def reflexion_reflector(state: State) -> Dict[str, List[AIMessage]]:
+    """Reflector that evaluates the actor's response"""
+    configuration = Configuration(
+        model="openai/gpt-4o-mini",
+        system_prompt="You are a helpful assistant that evaluates responses.",
+    )
+
+    model = load_chat_model(configuration.model)
     
-    Args:
-        state (ReflexionState): The current state of the conversation.
-        
-    Returns:
-        str: The name of the next node to call ("revise" or "__end__").
-    """
-    # Count the iterations by counting AIMessages with tool calls
-    iteration_count = 0
+    # Get the original query and the last response
+    user_query = ""
+    last_ai_response = ""
+    
     for message in state.messages:
-        if isinstance(message, AIMessage) and message.tool_calls:
-            if any(tool_call["name"] == "ReviseAnswer" for tool_call in message.tool_calls):
-                iteration_count += 1
+        if isinstance(message, HumanMessage):
+            user_query = message.content
+        elif isinstance(message, AIMessage) and not hasattr(message, 'name'):
+            last_ai_response = message.content
     
-    # If we've reached the maximum number of iterations, end the process
-    if iteration_count >= MAX_ITERATIONS:
-        return END
+    reflection_prompt = REFLEXION_REFLECTOR_PROMPT.format(
+        response=last_ai_response,
+        query=user_query
+    )
     
-    # Otherwise, continue revising
-    return "revise"
+    response = cast(
+        AIMessage,
+        await model.ainvoke([{"role": "user", "content": reflection_prompt}])
+    )
+    
+    # Add reflection metadata to track this as a reflection
+    response.additional_kwargs["reflection"] = True
+    
+    return {"messages": [response]}
 
 
-# Create the builder for the Reflexion agent graph
-builder = StateGraph(ReflexionState, input=InputState, config_schema=Configuration)
+async def reflexion_actor_reflect(state: State) -> Dict[str, List[AIMessage]]:
+    """Actor that improves response based on reflection"""
+    configuration = Configuration(
+        model="openai/gpt-4o-mini",
+        system_prompt="You are an expert financial news agent that improves responses based on feedback.",
+    )
 
-# Add nodes to the graph
-builder.add_node("draft", first_responder_agent)
+    model = load_chat_model(configuration.model).bind_tools(TOOLS)
+    
+    # Extract original query, previous response, and reflection
+    user_query = ""
+    previous_response = ""
+    reflection = ""
+    
+    for message in state.messages:
+        if isinstance(message, HumanMessage):
+            user_query = message.content
+        elif isinstance(message, AIMessage):
+            if message.additional_kwargs.get("reflection"):
+                reflection = message.content
+            else:
+                previous_response = message.content
+    
+    improve_prompt = REFLEXION_ACTOR_REFLECT_PROMPT.format(
+        query=user_query,
+        previous_response=previous_response,
+        reflection=reflection
+    )
+    
+    response = cast(
+        AIMessage,
+        await model.ainvoke([{"role": "user", "content": improve_prompt}])
+    )
+
+    if state.is_last_step and response.tool_calls:
+        return {
+            "messages": [
+                AIMessage(
+                    id=response.id,
+                    content="Sorry, I could not find an answer to your question in the specified number of steps.",
+                )
+            ]
+        }
+
+    return {"messages": [response]}
+
+
+def route_after_actor(state: State) -> Literal["tools", "reflector"]:
+    """Route after actor - if tool calls exist, go to tools, otherwise go to reflector"""
+    last_message = state.messages[-1]
+    if not isinstance(last_message, AIMessage):
+        raise ValueError(
+            f"Expected AIMessage in output edges, but got {type(last_message).__name__}"
+        )
+
+    if last_message.tool_calls:
+        return "tools"
+    
+    return "reflector"
+
+
+def route_after_reflector(state: State) -> Literal["__end__", "actor_reflect"]:
+    """Route after reflector - if reflection says satisfactory, end, otherwise improve"""
+    last_message = state.messages[-1]
+    if not isinstance(last_message, AIMessage):
+        raise ValueError(
+            f"Expected AIMessage in output edges, but got {type(last_message).__name__}"
+        )
+    
+    # Count how many reflections we've done to prevent infinite loops
+    reflection_count = sum(1 for msg in state.messages 
+                          if isinstance(msg, AIMessage) and msg.additional_kwargs.get("reflection"))
+    
+    # Limit to maximum 2 reflection cycles
+    if reflection_count >= 2:
+        return "__end__"
+    
+    # Check if the reflection indicates the response is satisfactory
+    reflection_content = last_message.content.lower()
+    if "satisfactory" in reflection_content or "good enough" in reflection_content:
+        return "__end__"
+    
+    return "actor_reflect"
+
+
+def route_after_actor_reflect(state: State) -> Literal["reflector", "tools"]:
+    """Route after actor reflect - if tool calls exist, go to tools, otherwise go to reflector for re-evaluation"""
+    last_message = state.messages[-1]
+    if not isinstance(last_message, AIMessage):
+        raise ValueError(
+            f"Expected AIMessage in output edges, but got {type(last_message).__name__}"
+        )
+
+    if last_message.tool_calls:
+        return "tools"
+    
+    return "reflector"
+
+
+# Build the reflexion graph
+builder = StateGraph(State, input=InputState, config_schema=Configuration)
+
+# Add nodes
+builder.add_node("actor", reflexion_actor)
 builder.add_node("tools", ToolNode(TOOLS))
-builder.add_node("revise", revision_agent)
+builder.add_node("reflector", reflexion_reflector)
+builder.add_node("actor_reflect", reflexion_actor_reflect)
 
-# Add edges to define the workflow
-builder.add_edge("__start__", "draft")
-builder.add_edge("draft", "tools")
-builder.add_edge("tools", "revise")
+# Add edges
+builder.add_edge("__start__", "actor")
 
-# Add conditional edge to determine when to stop revising
+# Add conditional edges
 builder.add_conditional_edges(
-    "revise",
-    route_output,
-    {
-        "revise": "tools",
-        END: END
-    }
+    "actor",
+    route_after_actor,
+)
+
+builder.add_conditional_edges(
+    "reflector", 
+    route_after_reflector,
+)
+
+builder.add_conditional_edges(
+    "actor_reflect",
+    route_after_actor_reflect,
+)
+
+# Tool routing - tools always go back to the node that called them
+# We need to track which node called tools to route back correctly
+def route_from_tools(state: State) -> Literal["actor", "actor_reflect"]:
+    """Route from tools back to the appropriate actor node"""
+    # Check recent messages to see which actor node we came from
+    messages = state.messages
+    for i in range(len(messages) - 1, -1, -1):
+        msg = messages[i]
+        if isinstance(msg, AIMessage) and msg.tool_calls:
+            # Look at the context to determine which actor called tools
+            # If we have a reflection in recent messages, we're in actor_reflect mode
+            for j in range(i - 1, max(-1, i - 10), -1):
+                if isinstance(messages[j], AIMessage) and messages[j].additional_kwargs.get("reflection"):
+                    return "actor_reflect"
+            return "actor"
+    return "actor"  # Default fallback
+
+builder.add_conditional_edges(
+    "tools",
+    route_from_tools,
 )
 
 # Compile the graph
 graph = builder.compile(name="Reflexion Agent")
+
+
+async def main():
+    test_query = "Tin tức về giá cả cổ phiếu của công ty FPT trong tuần vừa qua"
+    
+    # Print the input query
+    print("\n=== INPUT ===")
+    print(f"User: {test_query}")
+    
+    # Get final result using invoke
+    result = await graph.ainvoke({
+        "messages": [HumanMessage(content=test_query)]
+    }, config={"callbacks": [langfuse_handler]})
+    
+    print("\n=== FINAL OUTPUT ===")
+    
+    # Access the final message in the result
+    if "messages" in result:
+        messages = result["messages"]
+        if messages:
+            # Get the last non-reflection message which contains the final response
+            final_message = None
+            for msg in reversed(messages):
+                if isinstance(msg, AIMessage) and not msg.additional_kwargs.get("reflection"):
+                    final_message = msg
+                    break
+            
+            if final_message:
+                print(f"AI: {final_message.content}")
+                
+    # Show tools used during the conversation
+    tool_messages = [msg for msg in result.get("messages", []) 
+                    if hasattr(msg, "name") and getattr(msg, "name", None)]
+    
+    if tool_messages:
+        print("\n=== TOOLS USED ===")
+        for i, msg in enumerate(tool_messages, 1):
+            print(f"{i}. {msg.name}")
+    else:
+        print("\nNo tools were used in this interaction.")
+
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())
