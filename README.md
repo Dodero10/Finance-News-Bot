@@ -4,7 +4,7 @@ AI-powered financial news analysis system using LangGraph agents and RAG pipelin
 
 ## Features
 
-- 🤖 **Multi-Agent System**: ReAct, Reflection, ReWOO, and Reflexion agents
+- 🤖 **Multi-Agent System**: ReAct, ReWOO, and Reflexion agents
 - 📰 **News Processing**: Crawl and analyze Vietnamese financial news
 - 🔍 **RAG Pipeline**: Advanced retrieval and generation capabilities
 - 🗄️ **Vector Database**: ChromaDB integration for semantic search
@@ -57,6 +57,3 @@ examples/           # Usage examples
 - API keys for chosen LLM provider
 - See `requirements.txt` for dependencies
 
-## License
-
-MIT License - see [LICENSE](LICENSE) for details.
