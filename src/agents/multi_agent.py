@@ -22,6 +22,7 @@ from src.agents.configuration import Configuration
 from src.agents.state import InputState, State
 from src.agents.tools import search_web, retrival_vector_db, listing_symbol, history_price, time_now
 from src.agents.utils import load_chat_model
+from src.agents.prompts import SUPERVISOR_PROMPT, RESEARCH_AGENT_PROMPT, FINANCE_AGENT_PROMPT
 
 # Load environment variables
 load_dotenv()
@@ -48,6 +49,7 @@ class MultiAgentState(State):
     """Extended state for multi-agent coordination."""
     current_agent: Optional[str] = None
     task_completed: bool = False
+    agents_used: set = field(default_factory=set)
 
 class RouteResponse(BaseModel):
     """Response model for supervisor routing decisions."""
@@ -57,96 +59,6 @@ class RouteResponse(BaseModel):
     reasoning: str = Field(
         description="Brief explanation of why this choice was made"
     )
-
-# Supervisor prompt
-SUPERVISOR_PROMPT = """Bạn là một supervisor quản lý hai agent chuyên biệt để trả lời các câu hỏi về tài chính và tin tức:
-
-RESEARCH AGENT:
-- Chuyên về tìm kiếm thông tin web và tin tức tài chính từ cơ sở dữ liệu vector
-- Có thể tìm kiếm tin tức mới nhất, thông tin công ty, sự kiện thị trường
-- Sử dụng tools: search_web, retrival_vector_db
-
-FINANCE AGENT:  
-- Chuyên về dữ liệu tài chính cụ thể của cổ phiếu Việt Nam
-- Có thể lấy danh sách mã cổ phiếu, lịch sử giá chính xác từ sàn giao dịch, thời gian hiện tại
-- Sử dụng tools: listing_symbol, history_price, time_now
-
-QUYỀN ƯU TIÊN ROUTING:
-1. Nếu câu hỏi có từ khóa về "giá cổ phiếu", "giá trị cổ phiếu", "lịch sử giá", "dữ liệu tài chính" → BẮT BUỘC phải sử dụng FINANCE AGENT
-2. Nếu câu hỏi có từ khóa về "tin tức", "thông tin công ty", "sự kiện" → sử dụng RESEARCH AGENT trước
-3. Nếu câu hỏi yêu cầu CẢ HAI loại thông tin → phải sử dụng CẢ HAI agent theo thứ tự: RESEARCH AGENT trước, sau đó FINANCE AGENT
-
-STRATEGY SELECTION:
-- "research_agent": Khi cần tin tức, thông tin tổng quát VÀ chưa có agent nào chạy
-- "finance_agent": Khi cần dữ liệu tài chính cụ thể HOẶC đã có tin tức từ research_agent nhưng chưa có dữ liệu giá chính xác
-- "FINISH": CHỈ KHI đã có đầy đủ cả tin tức VÀ dữ liệu tài chính (nếu câu hỏi yêu cầu cả hai)
-
-QUAN TRỌNG: 
-- Nếu người dùng hỏi về "giá cổ phiếu hôm nay" hoặc "giá trị cổ phiếu trong ngày" → BẮT BUỘC phải có dữ liệu từ FINANCE AGENT
-- Không được FINISH nếu chưa có dữ liệu tài chính chính xác khi người dùng yêu cầu
-
-Lịch sử cuộc hội thoại:
-{messages}
-
-Hãy quyết định bước tiếp theo và giải thích lý do."""
-
-# Research agent prompt
-RESEARCH_AGENT_PROMPT = """Bạn là Research Agent chuyên về tìm kiếm và phân tích thông tin tài chính.
-
-KHẢ NĂNG CỦA BẠN:
-- Tìm kiếm thông tin web tổng quát về tài chính, kinh tế
-- Truy xuất tin tức tài chính từ cơ sở dữ liệu vector chuyên biệt
-- Phân tích và tổng hợp thông tin từ nhiều nguồn
-
-TOOLS AVAILABLE:
-- search_web: Tìm kiếm thông tin web tổng quát
-- retrival_vector_db: Tìm kiếm tin tức tài chính từ database vector
-
-HƯỚNG DẪN:
-1. Bắt buộc phải sử dụng tools retrival_vector_db trước để tìm thông tin, rồi khi có thông tin liên quan hay không cũng phải sử dụng tools search_web.
-2. Sử dụng retrival_vector_db TRƯỚC cho các câu hỏi về tin tức tài chính Việt Nam
-3. Sử dụng search_web cho thông tin tổng quát hoặc khi cần thông tin mới nhất
-4. Tổng hợp thông tin một cách rõ ràng và có cấu trúc
-5. Trích dẫn nguồn thông tin khi có thể
-6. Trả lời bằng tiếng Việt
-7. Chỉ hỗ trợ các nhiệm vụ nghiên cứu, KHÔNG làm toán
-
-Nhiệm vụ hiện tại: {task}"""
-
-# Finance agent prompt  
-FINANCE_AGENT_PROMPT = """Bạn là Finance Agent chuyên về dữ liệu cổ phiếu và thị trường tài chính Việt Nam.
-
-KHẢ NĂNG CỦA BẠN:
-- Lấy danh sách mã cổ phiếu và thông tin công ty
-- Truy xuất lịch sử giá cổ phiếu chính xác từ sàn giao dịch
-- Cung cấp thông tin thời gian hiện tại
-- Phân tích dữ liệu giá và xu hướng
-
-TOOLS AVAILABLE:
-- listing_symbol: Lấy danh sách tất cả mã cổ phiếu
-- history_price: Lấy lịch sử giá cổ phiếu (cần symbol, source, start_date, end_date, interval)
-- time_now: Lấy thời gian hiện tại ở Việt Nam
-
-HƯỚNG DẪN THỰC HIỆN:
-1. LUÔN sử dụng time_now để lấy thời gian hiện tại trước
-2. Sử dụng listing_symbol để tìm mã cổ phiếu chính xác (ví dụ: FPT)
-3. Sử dụng history_price để lấy dữ liệu giá mới nhất:
-   - source: 'VCI' (khuyến nghị cao nhất)
-   - interval: '1D' cho giá ngày
-   - start_date và end_date: sử dụng ngày hiện tại hoặc vài ngày gần đây
-   - Định dạng ngày: YYYY-MM-DD
-4. Phân tích dữ liệu và đưa ra thông tin chi tiết về:
-   - Giá hiện tại
-   - Thay đổi so với phiên trước
-   - Khối lượng giao dịch
-   - Xu hướng giá
-5. Trả lời bằng tiếng Việt với số liệu cụ thể và chính xác
-
-QUAN TRỌNG:
-- BẮT BUỘC phải lấy dữ liệu giá thực tế từ tools, KHÔNG được đoán hoặc sử dụng thông tin từ agent khác
-- Nếu không tìm thấy mã cổ phiếu, hãy thử các biến thể (FPT, FPTS, etc.)
-
-Nhiệm vụ hiện tại: {task}"""
 
 async def supervisor_node(state: MultiAgentState) -> Dict[str, any]:
     """Supervisor node that routes tasks to appropriate agents."""
@@ -159,12 +71,17 @@ async def supervisor_node(state: MultiAgentState) -> Dict[str, any]:
     model = load_chat_model(configuration.model)
     structured_llm = model.with_structured_output(RouteResponse)
     
+    # Get agents already used from state
+    agents_used = getattr(state, 'agents_used', set())
+    
     # Format messages for the prompt
     messages_str = "\n".join([
         f"{getattr(msg, 'type', type(msg).__name__)}: {getattr(msg, 'content', '')}" for msg in state.messages
     ])
     
-    prompt = SUPERVISOR_PROMPT.format(messages=messages_str)
+    # Add context about which agents have been used
+    agent_status = f"\nĐã sử dụng agents: {', '.join(agents_used) if agents_used else 'Chưa có agent nào'}"
+    prompt = SUPERVISOR_PROMPT.format(messages=messages_str + agent_status)
     
     response = await structured_llm.ainvoke([
         {"role": "system", "content": prompt}
@@ -179,7 +96,8 @@ async def supervisor_node(state: MultiAgentState) -> Dict[str, any]:
     return {
         "messages": [supervisor_message],
         "current_agent": response.next_agent,
-        "task_completed": response.next_agent == "FINISH"
+        "task_completed": response.next_agent == "FINISH",
+        "agents_used": agents_used
     }
 
 async def research_agent_node(state: MultiAgentState) -> Dict[str, any]:
@@ -218,7 +136,10 @@ async def research_agent_node(state: MultiAgentState) -> Dict[str, any]:
             ]
         }
     
-    return {"messages": [response]}
+    return {
+        "messages": [response],
+        "agents_used": state.agents_used | {RESEARCH_AGENT}
+    }
 
 async def finance_agent_node(state: MultiAgentState) -> Dict[str, any]:
     """Finance agent that handles stock data and financial tools."""
@@ -256,7 +177,10 @@ async def finance_agent_node(state: MultiAgentState) -> Dict[str, any]:
             ]
         }
     
-    return {"messages": [response]}
+    return {
+        "messages": [response],
+        "agents_used": state.agents_used | {FINANCE_AGENT}
+    }
 
 def route_after_supervisor(state: MultiAgentState) -> str:
     """Route to the next agent based on supervisor's decision."""

@@ -235,23 +235,15 @@ def _route(state: ReWOOState) -> Literal["tool", "solve"]:
         return "tool"
 
 
-# Build the ReWOO graph using the React agent's pattern
 builder = StateGraph(ReWOOState, input=InputState, config_schema=Configuration)
 
-# Add nodes
 builder.add_node("plan", get_plan)
 builder.add_node("tool", tool_execution) 
 builder.add_node("solve", solve)
-
-# Add edges
 builder.add_edge("__start__", "plan")
 builder.add_edge("plan", "tool")
 builder.add_edge("solve", "__end__")
-
-# Add conditional edge from tool to either tool (loop) or solve (finish)
 builder.add_conditional_edges("tool", _route)
-
-# Compile the graph
 graph = builder.compile(name="ReWOO Agent")
 
 
@@ -259,11 +251,9 @@ async def main():
     """Test function for the ReWOO agent."""
     test_query = "Thông tin về diễn biến giá cổ phiếu VCB trong tuần vừa qua"
     
-    # Print the input query
     print("\n=== INPUT ===")
     print(f"User: {test_query}")
     
-    # Get final result using invoke
     result = await graph.ainvoke({
         "messages": [HumanMessage(content=test_query)]
     }, config={"callbacks": [langfuse_handler]})

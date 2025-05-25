@@ -8,7 +8,6 @@ from langchain_core.messages import AIMessage, HumanMessage, BaseMessage
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 
-# Add the project root to Python path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.insert(0, project_root)
 
@@ -19,9 +18,8 @@ from src.agents.configuration import Configuration
 from src.agents.state import InputState, State
 from src.agents.tools import TOOLS
 from src.agents.utils import load_chat_model
-from src.agents.prompts import REFLEXION_FIRST_RESPONDER_PROMPT, REFLEXION_REVISION_PROMPT
+from src.agents.prompts import REFLEXION_FIRST_RESPONDER_PROMPT, REFLEXION_REVISION_PROMPT, REFLEXION_REFLECTOR_PROMPT, REFLEXION_ACTOR_REFLECT_PROMPT
 
-# Load environment variables
 load_dotenv()
 
 langfuse = Langfuse(
@@ -31,35 +29,6 @@ langfuse = Langfuse(
 )
 
 langfuse_handler = CallbackHandler()
-
-# Updated Vietnamese prompts for reflector
-REFLEXION_REFLECTOR_PROMPT = """Bạn là một chuyên gia đánh giá chất lượng phản hồi về tin tức tài chính.
-
-Đánh giá phản hồi dựa trên:
-1. Tính chính xác của thông tin
-2. Mức độ liên quan đến câu hỏi của người dùng
-3. Tính đầy đủ của câu trả lời
-4. Việc sử dụng công cụ và nguồn thông tin phù hợp
-5. Tính rõ ràng và cấu trúc
-
-Nếu phản hồi có vấn đề, hãy đưa ra phản hồi cụ thể về:
-- Thông tin nào còn thiếu
-- Điều gì có thể được cải thiện
-- Hành động cụ thể nào nên thực hiện để có câu trả lời tốt hơn
-
-Nếu phản hồi đã đủ tốt, chỉ cần trả lời "Phản hồi này đã đạt yêu cầu."
-
-Phản hồi cần đánh giá: {response}
-Câu hỏi của người dùng: {query}"""
-
-REFLEXION_ACTOR_REFLECT_PROMPT = """Bạn là một trợ lý AI chuyên nghiệp về tài chính Việt Nam. Bạn đã đưa ra phản hồi trước đó nhưng nhận được góp ý để cải thiện.
-
-Câu hỏi gốc: {query}
-Phản hồi trước đó của bạn: {previous_response}
-Góp ý cải thiện: {reflection}
-
-Dựa trên góp ý, hãy đưa ra phản hồi được cải thiện. Sử dụng các công cụ có sẵn để thu thập thêm thông tin nếu cần."""
-
 
 async def reflexion_actor(state: State) -> Dict[str, List[AIMessage]]:
     """Main actor that generates responses using tools"""
@@ -94,12 +63,11 @@ async def reflexion_reflector(state: State) -> Dict[str, List[AIMessage]]:
     """Reflector that evaluates the actor's response"""
     configuration = Configuration(
         model="openai/gpt-4o-mini",
-        system_prompt="Bạn là một trợ lý hữu ích đánh giá các phản hồi.",
+        system_prompt=REFLEXION_REFLECTOR_PROMPT,
     )
 
     model = load_chat_model(configuration.model)
     
-    # Get the original query and the last response
     user_query = ""
     last_ai_response = ""
     
@@ -119,7 +87,6 @@ async def reflexion_reflector(state: State) -> Dict[str, List[AIMessage]]:
         await model.ainvoke([{"role": "user", "content": reflection_prompt}])
     )
     
-    # Add reflection metadata to track this as a reflection
     response.additional_kwargs["reflection"] = True
     
     return {"messages": [response]}
@@ -134,7 +101,6 @@ async def reflexion_actor_reflect(state: State) -> Dict[str, List[AIMessage]]:
 
     model = load_chat_model(configuration.model).bind_tools(TOOLS)
     
-    # Extract original query, previous response, and reflection
     user_query = ""
     previous_response = ""
     reflection = ""
@@ -194,15 +160,12 @@ def route_after_reflector(state: State) -> Literal["__end__", "actor_reflect"]:
             f"Expected AIMessage in output edges, but got {type(last_message).__name__}"
         )
     
-    # Count how many reflections we've done to prevent infinite loops
     reflection_count = sum(1 for msg in state.messages 
                           if isinstance(msg, AIMessage) and msg.additional_kwargs.get("reflection"))
     
-    # Limit to maximum 2 reflection cycles
     if reflection_count >= 2:
         return "__end__"
     
-    # Check if the reflection indicates the response is satisfactory (Vietnamese keywords)
     reflection_content = last_message.content.lower()
     if ("đạt yêu cầu" in reflection_content or 
         "đủ tốt" in reflection_content or 
@@ -227,35 +190,17 @@ def route_after_actor_reflect(state: State) -> Literal["reflector", "tools"]:
     return "reflector"
 
 
-# Build the reflexion graph
 builder = StateGraph(State, input=InputState, config_schema=Configuration)
 
-# Add nodes
 builder.add_node("actor", reflexion_actor)
 builder.add_node("tools", ToolNode(TOOLS))
 builder.add_node("reflector", reflexion_reflector)
 builder.add_node("actor_reflect", reflexion_actor_reflect)
-
-# Add edges
 builder.add_edge("__start__", "actor")
+builder.add_conditional_edges("actor", route_after_actor)
+builder.add_conditional_edges("reflector", route_after_reflector)
+builder.add_conditional_edges("actor_reflect", route_after_actor_reflect)
 
-# Add conditional edges
-builder.add_conditional_edges(
-    "actor",
-    route_after_actor,
-)
-
-builder.add_conditional_edges(
-    "reflector", 
-    route_after_reflector,
-)
-
-builder.add_conditional_edges(
-    "actor_reflect",
-    route_after_actor_reflect,
-)
-
-# Tool routing - tools always go back to the node that called them
 def route_from_tools(state: State) -> Literal["actor", "actor_reflect"]:
     """Route from tools back to the appropriate actor node"""
     # Check recent messages to see which actor node we came from
@@ -271,12 +216,8 @@ def route_from_tools(state: State) -> Literal["actor", "actor_reflect"]:
             return "actor"
     return "actor"  # Default fallback
 
-builder.add_conditional_edges(
-    "tools",
-    route_from_tools,
-)
+builder.add_conditional_edges("tools", route_from_tools)
 
-# Compile the graph
 graph = builder.compile(name="Reflexion Agent")
 
 
