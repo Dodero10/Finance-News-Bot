@@ -68,18 +68,22 @@ RESEARCH AGENT:
 
 FINANCE AGENT:  
 - Chuyên về dữ liệu tài chính cụ thể của cổ phiếu Việt Nam
-- Có thể lấy danh sách mã cổ phiếu, lịch sử giá, thời gian hiện tại
+- Có thể lấy danh sách mã cổ phiếu, lịch sử giá chính xác từ sàn giao dịch, thời gian hiện tại
 - Sử dụng tools: listing_symbol, history_price, time_now
 
-NHIỆM VỤ CỦA BẠN:
-1. Phân tích câu hỏi của người dùng
-2. Quyết định agent phù hợp nhất để xử lý
-3. Nếu đã có kết quả từ agent, hãy tổng hợp và trả lời người dùng
+QUYỀN ƯU TIÊN ROUTING:
+1. Nếu câu hỏi có từ khóa về "giá cổ phiếu", "giá trị cổ phiếu", "lịch sử giá", "dữ liệu tài chính" → BẮT BUỘC phải sử dụng FINANCE AGENT
+2. Nếu câu hỏi có từ khóa về "tin tức", "thông tin công ty", "sự kiện" → sử dụng RESEARCH AGENT trước
+3. Nếu câu hỏi yêu cầu CẢ HAI loại thông tin → phải sử dụng CẢ HAI agent theo thứ tự: RESEARCH AGENT trước, sau đó FINANCE AGENT
 
 STRATEGY SELECTION:
-- "research_agent": Chỉ cần thông tin tin tức, sự kiện, thông tin tổng quát
-- "finance_agent": Chỉ cần dữ liệu cổ phiếu cụ thể, giá lịch sử, mã cổ phiếu
-- "FINISH": Khi đã có đủ thông tin để trả lời hoàn chỉnh
+- "research_agent": Khi cần tin tức, thông tin tổng quát VÀ chưa có agent nào chạy
+- "finance_agent": Khi cần dữ liệu tài chính cụ thể HOẶC đã có tin tức từ research_agent nhưng chưa có dữ liệu giá chính xác
+- "FINISH": CHỈ KHI đã có đầy đủ cả tin tức VÀ dữ liệu tài chính (nếu câu hỏi yêu cầu cả hai)
+
+QUAN TRỌNG: 
+- Nếu người dùng hỏi về "giá cổ phiếu hôm nay" hoặc "giá trị cổ phiếu trong ngày" → BẮT BUỘC phải có dữ liệu từ FINANCE AGENT
+- Không được FINISH nếu chưa có dữ liệu tài chính chính xác khi người dùng yêu cầu
 
 Lịch sử cuộc hội thoại:
 {messages}
@@ -114,23 +118,33 @@ FINANCE_AGENT_PROMPT = """Bạn là Finance Agent chuyên về dữ liệu cổ 
 
 KHẢ NĂNG CỦA BẠN:
 - Lấy danh sách mã cổ phiếu và thông tin công ty
-- Truy xuất lịch sử giá cổ phiếu với các khung thời gian khác nhau
+- Truy xuất lịch sử giá cổ phiếu chính xác từ sàn giao dịch
 - Cung cấp thông tin thời gian hiện tại
+- Phân tích dữ liệu giá và xu hướng
 
 TOOLS AVAILABLE:
 - listing_symbol: Lấy danh sách tất cả mã cổ phiếu
 - history_price: Lấy lịch sử giá cổ phiếu (cần symbol, source, start_date, end_date, interval)
 - time_now: Lấy thời gian hiện tại ở Việt Nam
 
-HƯỚNG DẪN:
-1. Sử dụng listing_symbol để tìm mã cổ phiếu chính xác
-2. Sử dụng history_price với các tham số phù hợp:
-   - source: 'VCI', 'TCBS', hoặc 'MSN' (khuyến nghị VCI)
-   - interval: '1m', '5m', '15m', '30m', '1H', '1D', '1W', '1M'
+HƯỚNG DẪN THỰC HIỆN:
+1. LUÔN sử dụng time_now để lấy thời gian hiện tại trước
+2. Sử dụng listing_symbol để tìm mã cổ phiếu chính xác (ví dụ: FPT)
+3. Sử dụng history_price để lấy dữ liệu giá mới nhất:
+   - source: 'VCI' (khuyến nghị cao nhất)
+   - interval: '1D' cho giá ngày
+   - start_date và end_date: sử dụng ngày hiện tại hoặc vài ngày gần đây
    - Định dạng ngày: YYYY-MM-DD
-3. Phân tích dữ liệu và đưa ra nhận xét có ý nghĩa
-4. Trả lời bằng tiếng Việt với số liệu cụ thể
-5. Chỉ hỗ trợ các nhiệm vụ tài chính, KHÔNG làm nghiên cứu
+4. Phân tích dữ liệu và đưa ra thông tin chi tiết về:
+   - Giá hiện tại
+   - Thay đổi so với phiên trước
+   - Khối lượng giao dịch
+   - Xu hướng giá
+5. Trả lời bằng tiếng Việt với số liệu cụ thể và chính xác
+
+QUAN TRỌNG:
+- BẮT BUỘC phải lấy dữ liệu giá thực tế từ tools, KHÔNG được đoán hoặc sử dụng thông tin từ agent khác
+- Nếu không tìm thấy mã cổ phiếu, hãy thử các biến thể (FPT, FPTS, etc.)
 
 Nhiệm vụ hiện tại: {task}"""
 
@@ -147,7 +161,7 @@ async def supervisor_node(state: MultiAgentState) -> Dict[str, any]:
     
     # Format messages for the prompt
     messages_str = "\n".join([
-        f"{msg.type}: {msg.content}" for msg in state.messages
+        f"{getattr(msg, 'type', type(msg).__name__)}: {getattr(msg, 'content', '')}" for msg in state.messages
     ])
     
     prompt = SUPERVISOR_PROMPT.format(messages=messages_str)
@@ -180,7 +194,7 @@ async def research_agent_node(state: MultiAgentState) -> Dict[str, any]:
     
     # Get the latest user message as the task
     user_messages = [msg for msg in state.messages if isinstance(msg, HumanMessage)]
-    task = user_messages[-1].content if user_messages else "No task specified"
+    task = getattr(user_messages[-1], 'content', 'No task specified') if user_messages else "No task specified"
     
     system_message = RESEARCH_AGENT_PROMPT.format(task=task)
     
@@ -194,7 +208,7 @@ async def research_agent_node(state: MultiAgentState) -> Dict[str, any]:
     
     response.name = RESEARCH_AGENT
     
-    if state.is_last_step and response.tool_calls:
+    if state.is_last_step and hasattr(response, 'tool_calls') and response.tool_calls:
         return {
             "messages": [
                 AIMessage(
@@ -218,7 +232,7 @@ async def finance_agent_node(state: MultiAgentState) -> Dict[str, any]:
     
     # Get the latest user message as the task
     user_messages = [msg for msg in state.messages if isinstance(msg, HumanMessage)]
-    task = user_messages[-1].content if user_messages else "No task specified"
+    task = getattr(user_messages[-1], 'content', 'No task specified') if user_messages else "No task specified"
     
     system_message = FINANCE_AGENT_PROMPT.format(task=task)
     
@@ -232,7 +246,7 @@ async def finance_agent_node(state: MultiAgentState) -> Dict[str, any]:
     
     response.name = FINANCE_AGENT
     
-    if state.is_last_step and response.tool_calls:
+    if state.is_last_step and hasattr(response, 'tool_calls') and response.tool_calls:
         return {
             "messages": [
                 AIMessage(
@@ -262,7 +276,7 @@ def route_after_agent(state: MultiAgentState) -> str:
     last_message = state.messages[-1]
     
     # If agent used tools, continue with tool execution
-    if isinstance(last_message, AIMessage) and last_message.tool_calls:
+    if isinstance(last_message, AIMessage) and hasattr(last_message, 'tool_calls') and last_message.tool_calls:
         return "tools"
     
     # Otherwise, go back to supervisor for next decision
@@ -338,35 +352,123 @@ builder.add_conditional_edges(
 graph = builder.compile(name="Multi-Agent Finance System")
 
 async def main():
-    """Test the multi-agent system."""
+    """Test the multi-agent system with detailed logging."""
     
     test_queries = [
         "Tin tức mới nhất về công ty cổ phần công nghệ FPT và giá trị cổ phiếu trong ngày hôm nay",
     ]
     
     for i, query in enumerate(test_queries, 1):
-        print(f"\n{'='*60}")
-        print(f"TEST CASE {i}: {query}")
-        print('='*60)
+        print(f"\n{'='*80}")
+        print(f"TEST CASE {i}")
+        print('='*80)
+        
+        # Print INPUT
+        print("\n=== 📥 INPUT ===")
+        print(f"User: {query}")
         
         try:
             result = await graph.ainvoke({
                 "messages": [HumanMessage(content=query)]
             }, config={"callbacks": [langfuse_handler]})
             
-            print("\n=== FINAL RESULT ===")
+            # Print AGENT WORKFLOW
+            print("\n=== 🔄 AGENT WORKFLOW ===")
+            if "messages" in result:
+                workflow_steps = []
+                for idx, msg in enumerate(result["messages"]):
+                    if hasattr(msg, 'name') and msg.name in [SUPERVISOR, RESEARCH_AGENT, FINANCE_AGENT]:
+                        content = getattr(msg, 'content', '')
+                        content_preview = content[:150] + "..." if len(str(content)) > 150 else str(content)
+                        workflow_steps.append(f"Step {idx+1} - {msg.name.upper()}: {content_preview}")
+                
+                for step in workflow_steps:
+                    print(step)
+            
+            # Print TOOLS USED
+            print("\n=== 🛠️ TOOLS USED ===")
+            if "messages" in result:
+                tool_calls = []
+                tool_results = []
+                
+                for msg in result["messages"]:
+                    # Collect tool calls
+                    if isinstance(msg, AIMessage) and hasattr(msg, 'tool_calls') and msg.tool_calls:
+                        for tool_call in msg.tool_calls:
+                            agent_name = getattr(msg, 'name', 'Unknown Agent')
+                            tool_calls.append({
+                                'agent': agent_name,
+                                'tool': tool_call['name'],
+                                'args': tool_call.get('args', {})
+                            })
+                    
+                    # Collect tool results
+                    if hasattr(msg, 'name') and msg.name in ['search_web', 'retrival_vector_db', 'listing_symbol', 'history_price', 'time_now']:
+                        tool_results.append({
+                            'tool': msg.name,
+                            'result_preview': str(msg.content)[:300] + "..." if len(str(msg.content)) > 300 else str(msg.content)
+                        })
+                
+                if tool_calls:
+                    print("Tool Calls:")
+                    for idx, tool_call in enumerate(tool_calls, 1):
+                        print(f"  {idx}. Agent: {tool_call['agent']} | Tool: {tool_call['tool']}")
+                        print(f"     Args: {tool_call['args']}")
+                else:
+                    print("No tools were called in this interaction.")
+                
+                if tool_results:
+                    print("\nTool Results:")
+                    for idx, tool_result in enumerate(tool_results, 1):
+                        print(f"  {idx}. {tool_result['tool']}:")
+                        print(f"     {tool_result['result_preview']}")
+            
+            # Print FINAL OUTPUT
+            print("\n=== 📤 FINAL OUTPUT ===")
             if "messages" in result:
                 final_messages = result["messages"]
-                for msg in final_messages[-5:]:  # Show last 5 messages
-                    if hasattr(msg, 'name') and msg.name:
-                        print(f"[{msg.name.upper()}]: {msg.content}")
+                # Get the last meaningful response (not supervisor routing)
+                final_response = None
+                for msg in reversed(final_messages):
+                    if isinstance(msg, AIMessage) and hasattr(msg, 'name'):
+                        if msg.name in [RESEARCH_AGENT, FINANCE_AGENT] and not (hasattr(msg, 'tool_calls') and msg.tool_calls):
+                            final_response = msg
+                            break
+                    elif isinstance(msg, AIMessage) and not hasattr(msg, 'name') and not (hasattr(msg, 'tool_calls') and msg.tool_calls):
+                        final_response = msg
+                        break
+                
+                if final_response:
+                    final_content = getattr(final_response, 'content', '')
+                    print(f"AI: {final_content}")
+                else:
+                    print("No final response found.")
+                    
+                # Print all messages for debugging
+                print("\n=== 🔍 ALL MESSAGES (DEBUG) ===")
+                for idx, msg in enumerate(final_messages):
+                    # Safely get message type and name
+                    msg_name = getattr(msg, 'name', None)
+                    msg_type_attr = getattr(msg, 'type', None)
+                    
+                    if msg_name:
+                        msg_type = f"[{msg_name.upper()}]"
+                    elif msg_type_attr:
+                        msg_type = f"[{msg_type_attr.upper()}]"
                     else:
-                        print(f"[{msg.type.upper()}]: {msg.content}")
+                        msg_type = f"[{type(msg).__name__.upper()}]"
+                    
+                    content = getattr(msg, 'content', '')
+                    content_preview = content[:100] + "..." if len(str(content)) > 100 else str(content)
+                    tool_info = f" | Tools: {len(msg.tool_calls)}" if hasattr(msg, 'tool_calls') and msg.tool_calls else ""
+                    print(f"  {idx+1}. {msg_type}: {content_preview}{tool_info}")
             
         except Exception as e:
-            print(f"Error processing query: {e}")
+            print(f"❌ Error processing query: {e}")
+            import traceback
+            traceback.print_exc()
         
-        print("\n" + "="*60)
+        print("\n" + "="*80)
 
 if __name__ == "__main__":
     import asyncio
