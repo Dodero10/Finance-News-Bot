@@ -1,231 +1,373 @@
-from typing import Any, Dict, List, Literal, Tuple, Union, cast
+import os
+import sys
 from datetime import UTC, datetime
+from typing import Dict, List, Literal, cast, Optional
+from dataclasses import dataclass, field
 
-from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage, ToolMessage
-from langgraph.graph import StateGraph
+from dotenv import load_dotenv
+from langchain_core.messages import AIMessage, HumanMessage, BaseMessage
+from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from pydantic import BaseModel, Field
+
+# Add the project root to Python path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.insert(0, project_root)
+
+from langfuse import Langfuse
+from langfuse.callback import CallbackHandler   
 
 from src.agents.configuration import Configuration
 from src.agents.state import InputState, State
-from src.agents.tools import TOOLS, retrival_vector_db, search_web
+from src.agents.tools import search_web, retrival_vector_db, listing_symbol, history_price, time_now
 from src.agents.utils import load_chat_model
 
-# Define specialized tool groups
-SEARCH_TOOLS = [search_web, retrival_vector_db]
-OTHER_TOOLS = [tool for tool in TOOLS if tool not in SEARCH_TOOLS]
+# Load environment variables
+load_dotenv()
 
-# Define prompts for each agent
-SUPERVISOR_PROMPT = """You are the supervisor of a multi-agent system designed to answer finance-related questions.
-You coordinate two specialized agents:
-1. A Search Agent that can search the web and query a vector database for financial news
-2. A Tools Agent that can access financial data and tools
+langfuse = Langfuse(
+    public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+    secret_key=os.getenv("LANGFUSE_API_KEY"),
+    host=os.getenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
+)
 
-Your job is to:
-1. Understand the user's question and determine which agent(s) to call
-2. Delegate tasks to the appropriate agent(s)
-3. Synthesize the information from both agents into a complete, accurate response
-4. Provide the final answer to the user's question
+langfuse_handler = CallbackHandler()
 
-Be concise in your interactions with the specialized agents, giving them clear instructions.
-When providing the final answer to the user, be informative, accurate, and helpful.
-"""
+# Define agent names
+RESEARCH_AGENT = "research_agent"
+FINANCE_AGENT = "finance_agent"
+SUPERVISOR = "supervisor"
 
-SEARCH_AGENT_PROMPT = """You are a Search Agent specialized in finding information from the web and a finance news vector database.
-Your role is to find relevant information about finance topics when requested by the supervisor.
+# Define tools for each agent
+RESEARCH_TOOLS = [search_web, retrival_vector_db]
+FINANCE_TOOLS = [listing_symbol, history_price, time_now]
 
-You have access to two tools:
-1. search_web - Find general information from the web
-2. retrival_vector_db - Search specifically in a financial news vector database
+@dataclass
+class MultiAgentState(State):
+    """Extended state for multi-agent coordination."""
+    current_agent: Optional[str] = None
+    task_completed: bool = False
 
-Provide factual, reliable information from your searches without opinions or speculation.
-Focus on gathering the most relevant information to answer the supervisor's request.
-"""
+class RouteResponse(BaseModel):
+    """Response model for supervisor routing decisions."""
+    next_agent: Literal["research_agent", "finance_agent", "FINISH"] = Field(
+        description="The next agent to route to or FINISH if complete"
+    )
+    reasoning: str = Field(
+        description="Brief explanation of why this choice was made"
+    )
 
-TOOLS_AGENT_PROMPT = """You are a Tools Agent specialized in using financial data tools.
-Your role is to gather and analyze financial data when requested by the supervisor.
+# Supervisor prompt
+SUPERVISOR_PROMPT = """Bạn là một supervisor quản lý hai agent chuyên biệt để trả lời các câu hỏi về tài chính và tin tức:
 
-You have access to these tools:
-- listing_symbol - Get listing symbols with company names
-- history_price - Retrieve historical price data for stocks
-- time_now - Get the current time in Vietnam
+RESEARCH AGENT:
+- Chuyên về tìm kiếm thông tin web và tin tức tài chính từ cơ sở dữ liệu vector
+- Có thể tìm kiếm tin tức mới nhất, thông tin công ty, sự kiện thị trường
+- Sử dụng tools: search_web, retrival_vector_db
 
-Provide factual data and analysis based on the tools available.
-Focus on gathering the precise information requested by the supervisor.
-"""
+FINANCE AGENT:  
+- Chuyên về dữ liệu tài chính cụ thể của cổ phiếu Việt Nam
+- Có thể lấy danh sách mã cổ phiếu, lịch sử giá, thời gian hiện tại
+- Sử dụng tools: listing_symbol, history_price, time_now
 
-# Helper functions to extend the State with additional information
-def add_supervisor_messages(state: State, supervisor_messages: List[BaseMessage]) -> State:
-    """Add supervisor messages to the state"""
-    if "supervisor_messages" not in state.metadata:
-        state.metadata["supervisor_messages"] = []
-    state.metadata["supervisor_messages"].extend(supervisor_messages)
-    return state
+NHIỆM VỤ CỦA BẠN:
+1. Phân tích câu hỏi của người dùng
+2. Quyết định agent phù hợp nhất để xử lý
+3. Nếu đã có kết quả từ agent, hãy tổng hợp và trả lời người dùng
 
-def add_search_agent_messages(state: State, messages: List[BaseMessage]) -> State:
-    """Add search agent messages to the state"""
-    if "search_agent_messages" not in state.metadata:
-        state.metadata["search_agent_messages"] = []
-    state.metadata["search_agent_messages"].extend(messages)
-    return state
+STRATEGY SELECTION:
+- "research_agent": Chỉ cần thông tin tin tức, sự kiện, thông tin tổng quát
+- "finance_agent": Chỉ cần dữ liệu cổ phiếu cụ thể, giá lịch sử, mã cổ phiếu
+- "FINISH": Khi đã có đủ thông tin để trả lời hoàn chỉnh
 
-def add_tools_agent_messages(state: State, messages: List[BaseMessage]) -> State:
-    """Add tools agent messages to the state"""
-    if "tools_agent_messages" not in state.metadata:
-        state.metadata["tools_agent_messages"] = []
-    state.metadata["tools_agent_messages"].extend(messages)
-    return state
+Lịch sử cuộc hội thoại:
+{messages}
 
-def get_messages(state: State, key: str) -> List[BaseMessage]:
-    """Get messages from state metadata by key"""
-    return state.metadata.get(key, [])
+Hãy quyết định bước tiếp theo và giải thích lý do."""
 
-async def supervisor(state: State) -> Dict[str, Union[List[AIMessage], str]]:
-    """The supervisor agent that coordinates the specialized agents."""
+# Research agent prompt
+RESEARCH_AGENT_PROMPT = """Bạn là Research Agent chuyên về tìm kiếm và phân tích thông tin tài chính.
+
+KHẢ NĂNG CỦA BẠN:
+- Tìm kiếm thông tin web tổng quát về tài chính, kinh tế
+- Truy xuất tin tức tài chính từ cơ sở dữ liệu vector chuyên biệt
+- Phân tích và tổng hợp thông tin từ nhiều nguồn
+
+TOOLS AVAILABLE:
+- search_web: Tìm kiếm thông tin web tổng quát
+- retrival_vector_db: Tìm kiếm tin tức tài chính từ database vector
+
+HƯỚNG DẪN:
+1. Bắt buộc phải sử dụng tools retrival_vector_db trước để tìm thông tin, rồi khi có thông tin liên quan hay không cũng phải sử dụng tools search_web.
+2. Sử dụng retrival_vector_db TRƯỚC cho các câu hỏi về tin tức tài chính Việt Nam
+3. Sử dụng search_web cho thông tin tổng quát hoặc khi cần thông tin mới nhất
+4. Tổng hợp thông tin một cách rõ ràng và có cấu trúc
+5. Trích dẫn nguồn thông tin khi có thể
+6. Trả lời bằng tiếng Việt
+7. Chỉ hỗ trợ các nhiệm vụ nghiên cứu, KHÔNG làm toán
+
+Nhiệm vụ hiện tại: {task}"""
+
+# Finance agent prompt  
+FINANCE_AGENT_PROMPT = """Bạn là Finance Agent chuyên về dữ liệu cổ phiếu và thị trường tài chính Việt Nam.
+
+KHẢ NĂNG CỦA BẠN:
+- Lấy danh sách mã cổ phiếu và thông tin công ty
+- Truy xuất lịch sử giá cổ phiếu với các khung thời gian khác nhau
+- Cung cấp thông tin thời gian hiện tại
+
+TOOLS AVAILABLE:
+- listing_symbol: Lấy danh sách tất cả mã cổ phiếu
+- history_price: Lấy lịch sử giá cổ phiếu (cần symbol, source, start_date, end_date, interval)
+- time_now: Lấy thời gian hiện tại ở Việt Nam
+
+HƯỚNG DẪN:
+1. Sử dụng listing_symbol để tìm mã cổ phiếu chính xác
+2. Sử dụng history_price với các tham số phù hợp:
+   - source: 'VCI', 'TCBS', hoặc 'MSN' (khuyến nghị VCI)
+   - interval: '1m', '5m', '15m', '30m', '1H', '1D', '1W', '1M'
+   - Định dạng ngày: YYYY-MM-DD
+3. Phân tích dữ liệu và đưa ra nhận xét có ý nghĩa
+4. Trả lời bằng tiếng Việt với số liệu cụ thể
+5. Chỉ hỗ trợ các nhiệm vụ tài chính, KHÔNG làm nghiên cứu
+
+Nhiệm vụ hiện tại: {task}"""
+
+async def supervisor_node(state: MultiAgentState) -> Dict[str, any]:
+    """Supervisor node that routes tasks to appropriate agents."""
+    
     configuration = Configuration(
         model="openai/gpt-4o-mini",
         system_prompt=SUPERVISOR_PROMPT,
     )
+    
     model = load_chat_model(configuration.model)
+    structured_llm = model.with_structured_output(RouteResponse)
     
-    # Use all messages in the conversation for context
-    messages_for_model = [SystemMessage(content=SUPERVISOR_PROMPT)]
+    # Format messages for the prompt
+    messages_str = "\n".join([
+        f"{msg.type}: {msg.content}" for msg in state.messages
+    ])
     
-    # Add user messages from the main conversation
-    for message in state.messages:
-        if isinstance(message, HumanMessage):
-            messages_for_model.append(message)
+    prompt = SUPERVISOR_PROMPT.format(messages=messages_str)
     
-    # Add any responses from specialized agents
-    supervisor_messages = get_messages(state, "supervisor_messages")
-    for message in supervisor_messages:
-        messages_for_model.append(message)
+    response = await structured_llm.ainvoke([
+        {"role": "system", "content": prompt}
+    ])
     
-    # Check if we have responses from specialized agents
-    search_agent_messages = get_messages(state, "search_agent_messages")
-    tools_agent_messages = get_messages(state, "tools_agent_messages")
-    
-    has_search_response = any(isinstance(msg, ToolMessage) for msg in search_agent_messages)
-    has_tools_response = any(isinstance(msg, ToolMessage) for msg in tools_agent_messages)
-    
-    # If both agents have responded or there are no agent responses yet, determine which to call
-    if (not supervisor_messages) or (has_search_response and has_tools_response):
-        # If this is first call or both agents have provided responses
-        response = await model.ainvoke(messages_for_model)
-        
-        # Check if the supervisor wants to call agents or provide final answer
-        content = response.content.lower() if response.content else ""
-        
-        if "search agent" in content and not has_search_response:
-            # Update state with supervisor's message and indicate next agent
-            state = add_supervisor_messages(state, [response])
-            return {"messages": state.messages, "next": "search_agent"}
-        elif "tools agent" in content and not has_tools_response:
-            # Update state with supervisor's message and indicate next agent
-            state = add_supervisor_messages(state, [response])
-            return {"messages": state.messages, "next": "tools_agent"}
-        else:
-            # Provide final answer
-            return {
-                "messages": [*state.messages, AIMessage(content=response.content)],
-                "next": "__end__"
-            }
-    
-    # If only one agent has responded, call the other agent
-    if has_search_response and not has_tools_response:
-        return {"messages": state.messages, "next": "tools_agent"}
-    elif has_tools_response and not has_search_response:
-        return {"messages": state.messages, "next": "search_agent"}
-    
-    # Default case - should not reach here
-    return {"messages": state.messages, "next": "supervisor"}
-
-async def search_agent(state: State) -> Dict[str, List[BaseMessage]]:
-    """Agent that uses web search and RAG tools."""
-    configuration = Configuration(
-        model="openai/gpt-4o-mini",
-        system_prompt=SEARCH_AGENT_PROMPT,
+    # Add supervisor response to messages
+    supervisor_message = AIMessage(
+        content=f"[SUPERVISOR] Routing to {response.next_agent}. Reasoning: {response.reasoning}",
+        name=SUPERVISOR
     )
     
-    model = load_chat_model(configuration.model).bind_tools(SEARCH_TOOLS)
-    
-    # Build messages for this agent
-    messages = [SystemMessage(content=SEARCH_AGENT_PROMPT)]
-    
-    # Add the latest supervisor message as context for this agent
-    supervisor_messages = [msg for msg in get_messages(state, "supervisor_messages") if isinstance(msg, AIMessage)]
-    if supervisor_messages:
-        latest_supervisor_message = supervisor_messages[-1]
-        messages.append(HumanMessage(content=latest_supervisor_message.content))
-    
-    # Get the initial user query as fallback
-    if not supervisor_messages and state.messages:
-        user_messages = [msg for msg in state.messages if isinstance(msg, HumanMessage)]
-        if user_messages:
-            messages.append(HumanMessage(content=user_messages[-1].content))
-    
-    response = await model.ainvoke(messages)
-    
-    # Update state with search agent's response
-    state = add_search_agent_messages(state, [response])
-    
-    return {"messages": state.messages}
+    return {
+        "messages": [supervisor_message],
+        "current_agent": response.next_agent,
+        "task_completed": response.next_agent == "FINISH"
+    }
 
-async def tools_agent(state: State) -> Dict[str, List[BaseMessage]]:
-    """Agent that uses financial data tools."""
+async def research_agent_node(state: MultiAgentState) -> Dict[str, any]:
+    """Research agent that handles web search and RAG queries."""
+    
     configuration = Configuration(
         model="openai/gpt-4o-mini",
-        system_prompt=TOOLS_AGENT_PROMPT,
+        system_prompt=RESEARCH_AGENT_PROMPT,
     )
     
-    model = load_chat_model(configuration.model).bind_tools(OTHER_TOOLS)
+    model = load_chat_model(configuration.model).bind_tools(RESEARCH_TOOLS)
     
-    # Build messages for this agent
-    messages = [SystemMessage(content=TOOLS_AGENT_PROMPT)]
+    # Get the latest user message as the task
+    user_messages = [msg for msg in state.messages if isinstance(msg, HumanMessage)]
+    task = user_messages[-1].content if user_messages else "No task specified"
     
-    # Add the latest supervisor message as context for this agent
-    supervisor_messages = [msg for msg in get_messages(state, "supervisor_messages") if isinstance(msg, AIMessage)]
-    if supervisor_messages:
-        latest_supervisor_message = supervisor_messages[-1]
-        messages.append(HumanMessage(content=latest_supervisor_message.content))
+    system_message = RESEARCH_AGENT_PROMPT.format(task=task)
     
-    # Get the initial user query as fallback
-    if not supervisor_messages and state.messages:
-        user_messages = [msg for msg in state.messages if isinstance(msg, HumanMessage)]
-        if user_messages:
-            messages.append(HumanMessage(content=user_messages[-1].content))
+    response = cast(
+        AIMessage,
+        await model.ainvoke([
+            {"role": "system", "content": system_message},
+            *state.messages
+        ])
+    )
     
-    response = await model.ainvoke(messages)
+    response.name = RESEARCH_AGENT
     
-    # Update state with tools agent's response
-    state = add_tools_agent_messages(state, [response])
+    if state.is_last_step and response.tool_calls:
+        return {
+            "messages": [
+                AIMessage(
+                    content="[RESEARCH AGENT] Xin lỗi, tôi không thể hoàn thành nhiệm vụ trong số bước giới hạn.",
+                    name=RESEARCH_AGENT
+                )
+            ]
+        }
     
-    return {"messages": state.messages}
+    return {"messages": [response]}
 
-def route_supervisor_output(state: State) -> str:
-    """Determine the next node based on the supervisor's decision."""
-    return state.metadata.get("next", "supervisor")
+async def finance_agent_node(state: MultiAgentState) -> Dict[str, any]:
+    """Finance agent that handles stock data and financial tools."""
+    
+    configuration = Configuration(
+        model="openai/gpt-4o-mini", 
+        system_prompt=FINANCE_AGENT_PROMPT,
+    )
+    
+    model = load_chat_model(configuration.model).bind_tools(FINANCE_TOOLS)
+    
+    # Get the latest user message as the task
+    user_messages = [msg for msg in state.messages if isinstance(msg, HumanMessage)]
+    task = user_messages[-1].content if user_messages else "No task specified"
+    
+    system_message = FINANCE_AGENT_PROMPT.format(task=task)
+    
+    response = cast(
+        AIMessage,
+        await model.ainvoke([
+            {"role": "system", "content": system_message},
+            *state.messages
+        ])
+    )
+    
+    response.name = FINANCE_AGENT
+    
+    if state.is_last_step and response.tool_calls:
+        return {
+            "messages": [
+                AIMessage(
+                    content="[FINANCE AGENT] Xin lỗi, tôi không thể hoàn thành nhiệm vụ trong số bước giới hạn.",
+                    name=FINANCE_AGENT
+                )
+            ]
+        }
+    
+    return {"messages": [response]}
 
-# Build the multi-agent graph
-builder = StateGraph(State, input=InputState, config_schema=Configuration)
-builder.add_node("supervisor", supervisor)
-builder.add_node("search_agent", search_agent)
-builder.add_node("tools_agent", tools_agent)
+def route_after_supervisor(state: MultiAgentState) -> str:
+    """Route to the next agent based on supervisor's decision."""
+    
+    if state.task_completed:
+        return END
+    elif state.current_agent == "research_agent":
+        return RESEARCH_AGENT
+    elif state.current_agent == "finance_agent":
+        return FINANCE_AGENT
+    else:
+        return END
 
-# Define the edges
-builder.add_edge("__start__", "supervisor")
-builder.add_edge("search_agent", "supervisor")
-builder.add_edge("tools_agent", "supervisor")
+def route_after_agent(state: MultiAgentState) -> str:
+    """Route back to supervisor after agent completes its task."""
+    
+    last_message = state.messages[-1]
+    
+    # If agent used tools, continue with tool execution
+    if isinstance(last_message, AIMessage) and last_message.tool_calls:
+        return "tools"
+    
+    # Otherwise, go back to supervisor for next decision
+    return SUPERVISOR
+
+def route_after_tools(state: MultiAgentState) -> str:
+    """Route after tools execution."""
+    
+    # Determine which agent the tools belonged to based on the last AI message
+    last_ai_message = None
+    for msg in reversed(state.messages):
+        if isinstance(msg, AIMessage) and hasattr(msg, 'name'):
+            last_ai_message = msg
+            break
+    
+    if last_ai_message and last_ai_message.name == RESEARCH_AGENT:
+        return RESEARCH_AGENT
+    elif last_ai_message and last_ai_message.name == FINANCE_AGENT:
+        return FINANCE_AGENT
+    
+    # Fallback to supervisor
+    return SUPERVISOR
+
+# Build the graph directly (similar to react_agent_graph.py)
+builder = StateGraph(MultiAgentState, input=InputState, config_schema=Configuration)
+
+builder.add_node(SUPERVISOR, supervisor_node)
+builder.add_node(RESEARCH_AGENT, research_agent_node)
+builder.add_node(FINANCE_AGENT, finance_agent_node)
+builder.add_node("tools", ToolNode(RESEARCH_TOOLS + FINANCE_TOOLS))
+
+builder.add_edge("__start__", SUPERVISOR)
+
 builder.add_conditional_edges(
-    "supervisor",
-    route_supervisor_output
+    SUPERVISOR,
+    route_after_supervisor,
+    {
+        RESEARCH_AGENT: RESEARCH_AGENT,
+        FINANCE_AGENT: FINANCE_AGENT,
+        END: END
+    }
 )
 
-# Compile the graph
-multi_agent_graph = builder.compile(name="Finance News Multi-Agent")
+builder.add_conditional_edges(
+    RESEARCH_AGENT,
+    route_after_agent,
+    {
+        "tools": "tools",
+        SUPERVISOR: SUPERVISOR
+    }
+)
 
-# Function to run the multi-agent system
-async def run_multi_agent(query: str) -> List[BaseMessage]:
-    """Run the multi-agent system with a user query."""
-    input_state = InputState(messages=[HumanMessage(content=query)])
-    result = await multi_agent_graph.ainvoke(input_state)
-    return result.messages
+builder.add_conditional_edges(
+    FINANCE_AGENT,
+    route_after_agent,
+    {
+        "tools": "tools", 
+        SUPERVISOR: SUPERVISOR
+    }
+)
+
+builder.add_conditional_edges(
+    "tools",
+    route_after_tools,
+    {
+        RESEARCH_AGENT: RESEARCH_AGENT,
+        FINANCE_AGENT: FINANCE_AGENT,
+        SUPERVISOR: SUPERVISOR
+    }
+)
+
+# Compile the builder into an executable graph
+graph = builder.compile(name="Multi-Agent Finance System")
+
+async def main():
+    """Test the multi-agent system."""
+    
+    test_queries = [
+        "Tin tức mới nhất về công ty cổ phần công nghệ FPT và giá trị cổ phiếu trong ngày hôm nay",
+    ]
+    
+    for i, query in enumerate(test_queries, 1):
+        print(f"\n{'='*60}")
+        print(f"TEST CASE {i}: {query}")
+        print('='*60)
+        
+        try:
+            result = await graph.ainvoke({
+                "messages": [HumanMessage(content=query)]
+            }, config={"callbacks": [langfuse_handler]})
+            
+            print("\n=== FINAL RESULT ===")
+            if "messages" in result:
+                final_messages = result["messages"]
+                for msg in final_messages[-5:]:  # Show last 5 messages
+                    if hasattr(msg, 'name') and msg.name:
+                        print(f"[{msg.name.upper()}]: {msg.content}")
+                    else:
+                        print(f"[{msg.type.upper()}]: {msg.content}")
+            
+        except Exception as e:
+            print(f"Error processing query: {e}")
+        
+        print("\n" + "="*60)
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main()) 

@@ -19,7 +19,7 @@ from src.agents.configuration import Configuration
 from src.agents.state import InputState, State
 from src.agents.tools import TOOLS
 from src.agents.utils import load_chat_model
-
+from src.agents.prompts import REFLEXION_FIRST_RESPONDER_PROMPT, REFLEXION_REVISION_PROMPT
 
 # Load environment variables
 load_dotenv()
@@ -32,52 +32,40 @@ langfuse = Langfuse(
 
 langfuse_handler = CallbackHandler()
 
-# Reflexion prompts
-REFLEXION_ACTOR_PROMPT = """You are an expert financial news agent. Your task is to provide accurate and up-to-date information about financial markets, stocks, companies, and economic news.
+# Updated Vietnamese prompts for reflector
+REFLEXION_REFLECTOR_PROMPT = """Bạn là một chuyên gia đánh giá chất lượng phản hồi về tin tức tài chính.
 
-You have access to various tools to search for financial information. Use these tools to gather relevant data and provide comprehensive answers.
+Đánh giá phản hồi dựa trên:
+1. Tính chính xác của thông tin
+2. Mức độ liên quan đến câu hỏi của người dùng
+3. Tính đầy đủ của câu trả lời
+4. Việc sử dụng công cụ và nguồn thông tin phù hợp
+5. Tính rõ ràng và cấu trúc
 
-When searching for information:
-1. Use specific and relevant search terms
-2. Look for recent news and data
-3. Provide context and analysis when possible
-4. Cite your sources when available
+Nếu phản hồi có vấn đề, hãy đưa ra phản hồi cụ thể về:
+- Thông tin nào còn thiếu
+- Điều gì có thể được cải thiện
+- Hành động cụ thể nào nên thực hiện để có câu trả lời tốt hơn
 
-If you make any mistakes or need to correct your approach, you will be given feedback to improve your response."""
+Nếu phản hồi đã đủ tốt, chỉ cần trả lời "Phản hồi này đã đạt yêu cầu."
 
-REFLEXION_REFLECTOR_PROMPT = """You are a reflector that evaluates the quality of responses from a financial news agent. 
+Phản hồi cần đánh giá: {response}
+Câu hỏi của người dùng: {query}"""
 
-Evaluate the response based on:
-1. Accuracy of information
-2. Relevance to the user's query
-3. Completeness of the answer
-4. Use of appropriate tools and sources
-5. Clarity and organization
+REFLEXION_ACTOR_REFLECT_PROMPT = """Bạn là một trợ lý AI chuyên nghiệp về tài chính Việt Nam. Bạn đã đưa ra phản hồi trước đó nhưng nhận được góp ý để cải thiện.
 
-If the response has issues, provide specific feedback on:
-- What information is missing
-- What could be improved
-- What specific actions should be taken to provide a better answer
+Câu hỏi gốc: {query}
+Phản hồi trước đó của bạn: {previous_response}
+Góp ý cải thiện: {reflection}
 
-If the response is good enough, simply respond with "The response is satisfactory."
-
-Response to evaluate: {response}
-User query: {query}"""
-
-REFLEXION_ACTOR_REFLECT_PROMPT = """You are an expert financial news agent. You previously provided a response, but received feedback for improvement.
-
-Original query: {query}
-Your previous response: {previous_response}
-Feedback: {reflection}
-
-Based on the feedback, provide an improved response. Use the available tools to gather additional information if needed."""
+Dựa trên góp ý, hãy đưa ra phản hồi được cải thiện. Sử dụng các công cụ có sẵn để thu thập thêm thông tin nếu cần."""
 
 
 async def reflexion_actor(state: State) -> Dict[str, List[AIMessage]]:
     """Main actor that generates responses using tools"""
     configuration = Configuration(
         model="openai/gpt-4o-mini",
-        system_prompt=REFLEXION_ACTOR_PROMPT,
+        system_prompt=REFLEXION_FIRST_RESPONDER_PROMPT,
     )
 
     model = load_chat_model(configuration.model).bind_tools(TOOLS)
@@ -94,7 +82,7 @@ async def reflexion_actor(state: State) -> Dict[str, List[AIMessage]]:
             "messages": [
                 AIMessage(
                     id=response.id,
-                    content="Sorry, I could not find an answer to your question in the specified number of steps.",
+                    content="Xin lỗi, tôi không thể tìm được câu trả lời cho câu hỏi của bạn trong số bước được chỉ định.",
                 )
             ]
         }
@@ -106,7 +94,7 @@ async def reflexion_reflector(state: State) -> Dict[str, List[AIMessage]]:
     """Reflector that evaluates the actor's response"""
     configuration = Configuration(
         model="openai/gpt-4o-mini",
-        system_prompt="You are a helpful assistant that evaluates responses.",
+        system_prompt="Bạn là một trợ lý hữu ích đánh giá các phản hồi.",
     )
 
     model = load_chat_model(configuration.model)
@@ -141,7 +129,7 @@ async def reflexion_actor_reflect(state: State) -> Dict[str, List[AIMessage]]:
     """Actor that improves response based on reflection"""
     configuration = Configuration(
         model="openai/gpt-4o-mini",
-        system_prompt="You are an expert financial news agent that improves responses based on feedback.",
+        system_prompt=REFLEXION_REVISION_PROMPT,
     )
 
     model = load_chat_model(configuration.model).bind_tools(TOOLS)
@@ -176,7 +164,7 @@ async def reflexion_actor_reflect(state: State) -> Dict[str, List[AIMessage]]:
             "messages": [
                 AIMessage(
                     id=response.id,
-                    content="Sorry, I could not find an answer to your question in the specified number of steps.",
+                    content="Xin lỗi, tôi không thể tìm được câu trả lời cho câu hỏi của bạn trong số bước được chỉ định.",
                 )
             ]
         }
@@ -214,9 +202,12 @@ def route_after_reflector(state: State) -> Literal["__end__", "actor_reflect"]:
     if reflection_count >= 2:
         return "__end__"
     
-    # Check if the reflection indicates the response is satisfactory
+    # Check if the reflection indicates the response is satisfactory (Vietnamese keywords)
     reflection_content = last_message.content.lower()
-    if "satisfactory" in reflection_content or "good enough" in reflection_content:
+    if ("đạt yêu cầu" in reflection_content or 
+        "đủ tốt" in reflection_content or 
+        "thỏa mãn" in reflection_content or
+        "satisfactory" in reflection_content):
         return "__end__"
     
     return "actor_reflect"
@@ -265,7 +256,6 @@ builder.add_conditional_edges(
 )
 
 # Tool routing - tools always go back to the node that called them
-# We need to track which node called tools to route back correctly
 def route_from_tools(state: State) -> Literal["actor", "actor_reflect"]:
     """Route from tools back to the appropriate actor node"""
     # Check recent messages to see which actor node we came from

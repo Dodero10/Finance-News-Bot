@@ -5,7 +5,7 @@
       "reflection_agent": "./src/agents/reflection_agent_graph.py:graph",
       "rewoo_agent": "./src/agents/rewoo_agent_graph.py:graph",
       "reflexion_agent": "./src/agents/reflexion_agent_graph.py:graph",
-      "multi_agent": "./src/agents/multi_agent.py:multi_agent_graph"
+      "multi_agent": "./src/agents/multi_agent.py:builder"
     },
     "env": ".env"
   }
