@@ -1,0 +1,5 @@
+Agent,Total Queries,Flexible Accuracy,Strict Accuracy,Partial Accuracy,F1 Score,Precision,Recall,Over-selection Rate,Under-selection Rate
+Multi-Agent,92,0.4457,0.0761,0.9339,0.7878,0.7283,0.9339,0.2283,0.0661
+ReWOO,92,0.2935,0.2717,0.6101,0.7104,0.9257,0.6101,0.0199,0.3899
+Reflexion,92,0.2391,0.1957,0.6451,0.7296,0.9348,0.6451,0.0435,0.3549
+ReAct,92,0.2174,0.2065,0.6056,0.6960,0.8967,0.6056,0.0380,0.3944

@@ -38,7 +38,7 @@ Lịch sử giá cổ phiếu VNM từ ngày 01/04/2025 đến 30/04/2025 với 
 | 2025-04-28  | 56.31  | 56.31    | 55.53     | 55.53    | 2,670,118    |
 | 2025-04-29  | 55.53  | 55.92    | 55.24     | 55.63    | 2,560,129    |
 
-Nếu bạn cần thêm thông tin hoặc phân tích nào khác về cổ phiếu VNM, hãy cho tôi biết!","history_price, time_now"
+Nếu bạn cần thêm thông tin hoặc phân tích nào khác về cổ phiếu VNM, hãy cho tôi biết!","history_price"
 Tìm mã chứng khoán của Vinamilk.,"ERROR: Recursion limit of 25 reached without hitting a stop condition. You can increase the limit by setting the `recursion_limit` config key.
 For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/GRAPH_RECURSION_LIMIT",
 Tìm tin tức mới nhất về kết quả kinh doanh quý của Vinamilk.,"### Phân tích kết quả kinh doanh và thông tin cổ phiếu Vinamilk (VNM)
@@ -105,7 +105,7 @@ Cho tôi các thông tin nổi bật về Vietcombank về tin tức tài chính
 | 2025-05-12 | 25.90  | 26.55   | 25.85     | 26.15     | 34103088       |
 | 2025-05-13 | 26.20  | 26.20   | 25.85     | 26.15     | 22639684       |
 
-Nếu bạn cần thêm thông tin hoặc phân tích nào khác, hãy cho tôi biết!","history_price, time_now"
+Nếu bạn cần thêm thông tin hoặc phân tích nào khác, hãy cho tôi biết!","history_price"
 Cho tôi danh sách mã chứng khoán để phân tích.,"Dưới đây là một số mã chứng khoán cùng tên công ty để bạn có thể phân tích:
 
 1. **YTC** - Công ty Cổ phần Xuất nhập khẩu Y tế Thành phố Hồ Chí Minh
@@ -142,7 +142,7 @@ Tìm triển vọng thị trường chứng khoán Việt Nam năm 2025.,"### Th
 - **Khối Lượng Giao Dịch**: Khối lượng giao dịch trên VN-Index (48 triệu cổ phiếu) là khá cao, cho thấy sự quan tâm của nhà đầu tư. HNX-Index có khối lượng thấp hơn, nhưng vẫn cho thấy hoạt động giao dịch tích cực.
 
 ### Kết Luận
-Triển vọng thị trường chứng khoán Việt Nam năm 2025 đang có dấu hiệu tích cực với sức hấp dẫn ngày càng tăng từ các nhà đầu tư, hỗ trợ bởi nền tảng kinh tế vĩ mô cải thiện và sự gia tăng lòng tin từ chính sách của nhà nước. Các chỉ số chứng khoán hiện tại cho thấy, thị trường đang trong xu hướng tăng trưởng. Nhà đầu tư có thể xem xét các cơ hội đầu tư trong bối cảnh này.","time_now, listing_symbol, retrival_vector_db, search_web, history_price"
+Triển vọng thị trường chứng khoán Việt Nam năm 2025 đang có dấu hiệu tích cực với sức hấp dẫn ngày càng tăng từ các nhà đầu tư, hỗ trợ bởi nền tảng kinh tế vĩ mô cải thiện và sự gia tăng lòng tin từ chính sách của nhà nước. Các chỉ số chứng khoán hiện tại cho thấy, thị trường đang trong xu hướng tăng trưởng. Nhà đầu tư có thể xem xét các cơ hội đầu tư trong bối cảnh này.","listing_symbol, retrival_vector_db, search_web, history_price"
 Tìm bài viết về xu hướng lạm phát tại Việt Nam.,"Dưới đây là thông tin về xu hướng lạm phát tại Việt Nam trong thời gian gần đây:
 
 ### 1. **Xu hướng lạm phát hiện tại**
@@ -175,7 +175,7 @@ Xu hướng lạm phát tại Việt Nam hiện nay cho thấy sự kiểm soát
 - **Xu Hướng Giá**: Có xu hướng giảm dần từ đầu tháng 3, với mức giá mở cửa cao nhất vào đầu tháng và giảm xuống mức thấp vào cuối tháng.
 - **Khối Lượng Giao Dịch**: Khối lượng giao dịch cũng có sự thay đổi lớn, đạt mức cao nhất vào tuần thứ hai (16/03/2025) với gần 37 triệu cổ phiếu được giao dịch.
 
-Nếu bạn cần thêm thông tin hay phân tích khác, hãy cho tôi biết!","history_price, time_now, listing_symbol"
+Nếu bạn cần thêm thông tin hay phân tích khác, hãy cho tôi biết!","history_price, listing_symbol"
 Tìm lịch sử giá VIC giữa 15/04/2025 và 20/04/2025 với tần suất hàng ngày.,"Dưới đây là lịch sử giá cổ phiếu VIC trong khoảng thời gian từ 15/04/2025 đến 20/04/2025 với tần suất hàng ngày:
 
 | Ngày       | Giá Mở | Giá Cao | Giá Thấp | Giá Đóng | Khối Lượng      |
@@ -190,7 +190,7 @@ Tìm lịch sử giá VIC giữa 15/04/2025 và 20/04/2025 với tần suất h�
 - **Thay đổi so với phiên trước**: Giá đã giảm 4.9% so với phiên trước đó (đóng cửa 71.0).
 - **Khối lượng giao dịch**: Khối lượng giao dịch trong ngày 18/04/2025 là 10,565,700 cổ phiếu.
 
-Nếu bạn cần thêm thông tin nào khác, hãy cho tôi biết!","history_price, time_now, listing_symbol"
+Nếu bạn cần thêm thông tin nào khác, hãy cho tôi biết!","history_price, listing_symbol"
 Danh sách tất cả mã chứng khoán trong cơ sở dữ liệu.,"Dưới đây là danh sách một số mã chứng khoán trong cơ sở dữ liệu:
 
 1. YTC - Công ty Cổ phần Xuất nhập khẩu Y tế Thành phố Hồ Chí Minh
@@ -263,7 +263,7 @@ Cho tôi giờ hiện tại tại Hà Nội.,"[SUPERVISOR] Routing to FINISH. Re
 | 2025-01-10 14:30:00 | 23.70   | 23.75   | 23.70   | 23.70   | 3,100        |
 | 2025-01-10 14:45:00 | 23.70   | 23.70   | 23.70   | 23.70   | 1,331,400    |
 
-Lưu ý rằng chỉ hiển thị một số hàng đầu và cuối trong tập dữ liệu. Nếu bạn cần thêm thông tin hoặc phân tích cụ thể hơn, hãy cho tôi biết!","history_price, time_now"
+Lưu ý rằng chỉ hiển thị một số hàng đầu và cuối trong tập dữ liệu. Nếu bạn cần thêm thông tin hoặc phân tích cụ thể hơn, hãy cho tôi biết!","history_price"
 Tìm báo cáo lạm phát tháng 4/2025.,"Dưới đây là thông tin liên quan đến báo cáo lạm phát tháng 4/2025 mà tôi đã tìm kiếm được:
 
 1. **Báo cáo của Cục Thống kê**:
@@ -326,7 +326,7 @@ Sự chú ý đến ESG đang tăng lên tại Việt Nam, với nhiều doanh n
 | 27/02/2025 | 63.48  | 63.81    | 62.88     | 62.88    | 5,035,025    |
 | 28/02/2025 | 63.01  | 63.01    | 62.41     | 62.41    | 2,073,877    |
 
-Nếu bạn cần thêm thông tin hoặc phân tích nào khác, hãy cho tôi biết!","history_price, time_now"
+Nếu bạn cần thêm thông tin hoặc phân tích nào khác, hãy cho tôi biết!","history_price"
 Triển vọng giá cổ phiếu Techcombank.,"### Triển vọng giá cổ phiếu Techcombank (TCB) hôm nay (26/05/2025)
 
 1. **Giá hiện tại**:
