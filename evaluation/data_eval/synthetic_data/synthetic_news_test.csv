@@ -1,0 +1,2 @@
+query,difficulty,tools
+Tìm tin tức mới nhất về kết quả kinh doanh quý của Vinamilk.,khó,"['time_now','retrival_vector_db','search_web', 'listing_symbol', 'history_price']"
