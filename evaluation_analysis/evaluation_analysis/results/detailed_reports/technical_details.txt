@@ -1,0 +1,98 @@
+🔧 BÁO CÁO CHI TIẾT KỸ THUẬT
+==================================================
+
+📊 PHƯƠNG PHÁP TÍNH TOÁN:
+------------------------------
+1. ACCURACY:
+   - Công thức: (Số câu có failed_tools_count = 0) / Tổng số câu
+   - Ý nghĩa: Tỉ lệ agent gọi tools hoàn toàn đúng, không có lỗi
+
+2. F1 SCORE:
+   - Dựa trên ground truth từ synthetic_news.csv
+   - TP: Tools được gọi đúng và cần thiết
+   - FP: Tools được gọi nhưng không cần thiết (thừa)
+   - FN: Tools cần thiết nhưng không được gọi (thiếu)
+   - Precision = TP / (TP + FP)
+   - Recall = TP / (TP + FN)
+   - F1 = 2 * (Precision * Recall) / (Precision + Recall)
+
+3. TOOL FAIL RATE:
+   - Công thức: (Số câu có failed_tools_count > 0) / Tổng số câu có gọi tools
+   - Ý nghĩa: Tỉ lệ lỗi khi agent thực thi tools
+
+📈 THỐNG KÊ CHI TIẾT:
+------------------------------
+
+🤖 React:
+   📝 Câu dễ:
+      - Số mẫu: 37
+      - Accuracy: 1.0000 (100.00%)
+      - F1 Score: 0.6337
+      - Precision: 0.9697
+      - Recall: 0.4706
+      - Tool Fail Rate: 0.0000 (0.00%)
+   📝 Câu khó:
+      - Số mẫu: 55
+      - Accuracy: 0.9818 (98.18%)
+      - F1 Score: 0.7257
+      - Precision: 0.9247
+      - Recall: 0.5972
+      - Tool Fail Rate: 0.0185 (1.85%)
+
+🤖 ReWOO:
+   📝 Câu dễ:
+      - Số mẫu: 37
+      - Accuracy: 1.0000 (100.00%)
+      - F1 Score: 0.7636
+      - Precision: 1.0000
+      - Recall: 0.6176
+      - Tool Fail Rate: 0.0000 (0.00%)
+   📝 Câu khó:
+      - Số mẫu: 55
+      - Accuracy: 0.9455 (94.55%)
+      - F1 Score: 0.7080
+      - Precision: 0.9756
+      - Recall: 0.5556
+      - Tool Fail Rate: 0.0189 (1.89%)
+
+🤖 Reflexion:
+   📝 Câu dễ:
+      - Số mẫu: 37
+      - Accuracy: 1.0000 (100.00%)
+      - F1 Score: 0.7222
+      - Precision: 0.9750
+      - Recall: 0.5735
+      - Tool Fail Rate: 0.0000 (0.00%)
+   📝 Câu khó:
+      - Số mẫu: 55
+      - Accuracy: 0.9818 (98.18%)
+      - F1 Score: 0.7592
+      - Precision: 0.9208
+      - Recall: 0.6458
+      - Tool Fail Rate: 0.0182 (1.82%)
+
+🤖 Multi-Agent:
+   📝 Câu dễ:
+      - Số mẫu: 37
+      - Accuracy: 0.9189 (91.89%)
+      - F1 Score: 0.7907
+      - Precision: 0.6538
+      - Recall: 1.0000
+      - Tool Fail Rate: 0.0811 (8.11%)
+   📝 Câu khó:
+      - Số mẫu: 55
+      - Accuracy: 0.8727 (87.27%)
+      - F1 Score: 0.7409
+      - Precision: 0.6186
+      - Recall: 0.9236
+      - Tool Fail Rate: 0.1273 (12.73%)
+
+📋 GROUND TRUTH INFORMATION:
+------------------------------
+Số lượng ground truth queries: 92
+Tools được sử dụng trong ground truth:
+   - history_price
+   - listing_symbol
+   - retrival_vector_db
+   - search_web
+   - time_now

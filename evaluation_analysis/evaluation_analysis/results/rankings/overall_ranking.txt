@@ -1,0 +1,23 @@
+🏆 XẾP HẠNG TỔNG THỂ
+==============================
+
+1. Reflexion: 0.9891
+   - Accuracy: 0.9909
+   - F1 Score: 0.7407
+   - Tool Success: 0.9909
+
+2. ReWOO: 0.9807
+   - Accuracy: 0.9727
+   - F1 Score: 0.7358
+   - Tool Success: 0.9906
+
+3. React: 0.9625
+   - Accuracy: 0.9909
+   - F1 Score: 0.6797
+   - Tool Success: 0.9907
+
+4. Multi-Agent: 0.9360
+   - Accuracy: 0.8958
+   - F1 Score: 0.7658
+   - Tool Success: 0.8958
+

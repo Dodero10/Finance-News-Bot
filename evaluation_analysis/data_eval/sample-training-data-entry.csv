@@ -1,0 +1,2 @@
+id,query,answers,tools
+0,Where can I find live giveaways for beta access and games?,"[{""name"": ""live_giveaways_by_type"", ""arguments"": {""type"": ""beta""}}, {""name"": ""live_giveaways_by_type"", ""arguments"": {""type"": ""game""}}]","[{""name"": ""live_giveaways_by_type"", ""description"": ""Retrieve live giveaways from the GamerPower API based on the specified type."", ""parameters"": {""type"": {""description"": ""The type of giveaways to retrieve (e.g., game, loot, beta)."", ""type"": ""str"", ""default"": ""game""}}}]"
