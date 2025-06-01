@@ -12,6 +12,7 @@ Phân tích và so sánh hiệu suất của 4 kiến trúc agent khác nhau:
 ```
 evaluation_analysis/
 ├── README.md                           # File hướng dẫn này
+├── PRECISION_RECALL_INSIGHTS.md        # 🆕 Phân tích chi tiết Precision & Recall
 ├── run_comparison_analysis.py          # Script chính để chạy analysis
 ├── utils/
 │   └── analysis_helper.py              # Các hàm hỗ trợ analysis
@@ -24,12 +25,15 @@ evaluation_analysis/
     ├── visualizations/                 # Tất cả biểu đồ
     │   ├── accuracy_comparison.png     # So sánh accuracy
     │   ├── f1_score_comparison.png     # So sánh F1 score
+    │   ├── precision_recall_analysis.png # 🆕 Biểu đồ riêng Precision & Recall
     │   ├── tool_metrics_heatmap.png    # Heatmap tool performance
     │   ├── difficulty_analysis.png     # Phân tích theo độ khó
-    │   └── overall_dashboard.png       # Dashboard tổng quan
+    │   └── overall_dashboard.png       # Dashboard tổng quan (cập nhật)
     ├── rankings/                       # Xếp hạng và so sánh
     │   ├── accuracy_ranking.txt        # Xếp hạng accuracy
     │   ├── f1_score_ranking.txt        # Xếp hạng F1 score
+    │   ├── precision_ranking.txt       # 🆕 Xếp hạng Precision riêng
+    │   ├── recall_ranking.txt          # 🆕 Xếp hạng Recall riêng
     │   ├── tool_performance_ranking.txt # Xếp hạng tool performance
     │   └── overall_ranking.txt         # Xếp hạng tổng thể
     ├── detailed_reports/               # Báo cáo chi tiết
@@ -61,14 +65,17 @@ python run_comparison_analysis.py --metrics-only
 ## 📊 Metrics được đánh giá
 
 ### 1. **Accuracy**
-- **Định nghĩa**: Tỉ lệ agent gọi tools hoàn toàn đúng (không có failed tools)
-- **Công thức**: `(Số câu có failed_tools_count = 0) / Tổng số câu`
-- **Giải thích**: Đo độ chính xác trong việc sử dụng tools
+- **Định nghĩa**: Tỉ lệ agent gọi tools hoàn toàn đúng theo ground truth
+- **Công thức**: `(Số câu gọi đúng hoàn toàn như ground truth) / Tổng số câu`
+- **Giải thích**: Agent gọi đúng tất cả tools cần thiết và không gọi thừa
+- **Ground Truth**: Dựa trên `synthetic_news.csv`
 
-### 2. **F1 Score** 
-- **Định nghĩa**: Điểm cân bằng giữa Precision và Recall trong việc gọi tools
-- **Công thức**: `2 * (Precision * Recall) / (Precision + Recall)`
+### 2. **F1 Score, Precision & Recall** 
+- **Precision**: `|Texp ∩ Tact| / |Tact|` - Tỉ lệ tool được chọn là cần thiết
+- **Recall**: `|Texp ∩ Tact| / |Texp|` - Tỉ lệ tool cần thiết đã được tìm thấy
+- **F1 Score**: `2 * (Precision * Recall) / (Precision + Recall)` - Cân bằng P&R
 - **Ground Truth**: Sử dụng dữ liệu từ `synthetic_news.csv`
+- **Giải thích**: Đo hành vi chọn tool - agent có xu hướng gọi thừa hay bỏ sót
 
 ### 3. **Tool Performance**
 - **Tool Precision**: Tỉ lệ tools được gọi đúng trong tổng số tools được gọi

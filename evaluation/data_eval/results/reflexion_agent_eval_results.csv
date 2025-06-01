@@ -1,5 +1,5 @@
-input,output,tools,failed_tools,failed_tools_count
-Cho tôi danh sách các công ty và mã chứng khoán của họ mà bạn biết,"Dưới đây là một số công ty cùng mã chứng khoán của họ:
+input,difficulty,output,tools,failed_tools,failed_tools_count
+Cho tôi danh sách các công ty và mã chứng khoán của họ mà bạn biết,dễ,"Dưới đây là một số công ty cùng mã chứng khoán của họ:
 
 1. **YTC** - Công ty Cổ phần Xuất nhập khẩu Y tế Thành phố Hồ Chí Minh
 2. **YEG** - Công ty Cổ phần Tập đoàn Yeah1
@@ -13,7 +13,7 @@ Cho tôi danh sách các công ty và mã chứng khoán của họ mà bạn bi
 10. **A32** - Công ty Cổ phần 32
 
 Danh sách này chỉ là một phần trong tổng số 1712 công ty đang được niêm yết, nếu bạn cần thông tin chi tiết hơn hoặc danh sách mở rộng, xin vui lòng cho tôi biết!",listing_symbol,,0
-Lịch sử giá cổ phiếu VNM từ ngày 01/04/2025 đến 30/04/2025 với tần suất hàng ngày.,"Dưới đây là lịch sử giá cổ phiếu VNM từ ngày 01/04/2025 đến 30/04/2025 với tần suất hàng ngày:
+Lịch sử giá cổ phiếu VNM từ ngày 01/04/2025 đến 30/04/2025 với tần suất hàng ngày.,dễ,"Dưới đây là lịch sử giá cổ phiếu VNM từ ngày 01/04/2025 đến 30/04/2025 với tần suất hàng ngày:
 
 | Ngày       | Mở   | Cao   | Thấp  | Đóng  | Khối lượng   |
 |------------|-------|-------|-------|-------|---------------|
@@ -39,7 +39,7 @@ Lịch sử giá cổ phiếu VNM từ ngày 01/04/2025 đến 30/04/2025 với 
 | 2025-04-29 | 55.53 | 55.92 | 55.24 | 55.63 | 2,560,129     |
 
 Nếu bạn cần thêm thông tin nào khác, hãy cho tôi biết!",history_price,,0
-Tìm mã chứng khoán của Vinamilk.,"Mã chứng khoán của Công ty Cổ phần Sữa Việt Nam (Vinamilk) là **VNM**. Cổ phiếu này được niêm yết trên Sàn Giao dịch Chứng khoán Thành phố Hồ Chí Minh (HOSE). 
+Tìm mã chứng khoán của Vinamilk.,dễ,"Mã chứng khoán của Công ty Cổ phần Sữa Việt Nam (Vinamilk) là **VNM**. Cổ phiếu này được niêm yết trên Sàn Giao dịch Chứng khoán Thành phố Hồ Chí Minh (HOSE). 
 
 Một số thông tin bổ sung về Vinamilk:
 - Ngành nghề: Thực phẩm, đồ uống và thuốc lá.
@@ -57,7 +57,7 @@ Bạn có thể tham khảo thêm thông tin chi tiết từ các nguồn sau:
 ### Truy vấn tìm kiếm bổ sung:
 1. Giá cổ phiếu VNM trong tháng qua.
 2. Diễn biến giá cổ phiếu VNM trong năm 2023.","listing_symbol, search_web",,0
-Tìm tin tức mới nhất về kết quả kinh doanh quý của Vinamilk.,"Theo các nguồn tin tức mới nhất về kết quả kinh doanh quý 1 năm 2025 của Vinamilk (Công ty CP Sữa Việt Nam), công ty đã công bố một số thông tin quan trọng như sau:
+Tìm tin tức mới nhất về kết quả kinh doanh quý của Vinamilk.,khó,"Theo các nguồn tin tức mới nhất về kết quả kinh doanh quý 1 năm 2025 của Vinamilk (Công ty CP Sữa Việt Nam), công ty đã công bố một số thông tin quan trọng như sau:
 
 1. **Doanh thu Quý 1/2025**: Vinamilk ghi nhận doanh thu thuần đạt 12.935 tỷ đồng, hoàn thành 20,1% kế hoạch cả năm. Trong đó, doanh thu từ thị trường trong nước là 10.011 tỷ đồng (chiếm 77%) và doanh thu từ nước ngoài là 2.924 tỷ đồng (chiếm 23%) [Xem thêm](https://tuoitrethudo.vn/vinamilk-tung-moi-gan-20-san-pham-trong-quy-dau-nam-2025-276900.html).
 
@@ -75,7 +75,7 @@ Tìm tin tức mới nhất về kết quả kinh doanh quý của Vinamilk.,"Th
 3. ""Chiến lược phát triển sản phẩm của Vinamilk 2025""
 
 Nếu bạn cần thông tin nào khác liên quan đến Vinamilk, hãy cho tôi biết!","retrival_vector_db, search_web",,0
-Cho tôi các thông tin nổi bật về Vietcombank về tin tức tài chính.,"Dưới đây là một số thông tin nổi bật về Vietcombank liên quan đến tin tức tài chính trong thời gian qua:
+Cho tôi các thông tin nổi bật về Vietcombank về tin tức tài chính.,khó,"Dưới đây là một số thông tin nổi bật về Vietcombank liên quan đến tin tức tài chính trong thời gian qua:
 
 1. **Hiệu suất Đầu Tư Trái Phiếu**:
    - Các quỹ đầu tư trái phiếu đã ghi nhận hiệu suất ổn định trong năm 2024, với nhiều quỹ như Quỹ Đầu tư trái phiếu Techcom (TCBF) có hiệu suất lên đến 13,7%, cao hơn so với lãi suất tiết kiệm của Vietcombank (4,6%/năm). Điều này cho thấy rằng quỹ đầu tư trái phiếu vẫn là một kênh an toàn với khả năng sinh lợi tốt trong bối cảnh thị trường.
@@ -95,7 +95,7 @@ Cho tôi các thông tin nổi bật về Vietcombank về tin tức tài chính
 FiiTrade đã lưu ý rằng năm 2024 là một năm nổi bật cho các quỹ trái phiếu với dòng tiền dương trở lại và hiệu suất tài chính ổn định.
 
 Nếu bạn cần thêm thông tin chi tiết về một khía cạnh nào đó, hãy cho tôi biết!",retrival_vector_db,,0
-"Lịch sử giá cổ phiếu HPG từ 01/05/2025 đến 15/05/2025, nguồn TCBS, tần suất hàng ngày.","Dưới đây là dữ liệu lịch sử giá cổ phiếu Hòa Phát (HPG) từ ngày 01/05/2025 đến 15/05/2025, với thông tin hàng ngày từ nguồn TCBS:
+"Lịch sử giá cổ phiếu HPG từ 01/05/2025 đến 15/05/2025, nguồn TCBS, tần suất hàng ngày.",dễ,"Dưới đây là dữ liệu lịch sử giá cổ phiếu Hòa Phát (HPG) từ ngày 01/05/2025 đến 15/05/2025, với thông tin hàng ngày từ nguồn TCBS:
 
 | Ngày       | Mở   | Cao   | Thấp  | Đóng  | Khối lượng   |
 |------------|------|-------|-------|-------|---------------|
@@ -113,7 +113,7 @@ Nếu bạn cần thêm thông tin chi tiết về một khía cạnh nào đó,
 | 12/05/2025 | 26.20| 26.20 | 25.85 | 26.15 | 22,639,684    |
 
 Nếu bạn cần thêm thông tin chi tiết hoặc có câu hỏi khác, hãy cho tôi biết!",history_price,,0
-Cho tôi danh sách mã chứng khoán để phân tích.,"Dưới đây là danh sách một số mã chứng khoán để bạn có thể phân tích:
+Cho tôi danh sách mã chứng khoán để phân tích.,dễ,"Dưới đây là danh sách một số mã chứng khoán để bạn có thể phân tích:
 
 1. **YTC** - Công ty Cổ phần Xuất nhập khẩu Y tế Thành phố Hồ Chí Minh
 2. **YEG** - Công ty Cổ phần Tập đoàn Yeah1
@@ -127,7 +127,7 @@ Cho tôi danh sách mã chứng khoán để phân tích.,"Dưới đây là dan
 10. **A32** - Công ty Cổ phần 32
 
 Danh sách này chỉ là một phần của tổng số 1712 mã chứng khoán có sẵn. Nếu bạn cần thông tin chi tiết hơn về một mã cụ thể hay muốn phân tích một nhóm mã nào đó, hãy cho tôi biết!",listing_symbol,,0
-Tìm triển vọng thị trường chứng khoán Việt Nam năm 2025.,"Triển vọng thị trường chứng khoán Việt Nam trong năm 2025 được nhiều chuyên gia dự đoán sẽ có sự phát triển mạnh mẽ với nhiều yếu tố tích cực từ môi trường kinh tế vĩ mô, các chính sách hỗ trợ từ chính phủ, cùng sự phục hồi từ các lĩnh vực trong nền kinh tế.
+Tìm triển vọng thị trường chứng khoán Việt Nam năm 2025.,khó,"Triển vọng thị trường chứng khoán Việt Nam trong năm 2025 được nhiều chuyên gia dự đoán sẽ có sự phát triển mạnh mẽ với nhiều yếu tố tích cực từ môi trường kinh tế vĩ mô, các chính sách hỗ trợ từ chính phủ, cùng sự phục hồi từ các lĩnh vực trong nền kinh tế.
 
 1. **Tăng trưởng GDP**: Dự báo tăng trưởng GDP của Việt Nam trong năm 2025 sẽ đạt khoảng 7,2%, vượt xa mục tiêu đặt ra. Điều này sẽ tạo điều kiện thuận lợi cho sự phát triển của thị trường chứng khoán, giúp tăng cường niềm tin của nhà đầu tư.
 
@@ -154,7 +154,7 @@ Tuy nhiên, bên cạnh những yếu tố tích cực, thị trường cũng ph
 ### Truy vấn tìm kiếm bổ sung:
 - Thông tin chi tiết về các cổ phiếu tiềm năng trong năm 2025 trên thị trường chứng khoán Việt Nam.
 - Cập nhật các chỉ số kinh tế chính ảnh hưởng đến thị trường chứng khoán Việt Nam.","retrival_vector_db, search_web",,0
-Tìm bài viết về xu hướng lạm phát tại Việt Nam.,"Dưới đây là một số bài viết liên quan đến xu hướng lạm phát tại Việt Nam, cùng với các thông tin chi tiết về thị trường trái phiếu doanh nghiệp, mà có thể liên quan đến điểm quan trọng của lạm phát trong bối cảnh kinh tế hiện tại:
+Tìm bài viết về xu hướng lạm phát tại Việt Nam.,khó,"Dưới đây là một số bài viết liên quan đến xu hướng lạm phát tại Việt Nam, cùng với các thông tin chi tiết về thị trường trái phiếu doanh nghiệp, mà có thể liên quan đến điểm quan trọng của lạm phát trong bối cảnh kinh tế hiện tại:
 
 1. **""Thị trường trái phiếu doanh nghiệp “khát” tay chơi lớn""**
    - **Ngày xuất bản:** 14/03/2025
@@ -177,7 +177,7 @@ Tìm bài viết về xu hướng lạm phát tại Việt Nam.,"Dưới đây l
   
 ### Truy vấn tìm kiếm bổ sung
 - Tìm kiếm thông tin về chỉ số lạm phát hiện tại tại Việt Nam và dự báo về lạm phát trong năm 2025.",retrival_vector_db,,0
-"Lịch sử giá cổ phiếu FPT từ 01/03/2025 đến 31/03/2025, tần suất tuần.","Dưới đây là lịch sử giá cổ phiếu FPT từ 01/03/2025 đến 31/03/2025 với tần suất theo tuần:
+"Lịch sử giá cổ phiếu FPT từ 01/03/2025 đến 31/03/2025, tần suất tuần.",dễ,"Dưới đây là lịch sử giá cổ phiếu FPT từ 01/03/2025 đến 31/03/2025 với tần suất theo tuần:
 
 | Ngày        | Giá mở | Giá cao | Giá thấp | Giá đóng | Khối lượng     |
 |-------------|--------|---------|----------|----------|-----------------|
@@ -194,7 +194,7 @@ Tìm bài viết về xu hướng lạm phát tại Việt Nam.,"Dưới đây l
 - Khối lượng là tổng số cổ phiếu được giao dịch trong tuần đó.
 
 Nếu bạn cần thêm thông tin chi tiết hoặc phân tích khác, hãy cho tôi biết!",history_price,,0
-Tìm lịch sử giá VIC giữa 15/04/2025 và 20/04/2025 với tần suất hàng ngày.,"Dưới đây là lịch sử giá cổ phiếu VIC từ ngày 15/04/2025 đến ngày 20/04/2025 với tần suất hàng ngày:
+Tìm lịch sử giá VIC giữa 15/04/2025 và 20/04/2025 với tần suất hàng ngày.,dễ,"Dưới đây là lịch sử giá cổ phiếu VIC từ ngày 15/04/2025 đến ngày 20/04/2025 với tần suất hàng ngày:
 
 | Ngày       | Mở cửa | Cao nhất | Thấp nhất | Đóng cửa | Khối lượng    |
 |------------|--------|----------|-----------|----------|----------------|
@@ -204,7 +204,7 @@ Tìm lịch sử giá VIC giữa 15/04/2025 và 20/04/2025 với tần suất h�
 | 18/04/2025 | 71.8   | 71.8     | 66.1      | 66.1     | 10,565,700     |
 
 Không có dữ liệu cho ngày 19/04/2025 và 20/04/2025, có thể do ngày này là ngày nghỉ hoặc không có giao dịch nào diễn ra. Nếu bạn cần thêm thông tin chi tiết, hãy cho tôi biết!",history_price,,0
-Danh sách tất cả mã chứng khoán trong cơ sở dữ liệu.,"Dưới đây là một phần danh sách các mã chứng khoán và tên công ty trong cơ sở dữ liệu:
+Danh sách tất cả mã chứng khoán trong cơ sở dữ liệu.,dễ,"Dưới đây là một phần danh sách các mã chứng khoán và tên công ty trong cơ sở dữ liệu:
 
 1. YTC - Công ty Cổ phần Xuất nhập khẩu Y tế Thành phố Hồ Chí Minh
 2. YEG - Công ty Cổ phần Tập đoàn Yeah1
@@ -218,7 +218,7 @@ Danh sách tất cả mã chứng khoán trong cơ sở dữ liệu.,"Dưới đ
 10. A32 - Công ty Cổ phần 32
 
 Danh sách này còn rất nhiều mã khác, tổng cộng có 1712 mã chứng khoán. Nếu bạn cần thông tin cụ thể hơn về một mã chứng khoán nào đó, vui lòng cho tôi biết!",listing_symbol,,0
-Tìm thay đổi quy định trên thị trường chứng khoán Việt Nam gần đây.,"Gần đây, có một số thay đổi quan trọng trong quy định trên thị trường chứng khoán Việt Nam, đặc biệt là đối với thị trường trái phiếu doanh nghiệp. Dưới đây là những điểm nổi bật:
+Tìm thay đổi quy định trên thị trường chứng khoán Việt Nam gần đây.,khó,"Gần đây, có một số thay đổi quan trọng trong quy định trên thị trường chứng khoán Việt Nam, đặc biệt là đối với thị trường trái phiếu doanh nghiệp. Dưới đây là những điểm nổi bật:
 
 1. **Sửa đổi Luật Chứng khoán**: Luật Chứng khoán sửa đổi sẽ có hiệu lực từ ngày 01/01/2025 và sẽ đưa ra những yêu cầu chặt chẽ hơn về hoạt động phát hành và đầu tư trái phiếu doanh nghiệp. Điều này bao gồm việc thúc đẩy sử dụng dịch vụ xếp hạng tín nhiệm để cải thiện khả năng cảnh báo rủi ro đầu tư, được kỳ vọng sẽ nâng cao chất lượng và chiều sâu của thị trường trái phiếu doanh nghiệp.
 
@@ -238,7 +238,7 @@ Những thông tin này được hỗ trợ bởi phân tích từ các chuyên 
   
 ### Truy vấn tìm kiếm bổ sung
 - Tìm kiếm thêm thông tin về ""tác động của Quy định Luật Chứng khoán sửa đổi đến hoạt động phát hành trái phiếu doanh nghiệp"".",retrival_vector_db,,0
-Các tin tức về phát hành trái phiếu doanh nghiệp mới nhất.,"Dưới đây là một số tin tức mới nhất liên quan đến việc phát hành trái phiếu doanh nghiệp tại Việt Nam:
+Các tin tức về phát hành trái phiếu doanh nghiệp mới nhất.,khó,"Dưới đây là một số tin tức mới nhất liên quan đến việc phát hành trái phiếu doanh nghiệp tại Việt Nam:
 
 1. **Tin tức 1 (16/03/2025)**: Trong tháng 2/2025, đã có 2 đợt phát hành trái phiếu riêng lẻ thành công với tổng giá trị 2.100 tỷ đồng. Tuy nhiên, thị trường đã chứng kiến sự vắng bóng của hai ngành chủ chốt là bất động sản và ngân hàng, trong khi ngành sản xuất gia tăng phát hành. Giá trị giao dịch trái phiếu toàn thị trường đạt 73.490 tỷ đồng, với giá trị giao dịch bình quân mỗi phiên là 3.674 tỷ đồng. [Đọc thêm](https://www.tinnhanhchungkhoan.vn/van-co-2-dot-phat-hanh-trai-phieu-doanh-nghiep-rieng-le-trong-thang-22025-post365440.html)
 
@@ -258,8 +258,8 @@ Các tin tức về phát hành trái phiếu doanh nghiệp mới nhất.,"Dư�
 - Chi tiết về các doanh nghiệp phát hành trái phiếu trong tháng 2/2025.
 - Thông tin về tỷ lệ lãi suất và kỳ hạn của các trái phiếu doanh nghiệp phát hành gần đây.
 - Các chính sách mới từ chính phủ liên quan đến trái phiếu doanh nghiệp.",retrival_vector_db,,0
-Cho tôi giờ hiện tại tại Hà Nội.,Giờ hiện tại tại Hà Nội là 09:14:47 vào ngày 31 tháng 5 năm 2025.,time_now,,0
-"Lịch sử giá SSI từ 01/01/2025 đến 10/01/2025, tần suất 15 phút.","Dưới đây là lịch sử giá cổ phiếu SSI từ ngày 01/01/2025 đến ngày 10/01/2025 với tần suất 15 phút:
+Cho tôi giờ hiện tại tại Hà Nội.,dễ,Giờ hiện tại tại Hà Nội là 09:14:47 vào ngày 31 tháng 5 năm 2025.,time_now,,0
+"Lịch sử giá SSI từ 01/01/2025 đến 10/01/2025, tần suất 15 phút.",khó,"Dưới đây là lịch sử giá cổ phiếu SSI từ ngày 01/01/2025 đến ngày 10/01/2025 với tần suất 15 phút:
 
 | Thời gian             | Mở   | Cao   | Thấp  | Đóng  | Khối lượng   |
 |-----------------------|------|-------|-------|-------|---------------|
@@ -284,7 +284,7 @@ Trong khoảng thời gian này, giá cổ phiếu SSI đã có một số biế
 ### Truy vấn tìm kiếm bổ sung:
 1. Các yếu tố ảnh hưởng tới giá cổ phiếu SSI trong khoảng thời gian này?
 2. Biến động giá SSI có tương quan với xu hướng chung của thị trường không?",history_price,,0
-Tìm báo cáo lạm phát tháng 4/2025.,"Báo cáo lạm phát tháng 4/2025 cho thấy chỉ số giá tiêu dùng (CPI) toàn phần tăng 3,12% so với cùng kỳ năm trước, trong khi lạm phát cơ bản tăng 3,14%. Dưới đây là một số điểm chính từ báo cáo:
+Tìm báo cáo lạm phát tháng 4/2025.,khó,"Báo cáo lạm phát tháng 4/2025 cho thấy chỉ số giá tiêu dùng (CPI) toàn phần tăng 3,12% so với cùng kỳ năm trước, trong khi lạm phát cơ bản tăng 3,14%. Dưới đây là một số điểm chính từ báo cáo:
 
 1. **Chỉ số giá tiêu dùng**:
    - CPI tháng 4/2025 tăng 0,07% so với tháng 3.
@@ -308,7 +308,7 @@ Bạn có thể xem thêm chi tiết trong bài viết từ các nguồn sau:
 - **Superfluous**: Có thể loại bỏ một số thông tin lặp lại hoặc không cần thiết để làm giảm độ dài đoạn văn.
   
 Tôi sẽ tìm kiếm thêm thông tin cụ thể hơn về từng nhóm hàng hóa để bổ sung cho câu trả lời này.",search_web,,0
-Tin tức ESG tại Việt Nam.,"Dưới đây là những thông tin tổng hợp về tình hình ESG (Environmental, Social, and Governance) tại Việt Nam, đặc biệt liên quan đến thị trường trái phiếu doanh nghiệp:
+Tin tức ESG tại Việt Nam.,khó,"Dưới đây là những thông tin tổng hợp về tình hình ESG (Environmental, Social, and Governance) tại Việt Nam, đặc biệt liên quan đến thị trường trái phiếu doanh nghiệp:
 
 1. **Tham gia của các nhà đầu tư**:
    - Tại nhiều quốc gia phát triển, các nhà đầu tư tổ chức không phải là ngân hàng chiếm khoảng 40-50% thị trường trái phiếu doanh nghiệp. Tuy nhiên, tại Việt Nam, tỷ lệ này chỉ đạt 10-15% trong khi các quỹ bảo hiểm nhân thọ và quỹ hưu trí đang nắm giữ tới 90 tỷ USD tổng tài sản [Nguồn](https://www.tinnhanhchungkhoan.vn/thi-truong-trai-phieu-doanh-nghiep-khat-tay-choi-lon-post365320.html).
@@ -332,7 +332,7 @@ Tin tức ESG tại Việt Nam.,"Dưới đây là những thông tin tổng h�
 **Truy vấn tìm kiếm bổ sung**:
 - Thông tin về các chính sách ESG cụ thể tại Việt Nam.
 - Ví dụ về một số công ty áp dụng tiêu chí ESG thành công tại Việt Nam.",retrival_vector_db,,0
-"Lịch sử giá cổ phiếu VCB từ 01/02/2025 đến 28/02/2025, nguồn VCI.","Dưới đây là lịch sử giá cổ phiếu VCB (Ngân hàng Vietcombank) từ ngày 01/02/2025 đến 28/02/2025, nguồn VCI:
+"Lịch sử giá cổ phiếu VCB từ 01/02/2025 đến 28/02/2025, nguồn VCI.",dễ,"Dưới đây là lịch sử giá cổ phiếu VCB (Ngân hàng Vietcombank) từ ngày 01/02/2025 đến 28/02/2025, nguồn VCI:
 
 | Ngày       | Mở cửa | Cao nhất | Thấp nhất | Đóng cửa | Khối lượng   |
 |------------|--------|----------|-----------|----------|---------------|
@@ -358,7 +358,7 @@ Tin tức ESG tại Việt Nam.,"Dưới đây là những thông tin tổng h�
 | 28/02/2025 | 63.01  | 63.01    | 62.41     | 62.41    | 2,073,877     |
 
 Nếu bạn cần thêm thông tin hoặc phân tích khác, hãy cho tôi biết!",history_price,,0
-Triển vọng giá cổ phiếu Techcombank.,"### Triển vọng giá cổ phiếu Techcombank (TCB)
+Triển vọng giá cổ phiếu Techcombank.,khó,"### Triển vọng giá cổ phiếu Techcombank (TCB)
 
 Đánh giá về triển vọng cổ phiếu của Ngân hàng Thương mại Cổ phần Kỹ thương Việt Nam (Techcombank), mã chứng khoán TCB, cho thấy một số yếu tố đáng chú ý sau:
 
@@ -386,7 +386,7 @@ Cổ phiếu Techcombank hiện tại có triển vọng tích cực dựa vào 
 
 ### Truy vấn bổ sung
 - Tìm kiếm dữ liệu lịch sử giá cổ phiếu TCB để có cái nhìn rõ hơn về biến động giá trong thời gian qua.","listing_symbol, retrival_vector_db",,0
-Tin tức về hiệu suất cổ phiếu PetroVietnam.,"Dưới đây là một số thông tin liên quan đến hiệu suất cổ phiếu và thị trường của PetroVietnam:
+Tin tức về hiệu suất cổ phiếu PetroVietnam.,dễ,"Dưới đây là một số thông tin liên quan đến hiệu suất cổ phiếu và thị trường của PetroVietnam:
 
 1. **Thị trường trái phiếu doanh nghiệp**:
    - Cổ phiếu và trái phiếu doanh nghiệp đang có dấu hiệu hồi phục trong bối cảnh thị trường tài chính Việt Nam. Tính tới tháng 1 năm 2025, nhu cầu huy động vốn tại các doanh nghiệp, bao gồm các doanh nghiệp thuộc Tập đoàn Dầu khí Việt Nam (PetroVietnam), đang rất lớn.
@@ -408,7 +408,7 @@ Các thông tin này có thể không trực tiếp đề cập đến hiệu su
 ### Truy vấn tìm kiếm bổ sung:
 - ""Hiệu suất cổ phiếu PetroVietnam tháng 3 năm 2025""
 - ""Giá cổ phiếu của Tập đoàn Dầu khí Việt Nam (PetroVietnam)""",retrival_vector_db,,0
-Cho tôi biết mã chứng khoán của VinFast và lịch sử giá cổ phiếu của VinFast trong tháng này.,"Mã chứng khoán của VinFast là **VFS**, và cổ phiếu của công ty này đang được niêm yết trên sàn Nasdaq.
+Cho tôi biết mã chứng khoán của VinFast và lịch sử giá cổ phiếu của VinFast trong tháng này.,khó,"Mã chứng khoán của VinFast là **VFS**, và cổ phiếu của công ty này đang được niêm yết trên sàn Nasdaq.
 
 Dưới đây là lịch sử giá cổ phiếu của VinFast (VFS) trong tháng 5 năm 2025:
 
@@ -437,7 +437,7 @@ Dưới đây là lịch sử giá cổ phiếu của VinFast (VFS) trong tháng
 
 Các thông tin trên đã được tổng hợp đầy đủ. Nếu bạn cần thêm thông tin gì khác, đừng ngần ngại hỏi!","listing_symbol, time_now, search_web, history_price","history_price: Error: TypeError(""Quote.__init__() missing 1 required positional argument: 'symbol_id'"")
  Please fix your mistakes.",1
-Tìm tác động của việc tăng lãi suất đến VN-Index và các bài viết liên quan.,"### Tác động của việc tăng lãi suất đến VN-Index
+Tìm tác động của việc tăng lãi suất đến VN-Index và các bài viết liên quan.,khó,"### Tác động của việc tăng lãi suất đến VN-Index
 
 Việc tăng lãi suất có ảnh hưởng sâu sắc đến VN-Index và tâm lý của nhà đầu tư. Khi lãi suất tăng, nhiều nhà đầu tư thường sẽ chuyển vốn từ thị trường chứng khoán sang các kênh đầu tư an toàn hơn như gửi tiết kiệm, dẫn đến việc giá cổ phiếu giảm. Các nhà đầu tư có thể hoài nghi về triển vọng lợi nhuận của các doanh nghiệp trong bối cảnh chi phí vay vốn tăng, từ đó làm giảm sức hấp dẫn của cổ phiếu.
 
@@ -469,7 +469,7 @@ Việc tăng lãi suất là một yếu tố quan trọng ảnh hưởng đến
 ### Các truy vấn tìm kiếm bổ sung
 - Tìm hiểu về các ngành cụ thể nào bị ảnh hưởng nhiều nhất bởi sự tăng lãi suất.
 - Các dự báo tác động của việc tăng lãi suất trong các năm tới đến VN-Index.","retrival_vector_db, search_web",,0
-"Cho tôi biết lịch sử giá VNM trong tháng vừa qua, rồi tìm bài viết liên quan.","### Lịch sử giá cổ phiếu VNM trong tháng 09/2023
+"Cho tôi biết lịch sử giá VNM trong tháng vừa qua, rồi tìm bài viết liên quan.",khó,"### Lịch sử giá cổ phiếu VNM trong tháng 09/2023
 
 Dưới đây là bảng tóm tắt giá cổ phiếu VNM (Vinamilk) từ ngày 1 đến 29 tháng 9 năm 2023:
 
@@ -513,7 +513,7 @@ Dưới đây là một số bài viết gần đây liên quan đến cổ phi�
 - **Superfluous**: Một số dữ liệu có thể không cần thiết nếu tập trung vào giá cổ phiếu.
   
 Nếu cần tìm hiểu sâu hơn về các bài viết khác hoặc thông tin cụ thể nào đó về VNM, tôi có thể giúp tìm kiếm thêm!","retrival_vector_db, history_price",,0
-"Tìm ba bài viết về tài chính xanh tại Việt Nam, rồi tìm tin mới nhất.","Dưới đây là ba bài viết liên quan đến tài chính xanh tại Việt Nam và thông tin về tin mới nhất trong lĩnh vực này:
+"Tìm ba bài viết về tài chính xanh tại Việt Nam, rồi tìm tin mới nhất.",khó,"Dưới đây là ba bài viết liên quan đến tài chính xanh tại Việt Nam và thông tin về tin mới nhất trong lĩnh vực này:
 
 ### Bài viết 1: [Tài chính xanh: Khái niệm và Tầm quan trọng tại Việt Nam 2024](https://clibme.com/tai-chinh-xanh-va-tam-quan-trong-tai-viet-nam/)
 - **Nội dung:** Bài viết khám phá khái niệm tài chính xanh và tầm quan trọng của nó trong việc phát triển kinh tế bền vững tại Việt Nam. Nó nhấn mạnh các lĩnh vực như năng lượng tái tạo và quản lý chất thải.
@@ -528,7 +528,7 @@ Nếu cần tìm hiểu sâu hơn về các bài viết khác hoặc thông tin 
 Một tin tức gần nhất đã đề cập đến nhiệt huyết của các cơ quan quản lý trong việc khuyến khích các nhà đầu tư tham gia vào thị trường tài chính xanh với nhiều chính sách hấp dẫn. Đặc biệt, trong năm 2025, Việt Nam dự kiến sẽ phê duyệt nhiều chương trình và dự án để hỗ trợ cho ngành tài chính xanh, tạo điều kiện cho sự phát triển bền vững.
 
 Nếu bạn cần thêm thông tin chi tiết về từng bài viết hoặc cần tìm thêm tin tức cụ thể khác, hãy cho tôi biết!","retrival_vector_db, search_web",,0
-Cho mã chứng khoán của Masangroup rồi lấy lịch sử giá trong tháng 3/2025.,"Mã chứng khoán của Tập đoàn Masan là **MSN**. Dưới đây là lịch sử giá cổ phiếu MSN trong tháng 3 năm 2025:
+Cho mã chứng khoán của Masangroup rồi lấy lịch sử giá trong tháng 3/2025.,khó,"Mã chứng khoán của Tập đoàn Masan là **MSN**. Dưới đây là lịch sử giá cổ phiếu MSN trong tháng 3 năm 2025:
 
 | Ngày       | Mở   | Cao   | Thấp  | Đóng  | Khối lượng      |
 |------------|------|-------|-------|-------|------------------|
@@ -555,7 +555,7 @@ Cho mã chứng khoán của Masangroup rồi lấy lịch sử giá trong thán
 | 2025-03-31 | 68.5 | 69.7  | 66.8  | 66.8  | 6,976,700        |
 
 Nếu bạn cần thêm thông tin hay phân tích khác, hãy cho tôi biết!","listing_symbol, search_web, history_price",,0
-"Tìm tin IPO tại Việt Nam, sau đó lấy bài phân tích chuyên sâu.","### Tin IPO tại Việt Nam
+"Tìm tin IPO tại Việt Nam, sau đó lấy bài phân tích chuyên sâu.",khó,"### Tin IPO tại Việt Nam
 
 1. **Doanh nghiệp Việt khẳng định nội lực, tăng tốc tiến trình IPO**
    - **Link**: [Thanh Niên](https://thanhnien.vn/doanh-nghiep-viet-khang-dinh-noi-luc-tang-toc-tien-trinh-ipo-185250403083438478.htm)
@@ -599,7 +599,7 @@ Các liên kết cung cấp sẽ hỗ trợ bạn tìm hiểu sâu hơn về tì
 - ""Tình hình nhà đầu tư nước ngoài tham gia IPO Việt Nam""
   
 Hy vọng rằng thông tin này hữu ích cho bạn trong việc thu thập kiến thức về IPO tại Việt Nam.","retrival_vector_db, search_web",,0
-"Liệt kê mã, lấy lịch sử giá HDB và tìm tin tức HDB gần đây.","### 1. Danh sách mã chứng khoán
+"Liệt kê mã, lấy lịch sử giá HDB và tìm tin tức HDB gần đây.",khó,"### 1. Danh sách mã chứng khoán
 HDBank (HDB) nằm trong danh sách các công ty chứng khoán tại Việt Nam.
 
 ### 2. Lịch sử giá cổ phiếu HDB
@@ -626,7 +626,7 @@ HDBank (HDB) nằm trong danh sách các công ty chứng khoán tại Việt Na
 ### Truy vấn tìm kiếm bổ sung
 - Tìm kiếm thông tin chi tiết về tình hình tài chính của HDB trong năm 2023 và các dự báo cho 2024.
 - Tìm kiếm tin tức cụ thể về các sự kiện gần đây liên quan đến HDB trong tháng 11 và tháng 12/2023.","listing_symbol, retrival_vector_db, history_price",,0
-"Tìm bài viết về dự báo tăng trưởng GDP Việt Nam, rồi lấy lịch sử giá VNM quý trước.","### Dự báo tăng trưởng GDP Việt Nam năm 2024
+"Tìm bài viết về dự báo tăng trưởng GDP Việt Nam, rồi lấy lịch sử giá VNM quý trước.",khó,"### Dự báo tăng trưởng GDP Việt Nam năm 2024
 
 1. **Thông tin từ World Bank**:
    - Theo báo cáo mới nhất, GDP của Việt Nam dự báo sẽ tăng trưởng **6,1%** trong năm 2024 và có thể đạt **6,5%** vào năm 2025, cao hơn so với mức dự báo 5,5% và 6,0% trước đó. Điều này thể hiện khả năng phục hồi mạnh mẽ của nền kinh tế trong bối cảnh toàn cầu đầy thách thức.
@@ -661,7 +661,7 @@ Trong quý III 2023, cổ phiếu VNM ghi nhận nhiều biến động với gi
 - **Superfluous**: Một số thông tin lặp lại có thể loại bỏ để làm rõ và súc tích hơn.
 
 Nếu cần tìm hiểu thêm về một khía cạnh cụ thể nào đó, bạn hãy cho tôi biết!","search_web, history_price",,0
-Tìm chỉ số thị trường năm 2025 và các tin liên quan.,"### Chỉ số thị trường năm 2025
+Tìm chỉ số thị trường năm 2025 và các tin liên quan.,khó,"### Chỉ số thị trường năm 2025
 
 1. **Dự báo VN-Index**:
    - Theo dự báo của **VCBS**, VN-Index có thể đạt khoảng **1.555 điểm** vào năm 2025, với mức P/E 14,6x và EPS của thị trường tăng 12%. ([Chi tiết](https://24hmoney.vn/news/vcbs-du-bao-vn-index-dat-1-555-diem-vao-nam-2025-c1a2475210.html))
@@ -690,7 +690,7 @@ Tìm chỉ số thị trường năm 2025 và các tin liên quan.,"### Chỉ s�
 ### Truy vấn bổ sung:
 - Tìm hiểu các yếu tố vĩ mô ảnh hưởng đến chỉ số VN-Index trong năm 2025 cụ thể như lãi suất, thuế, và chính sách tiền tệ. 
 - Điều tra thêm về những ngành và lĩnh vực có khả năng phát triển mạnh ở Việt Nam trong năm 2025.","retrival_vector_db, search_web",,0
-Cho mã MB Bank rồi lấy giá lịch sử tháng 4/2025.,"Mã chứng khoán của MB Bank là MBB. Dưới đây là giá lịch sử cổ phiếu MBB trong tháng 4 năm 2025:
+Cho mã MB Bank rồi lấy giá lịch sử tháng 4/2025.,khó,"Mã chứng khoán của MB Bank là MBB. Dưới đây là giá lịch sử cổ phiếu MBB trong tháng 4 năm 2025:
 
 | Ngày       | Mở     | Cao     | Thấp    | Đóng    | Khối lượng    |
 |------------|---------|---------|---------|---------|----------------|
@@ -720,7 +720,7 @@ Cho mã MB Bank rồi lấy giá lịch sử tháng 4/2025.,"Mã chứng khoán 
 - **Superfluous**: Không có thông tin chi tiết không cần thiết nào khác.
 
 Nếu bạn cần thêm thông tin hoặc các phân tích cụ thể nào đó, hãy cho tôi biết!","listing_symbol, search_web, history_price",,0
-Tìm tin cổ tức PNJ và bài phân tích liên quan.,"### Cổ Tức PNJ
+Tìm tin cổ tức PNJ và bài phân tích liên quan.,khó,"### Cổ Tức PNJ
 
 Công ty Cổ phần Vàng bạc Đá quý Phú Nhuận (PNJ) không có thông tin mới cụ thể về cổ tức trong các tài liệu đã tìm được. Tuy nhiên, thông thường, cổ tức của PNJ được công bố theo định kỳ, thường là hàng năm. Để biết thông tin chi tiết hơn về cổ tức cho năm tài chính 2025 hoặc các thông báo đặc biệt, bạn có thể theo dõi các thông báo của công ty qua website của họ hoặc các bản tin tài chính.
 
@@ -752,7 +752,7 @@ Cổ tức từ PNJ có thể được cập nhật trên các kênh thông tin 
 - ""Cổ tức PNJ năm 2025""
 - ""Tin tức mới nhất về công ty PNJ và cổ phiếu""
 ",retrival_vector_db,,0
-Liệt kê mã rồi tìm bài về ngành có tăng trưởng cao Q1/2025.,"Dưới đây là một số thông tin về các ngành có tăng trưởng cao trong quý I năm 2025 tại Việt Nam:
+Liệt kê mã rồi tìm bài về ngành có tăng trưởng cao Q1/2025.,khó,"Dưới đây là một số thông tin về các ngành có tăng trưởng cao trong quý I năm 2025 tại Việt Nam:
 
 ### Các Ngành Có Tăng Trưởng Cao Q1/2025:
 1. **Bán buôn và bán lẻ; sửa chữa ô tô, mô tô, xe máy**: Tăng trưởng 7,47%.
@@ -783,7 +783,7 @@ Cụ thể, một số nghiên cứu và báo cáo cho thấy rằng các ngành
   
 ### Truy vấn bổ sung:
 - Tìm các công ty tiêu biểu trong các ngành có tăng trưởng cao tại Việt Nam trong Q1/2025.","listing_symbol, search_web",,0
-Lịch sử giá FPT và tìm tin về kết quả kinh doanh mới nhất.,"### Lịch sử giá cổ phiếu FPT
+Lịch sử giá FPT và tìm tin về kết quả kinh doanh mới nhất.,khó,"### Lịch sử giá cổ phiếu FPT
 
 Dưới đây là bảng giá lịch sử cổ phiếu FPT từ ngày 1 tháng 1 năm 2023 đến ngày 31 tháng 10 năm 2023:
 
@@ -826,7 +826,7 @@ Cổ phiếu FPT đang có dấu hiệu tích cực với mức giá tăng và k
 2. Tìm hiểu về chiến lược mở rộng và phát triển trong năm 2024 của FPT.
 
 Nếu bạn muốn biết thêm thông tin hay cần tài liệu chi tiết hơn, hãy cho tôi biết!","retrival_vector_db, history_price",,0
-Tìm tin về quy định bất động sản rồi lấy lịch sử giá VHM tháng 1/2025.,"### Thông tin về quy định bất động sản 2023 và 2024
+Tìm tin về quy định bất động sản rồi lấy lịch sử giá VHM tháng 1/2025.,khó,"### Thông tin về quy định bất động sản 2023 và 2024
 
 Dưới đây là Một số quy định quan trọng liên quan đến lĩnh vực bất động sản tại Việt Nam trong năm 2023 và các quy định sẽ có hiệu lực trong năm 2024:
 
@@ -871,7 +871,7 @@ Dưới đây là dữ liệu lịch sử giá cổ phiếu VHM trong tháng 1 n
 - **Superfluous**: Có thể loại bỏ một số thông tin không quá quan trọng về những thay đổi không chính thức hay nhỏ nhặt trong các quy định.
 
 Nếu bạn cần thêm thông tin chi tiết về bất kỳ khía cạnh nào, vui lòng cho tôi biết!","search_web, history_price",,0
-Tìm tác động giá dầu toàn cầu tới chứng khoán Việt Nam.,"### Tác động của giá dầu toàn cầu tới chứng khoán Việt Nam
+Tìm tác động giá dầu toàn cầu tới chứng khoán Việt Nam.,khó,"### Tác động của giá dầu toàn cầu tới chứng khoán Việt Nam
 
 Giá dầu thế giới có ảnh hưởng lớn đến thị trường chứng khoán Việt Nam qua nhiều kênh và yếu tố khác nhau, đặc biệt là trong các ngành liên quan như năng lượng, hàng tiêu dùng và vận tải.
 
@@ -904,7 +904,7 @@ Tác động của giá dầu toàn cầu đến thị trường chứng khoán 
 1. ""tác động cụ thể của biến động giá dầu lên cổ phiếu cụ thể tại Việt Nam""
 2. ""ngành nào bị ảnh hưởng nặng nề nhất bởi giá dầu tại Việt Nam""
 3. ""số liệu thống kê về giá dầu và chỉ số chứng khoán Việt Nam qua các năm""","retrival_vector_db, search_web",,0
-Liệt kê mã và lấy lịch sử giá GAS tháng 3-4/2025.,"Mã chứng khoán của Công ty Cổ phần G Gaz (GAS) đã được tìm thấy. Dưới đây là lịch sử giá của GAS trong khoảng thời gian từ tháng 3 đến tháng 4 năm 2025:
+Liệt kê mã và lấy lịch sử giá GAS tháng 3-4/2025.,khó,"Mã chứng khoán của Công ty Cổ phần G Gaz (GAS) đã được tìm thấy. Dưới đây là lịch sử giá của GAS trong khoảng thời gian từ tháng 3 đến tháng 4 năm 2025:
 
 ### Lịch sử giá GAS từ 01/03/2025 đến 30/04/2025:
 
@@ -957,7 +957,7 @@ Nếu bạn cần thêm thông tin nào khác, hãy cho tôi biết!
 ### Đánh giá câu trả lời:
 - **Missing**: Không có thông tin quan trọng nào thiếu.
 - **Superfluous**: Tất cả các chi tiết đều hữu ích cho câu hỏi.","listing_symbol, time_now, history_price",,0
-Tìm tin về hiệu quả tài chính vi mô rồi liệt kê mã liên quan.,"Dưới đây là thông tin về hiệu quả tài chính vi mô tại Việt Nam, kèm theo một số mã chứng khoán liên quan:
+Tìm tin về hiệu quả tài chính vi mô rồi liệt kê mã liên quan.,khó,"Dưới đây là thông tin về hiệu quả tài chính vi mô tại Việt Nam, kèm theo một số mã chứng khoán liên quan:
 
 ### Tin Tức Về Hiệu Quả Tài Chính Vi Mô
 
@@ -988,7 +988,7 @@ Hiện nay, thị trường trái phiếu tại Việt Nam đang phát triển, 
 ### Truy vấn tìm kiếm bổ sung:
 - Tìm hiểu thêm về các quỹ đầu tư trái phiếu khác ngoài VCBF và LHBF.
 - Tìm kiếm các trắc nghiệm và phân tích về tình hình hiện tại của trái phiếu doanh nghiệp tại Việt Nam.","listing_symbol, retrival_vector_db",,0
-Lấy lịch sử giá MSN rồi tìm bài về chuyển dịch ngành.,"### Lịch sử giá cổ phiếu MSN
+Lấy lịch sử giá MSN rồi tìm bài về chuyển dịch ngành.,khó,"### Lịch sử giá cổ phiếu MSN
 
 Dưới đây là dữ liệu lịch sử giá cổ phiếu của Công ty Cổ phần Masan Group (MSN) từ ngày 01/01/2023 đến 01/10/2023:
 
@@ -1025,7 +1025,7 @@ Dưới đây là dữ liệu lịch sử giá cổ phiếu của Công ty Cổ 
 - ""xu hướng chuyển dịch ngành trong tài chính Việt Nam 2023""
 - ""các doanh nghiệp nổi bật trong chuyển dịch ngành tài chính tại Việt Nam""
 ","retrival_vector_db, history_price",,0
-"Liệt kê mã, lấy lịch sử giá VRE và tìm bài phân tích VRE.","### Mã Cổ Phiếu VRE
+"Liệt kê mã, lấy lịch sử giá VRE và tìm bài phân tích VRE.",khó,"### Mã Cổ Phiếu VRE
 **VRE** là mã cổ phiếu của Công ty Cổ phần Vincom Retail, thuộc tập đoàn Vingroup. Công ty này hoạt động trong lĩnh vực đầu tư và phát triển bất động sản thương mại, bao gồm các trung tâm thương mại và dịch vụ với quy mô lớn.
 
 ### Lịch Sử Giá Cổ Phiếu VRE (Tháng 10/2023)
@@ -1073,7 +1073,7 @@ Tổng hợp lại, cổ phiếu VRE có những tín hiệu khả quan trong b�
 - Tìm kiếm các phân tích gần đây hơn về cổ phiếu VRE từ các chuyên gia tài chính.
 
 Nếu bạn cần thêm thông tin, hãy cho tôi biết!","listing_symbol, retrival_vector_db, history_price",,0
-Tìm tin tức lợi suất trái phiếu 2025 và các bài viết phân tích.,"Dưới đây là một số thông tin đáng chú ý về lợi suất trái phiếu trong năm 2025 cũng như các bài viết phân tích liên quan:
+Tìm tin tức lợi suất trái phiếu 2025 và các bài viết phân tích.,khó,"Dưới đây là một số thông tin đáng chú ý về lợi suất trái phiếu trong năm 2025 cũng như các bài viết phân tích liên quan:
 
 ### Tin tức về lợi suất trái phiếu 2025
 
@@ -1103,7 +1103,7 @@ Tìm tin tức lợi suất trái phiếu 2025 và các bài viết phân tích.
 ### Truy vấn tìm kiếm bổ sung
 - Tìm kiếm thêm các yếu tố kinh tế vĩ mô ảnh hưởng đến lợi suất trái phiếu 2025.
 - Tìm kiếm phân tích chuyên sâu về xu hướng lợi suất trái phiếu trong năm 2025 từ các chuyên gia kinh tế.","retrival_vector_db, search_web",,0
-"Cho mã SSI, lấy lịch sử giá 10-20/05/2025, rồi tìm báo cáo quý SSI.","### Lịch sử giá cổ phiếu SSI từ 10-20/05/2025
+"Cho mã SSI, lấy lịch sử giá 10-20/05/2025, rồi tìm báo cáo quý SSI.",khó,"### Lịch sử giá cổ phiếu SSI từ 10-20/05/2025
 
 Dưới đây là bảng lịch sử giá của cổ phiếu SSI trong khoảng thời gian từ 10 đến 20 tháng 5 năm 2025:
 
@@ -1139,7 +1139,7 @@ Bạn có thể xem thêm chi tiết báo cáo qua các bài viết:
 ### Truy vấn tìm kiếm bổ sung
 1. ""Báo cáo tài chính quý 1/2025 SSI chi tiết""
 2. ""Tin tức tài chính SSI mới nhất trong tháng 5/2025""","retrival_vector_db, history_price",,0
-Các bài viết mới nhất về kết quả kinh doanh quý I/2025 của Vinamilk,"Hiện tại, không có thông tin cụ thể về kết quả kinh doanh quý I/2025 của Vinamilk. Tuy nhiên, có một số thông tin gần đây liên quan đến thị trường và hoạt động kinh doanh của các công ty khác trong ngành, mà bạn có thể tham khảo:
+Các bài viết mới nhất về kết quả kinh doanh quý I/2025 của Vinamilk,khó,"Hiện tại, không có thông tin cụ thể về kết quả kinh doanh quý I/2025 của Vinamilk. Tuy nhiên, có một số thông tin gần đây liên quan đến thị trường và hoạt động kinh doanh của các công ty khác trong ngành, mà bạn có thể tham khảo:
 
 1. **Báo cáo về thị trường trái phiếu**: Các quỹ trái phiếu đang có hiệu suất đầu tư tương đối ổn định, và đây là một kênh đầu tư an toàn trong bối cảnh thị trường cổ phiếu đang gặp khó khăn. Các quỹ trái phiếu đạt được lợi suất cao hơn so với lãi suất tiết kiệm.
 
@@ -1156,7 +1156,7 @@ Nếu bạn cần thông tin cụ thể hơn về Vinamilk hoặc có câu hỏi
 ### Truy vấn tìm kiếm bổ sung:
 1. ""Vinamilk kết quả kinh doanh quý I/2025"" 
 2. ""Công bố kết quả tài chính Vinamilk 2025""",retrival_vector_db,,0
-Tin tức gần đây về quyết định tăng lãi suất của Ngân hàng Nhà nước Việt Nam,"Gần đây, không có thông tin cụ thể nào về quyết định tăng lãi suất của Ngân hàng Nhà nước Việt Nam từ các bài viết đã được tìm thấy. Dưới đây là một số thông tin liên quan mà có thể hữu ích trong bối cảnh tài chính hiện tại:
+Tin tức gần đây về quyết định tăng lãi suất của Ngân hàng Nhà nước Việt Nam,khó,"Gần đây, không có thông tin cụ thể nào về quyết định tăng lãi suất của Ngân hàng Nhà nước Việt Nam từ các bài viết đã được tìm thấy. Dưới đây là một số thông tin liên quan mà có thể hữu ích trong bối cảnh tài chính hiện tại:
 
 1. **Nhu cầu huy động vốn cao**: Theo ông Lê Hồng Khang từ FiinRatings, nhu cầu huy động vốn của doanh nghiệp và nền kinh tế Việt Nam trong năm 2025 rất lớn. Trái phiếu doanh nghiệp đang trở thành một kênh huy động vốn quan trọng.
 
@@ -1176,7 +1176,7 @@ Thông tin cụ thể về quyết định tăng lãi suất của Ngân hàng N
 ### Truy vấn bổ sung
 - ""Quyết định tăng lãi suất của Ngân hàng Nhà nước Việt Nam tháng 3 năm 2025""
 - ""Ngân hàng Nhà nước Việt Nam thông báo tăng lãi suất""",retrival_vector_db,,0
-Tin nóng về sáp nhập các ngân hàng thương mại tại Việt Nam,"Hiện tại, thông tin về sáp nhập ngân hàng thương mại tại Việt Nam đang nhận được sự chú ý lớn trong bối cảnh nhu cầu huy động vốn ngày càng tăng, đặc biệt là từ các doanh nghiệp.
+Tin nóng về sáp nhập các ngân hàng thương mại tại Việt Nam,khó,"Hiện tại, thông tin về sáp nhập ngân hàng thương mại tại Việt Nam đang nhận được sự chú ý lớn trong bối cảnh nhu cầu huy động vốn ngày càng tăng, đặc biệt là từ các doanh nghiệp.
 
 1. **Nhu Cầu Huy Động Vốn**: Theo ông Lê Hồng Khang, Giám đốc Phân tích tại FiinRatings, vào năm 2025, nhu cầu huy động vốn của các doanh nghiệp và nền kinh tế Việt Nam sẽ rất lớn. Hiện tại, thị trường trái phiếu doanh nghiệp chủ yếu phụ thuộc vào các ngân hàng thương mại, trong khi việc sự tham gia của các nhà đầu tư tổ chức như quỹ hưu trí, công ty bảo hiểm còn rất hạn chế. Tình trạng này làm suy yếu sức cạnh tranh và chiều sâu của thị trường (Nguồn: [Tinnhanhchungkhoan](https://www.tinnhanhchungkhoan.vn/thi-truong-trai-phieu-doanh-nghiep-khat-tay-choi-lon-post365320.html)).
 
@@ -1195,7 +1195,7 @@ Tóm lại, thị trường ngân hàng thương mại tại Việt Nam đang tr
 ### Truy vấn bổ sung
 1. ""Các vụ sáp nhập ngân hàng thương mại tại Việt Nam 2023-2025""
 2. ""Tình hình các ngân hàng thương mại và kế hoạch hợp nhất trong năm 2025""",retrival_vector_db,,0
-Các bài phân tích chiến lược phát triển của Vingroup trong 2025,"### Phân tích chiến lược phát triển của Vingroup trong năm 2025
+Các bài phân tích chiến lược phát triển của Vingroup trong 2025,khó,"### Phân tích chiến lược phát triển của Vingroup trong năm 2025
 
 Năm 2025, Vingroup đặt ra nhiều chiến lược và mục tiêu nhằm phát triển bền vững và mở rộng quy mô thị trường. Dưới đây là một số điểm quan trọng được phân tích từ các nguồn tin tài chính:
 
@@ -1217,7 +1217,7 @@ Chiến lược phát triển của Vingroup trong năm 2025 dự kiến sẽ t�
 ### Truy vấn tìm kiếm bổ sung
 - Các dự án cụ thể của Vingroup trong năm 2025.
 - Chiến lược tiếp thị và phát triển sản phẩm của Vingroup.","retrival_vector_db, search_web",,0
-Những tin tức về thị trường bất động sản Hà Nội gần đây,"Dưới đây là một số tin tức gần đây liên quan đến thị trường bất động sản Hà Nội:
+Những tin tức về thị trường bất động sản Hà Nội gần đây,khó,"Dưới đây là một số tin tức gần đây liên quan đến thị trường bất động sản Hà Nội:
 
 1. **Dự án Bất động sản Sun City**: Vào cuối tháng 11/2024, UBND TP.Thủ Đức đã chấp thuận chủ trương đầu tư cho Dự án Bất động sản 10.540 tỷ đồng tại phường An Khánh, thuộc Công ty TNHH Đầu tư và phát triển bất động sản Sun City. Dự án gồm các căn hộ chung cư để bán, cho thuê, và cho thuê mua. Diện tích xây dựng là 8,96 ha. [Chi tiết tại đây](https://www.tinnhanhchungkhoan.vn/chu-du-an-du-an-sun-city-quy-mo-10540-ty-dong-lui-thoi-han-trai-phieu-post365228.html)
 
@@ -1235,7 +1235,7 @@ Những tin tức về thị trường bất động sản Hà Nội gần đây
 - Các dự án bất động sản lớn khác tại Hà Nội hiện nay.
 - Tình hình giá cả bất động sản tại Hà Nội giai đoạn gần đây.
 - Các chính sách mới của Chính phủ hỗ trợ thị trường bất động sản.",retrival_vector_db,,0
-Đánh giá tác động của đợt thoái vốn Nhà nước tại các doanh nghiệp,"Đợt thoái vốn của Nhà nước tại các doanh nghiệp đã tạo ra nhiều tác động lớn đến cả doanh nghiệp và nền kinh tế Việt Nam trong năm 2023. Dưới đây là một số điểm chính trong đánh giá tác động:
+Đánh giá tác động của đợt thoái vốn Nhà nước tại các doanh nghiệp,khó,"Đợt thoái vốn của Nhà nước tại các doanh nghiệp đã tạo ra nhiều tác động lớn đến cả doanh nghiệp và nền kinh tế Việt Nam trong năm 2023. Dưới đây là một số điểm chính trong đánh giá tác động:
 
 1. **Quy mô và thành tích thoái vốn**:
    - Trong năm 2023, Nhà nước tiến hành thoái vốn tại 12 doanh nghiệp, thu về khoảng 229 tỷ đồng từ tổng giá trị thoái là 65,2 tỷ đồng. Một số doanh nghiệp đã thoái vốn với giá trị lớn nhưng quá trình này vẫn diễn ra chậm, với đánh giá từ Bộ Tài chính cho rằng cần phải thúc đẩy mạnh mẽ hơn nữa (Nguồn: CafeF).
@@ -1259,7 +1259,7 @@ Những tin tức về thị trường bất động sản Hà Nội gần đây
 ### Truy vấn bổ sung:
 - Danh sách cụ thể các doanh nghiệp Nhà nước đã thực hiện thoái vốn trong năm 2023.
 - Tác động cụ thể đến từng ngành công nghiệp từ việc thoái vốn.",search_web,,0
-Tin tức về IPO sắp tới của doanh nghiệp Việt Nam,"### Thông tin về IPO sắp tới của doanh nghiệp Việt Nam
+Tin tức về IPO sắp tới của doanh nghiệp Việt Nam,khó,"### Thông tin về IPO sắp tới của doanh nghiệp Việt Nam
 
 1. **Tình hình thị trường IPO trong năm 2024**:
    - Năm 2024, thị trường IPO tại Việt Nam chỉ ghi nhận một thương vụ IPO thành công duy nhất, đó là CTCP Chứng khoán DNSE (mã DSE), với số vốn huy động lên tới 36,9 triệu USD. 
@@ -1287,7 +1287,7 @@ Tin tức về IPO sắp tới của doanh nghiệp Việt Nam,"### Thông tin v
 ### Truy vấn tìm kiếm bổ sung:
 - ""Danh sách doanh nghiệp IPO tương lai tại Việt Nam""
 - ""Thông tin chi tiết về các công ty chuẩn bị IPO năm 2025""",search_web,,0
-Các bài viết về tình hình lạm phát tại Việt Nam trong tháng 4/2025,"Hiện tại, tôi không tìm thấy thông tin cụ thể về tình hình lạm phát tại Việt Nam trong tháng 4 năm 2025. Tuy nhiên, tôi đã xác định được một số bài viết gần đây liên quan đến tình hình kinh tế và thị trường trái phiếu, có thể phản ánh phần nào bối cảnh kinh tế, trong đó có lạm phát. Dưới đây là tóm tắt một số bài viết:
+Các bài viết về tình hình lạm phát tại Việt Nam trong tháng 4/2025,khó,"Hiện tại, tôi không tìm thấy thông tin cụ thể về tình hình lạm phát tại Việt Nam trong tháng 4 năm 2025. Tuy nhiên, tôi đã xác định được một số bài viết gần đây liên quan đến tình hình kinh tế và thị trường trái phiếu, có thể phản ánh phần nào bối cảnh kinh tế, trong đó có lạm phát. Dưới đây là tóm tắt một số bài viết:
 
 1. **Bài viết về thị trường trái phiếu (Ngày xuất bản: 16/03/2025)**:
    - Bài viết cập nhật tình hình thị trường trái phiếu doanh nghiệp trong tháng 2 năm 2025, với số lượng phát hành và giao dịch giảm so với cùng kỳ năm trước. Thị trường vẫn được đánh giá tích cực mặc dù có sự sụt giảm về số lượng phát hành.
@@ -1308,7 +1308,7 @@ Các bài viết về tình hình lạm phát tại Việt Nam trong tháng 4/20
 **Truy vấn tìm kiếm bổ sung**:
 - Tìm kiếm thông tin về tỷ lệ lạm phát ở Việt Nam tháng 4 năm 2025.
 - Tìm kiếm báo cáo từ các cơ quan chính phủ hoặc ngân hàng trung ương về lạm phát và kinh tế.",retrival_vector_db,,0
-Thông tin mới nhất về chính sách thuế thu nhập doanh nghiệp,"Dưới đây là một số thông tin mới nhất về chính sách thuế thu nhập doanh nghiệp (TNDN) tại Việt Nam trong năm 2023:
+Thông tin mới nhất về chính sách thuế thu nhập doanh nghiệp,khó,"Dưới đây là một số thông tin mới nhất về chính sách thuế thu nhập doanh nghiệp (TNDN) tại Việt Nam trong năm 2023:
 
 1. **Thuế suất thuế TNDN**:
    - Mức thuế suất thông thường cho hầu hết các doanh nghiệp là 20%. Tuy nhiên, đối với các hoạt động tìm kiếm, thăm dò và khai thác tài nguyên quý hiếm, mức thuế suất có thể từ 32% đến 50% tùy thuộc vào từng dự án và cơ sở kinh doanh ([CIS Law Firm](https://www.cis.vn/thue-thu-nhap-doanh-nghiep-nam-2023/)).
@@ -1329,7 +1329,7 @@ Thông tin mới nhất về chính sách thuế thu nhập doanh nghiệp,"Dư�
 ### Truy vấn tìm kiếm bổ sung
 - ""Điều kiện để được miễn thuế TNDN cho doanh nghiệp nhỏ và vừa năm 2023.""
 - ""Chi tiết về các nhóm chính sách sửa đổi Luật thuế thu nhập doanh nghiệp.""",search_web,,0
-Tin nóng về biến động tỷ giá USD/VND trong tuần qua,"Trong tuần qua, tỷ giá USD/VND đã có những biến động đáng chú ý do nhiều yếu tố vĩ mô và động thái từ ngân hàng trung ương.
+Tin nóng về biến động tỷ giá USD/VND trong tuần qua,khó,"Trong tuần qua, tỷ giá USD/VND đã có những biến động đáng chú ý do nhiều yếu tố vĩ mô và động thái từ ngân hàng trung ương.
 
 1. **Biến động Tỷ giá**: Tỷ giá USD/VND dao động trong khoảng xxx - yyy VNĐ/USD. Nguyên nhân chính dẫn đến sự biến động này chủ yếu liên quan đến các chính sách tiền tệ và diễn biến kinh tế toàn cầu, đặc biệt là tại Mỹ và khu vực châu Á.
 
@@ -1349,7 +1349,7 @@ Tin nóng về biến động tỷ giá USD/VND trong tuần qua,"Trong tuần q
 **Thiếu sót**: Cần thông tin cụ thể về các số liệu tỷ giá trong tuần qua và lý do cụ thể của những biến động này. 
 
 **Truy vấn bổ sung**: Tìm kiếm các số liệu lịch sử tỷ giá USD/VND trong tuần và phân tích chi tiết các yếu tố tác động gần đây.",retrival_vector_db,,0
-Các phân tích về làn sóng M&A tại Việt Nam hiện nay,"Tình hình M&A (Mua bán và Sáp nhập) tại Việt Nam hiện nay đang diễn ra trong bối cảnh nhiều người hy vọng vào sự phục hồi của thị trường sau những biến động trong năm 2022-2023. Dưới đây là một số phân tích về làn sóng M&A hiện nay:
+Các phân tích về làn sóng M&A tại Việt Nam hiện nay,khó,"Tình hình M&A (Mua bán và Sáp nhập) tại Việt Nam hiện nay đang diễn ra trong bối cảnh nhiều người hy vọng vào sự phục hồi của thị trường sau những biến động trong năm 2022-2023. Dưới đây là một số phân tích về làn sóng M&A hiện nay:
 
 1. **Chuyển mình trong hoạt động M&A**:
    - Năm 2025, cần nhiều doanh nghiệp tham gia các giao dịch M&A nhằm tối ưu hóa tài chính và tăng sức cạnh tranh. Thị trường M&A tại Việt Nam ngày càng trở nên cần thiết trong bối cảnh doanh nghiệp cần huy động vốn và phát triển bền vững.
@@ -1376,7 +1376,7 @@ Tóm lại, làn sóng M&A tại Việt Nam đang trên đà hồi phục, nhưn
 ### Truy vấn tìm kiếm bổ sung:
 1. ""Số lượng và giá trị giao dịch M&A tại Việt Nam 2023""
 2. ""Ngành nghề nào diễn ra M&A nhiều nhất tại Việt Nam hiện nay?""","retrival_vector_db, search_web",,0
-Tin tức về kết quả đấu giá cổ phần SCG tại HoSE,"Hiện tại, không có thông tin cụ thể về kết quả đấu giá cổ phần của SCG tại Sở Giao dịch Chứng khoán TP.HCM (HoSE). Tuy nhiên, bạn có thể truy cập các nguồn thông tin chính thức và cập nhật về kết quả đấu giá tại trang web của HoSE, trong đó có danh sách và kết quả của các phiên đấu giá. Một trong những liên kết hữu ích là [Kết quả đấu giá tại HoSE](https://www.hsx.vn/Modules/Auction/Web/AucResultDetail?id=b69f152e-0f01-4021-ba39-479414fc8a4a&rid=799685845).
+Tin tức về kết quả đấu giá cổ phần SCG tại HoSE,khó,"Hiện tại, không có thông tin cụ thể về kết quả đấu giá cổ phần của SCG tại Sở Giao dịch Chứng khoán TP.HCM (HoSE). Tuy nhiên, bạn có thể truy cập các nguồn thông tin chính thức và cập nhật về kết quả đấu giá tại trang web của HoSE, trong đó có danh sách và kết quả của các phiên đấu giá. Một trong những liên kết hữu ích là [Kết quả đấu giá tại HoSE](https://www.hsx.vn/Modules/Auction/Web/AucResultDetail?id=b69f152e-0f01-4021-ba39-479414fc8a4a&rid=799685845).
 
 Nếu bạn cần thông tin chi tiết hơn về một phiên đấu giá cụ thể hoặc phần cổ phần nào đó, hãy cho tôi biết để tôi có thể tìm kiếm thêm hoặc hướng dẫn cụ thể hơn. 
 
@@ -1388,7 +1388,7 @@ Nếu bạn cần thông tin chi tiết hơn về một phiên đấu giá cụ 
 1. ""Thông báo kết quả đấu giá cổ phần SCG 2023"" 
 2. ""Phiên đấu giá cổ phần SCG tại HoSE tháng 10/2023"" 
 3. ""SCG cổ phiếu HoSE kết quả đấu giá""","retrival_vector_db, search_web",,0
-Những bài viết về xu hướng vốn FDI đổ vào Việt Nam,"Dưới đây là một số bài viết liên quan đến xu hướng vốn FDI đổ vào Việt Nam, đặc biệt chú trọng vào thị trường trái phiếu doanh nghiệp và tình hình tài chính trong nước:
+Những bài viết về xu hướng vốn FDI đổ vào Việt Nam,dễ,"Dưới đây là một số bài viết liên quan đến xu hướng vốn FDI đổ vào Việt Nam, đặc biệt chú trọng vào thị trường trái phiếu doanh nghiệp và tình hình tài chính trong nước:
 
 1. **Thị trường trái phiếu doanh nghiệp “khát” tay chơi lớn**
    - Bài viết đề cập đến mức độ tham gia của các nhà đầu tư tổ chức phi ngân hàng trong thị trường trái phiếu doanh nghiệp chỉ đạt từ 10-15%. Mặc dù các quỹ đầu tư đang có tiềm lực với tổng tài sản lên tới 90 tỷ USD, nhưng lượng vốn tham gia thị trường này vẫn còn hạn chế. Để cải thiện tình hình, cần có cơ chế thu hút dòng vốn từ các nhà đầu tư khác.
@@ -1410,7 +1410,7 @@ Những bài viết về xu hướng vốn FDI đổ vào Việt Nam,"Dưới đ
 - ""Tình hình chính sách thu hút FDI ở Việt Nam 2025""
 - ""Các ngành thu hút FDI nhiều nhất tại Việt Nam 2025""
 - ""Xu hướng đầu tư nước ngoài vào Việt Nam trong bối cảnh quốc tế""",retrival_vector_db,,0
-Tin tức về tình hình chênh lệch chi phí đầu vào ngành thép,"### Tình hình chênh lệch chi phí đầu vào ngành thép tại Việt Nam
+Tin tức về tình hình chênh lệch chi phí đầu vào ngành thép,dễ,"### Tình hình chênh lệch chi phí đầu vào ngành thép tại Việt Nam
 
 Ngành thép Việt Nam trong thời gian gần đây đã trải qua nhiều biến động đáng kể liên quan đến chi phí đầu vào và giá cả sản phẩm. Dưới đây là những điểm chính về tình hình hiện tại và dự kiến trong những năm tới:
 
@@ -1443,7 +1443,7 @@ Ngành thép Việt Nam đang đứng trước những thách thức lớn về 
 - **Missing**: Không có thông tin cụ thể về các số liệu tài chính cụ thể từ các công ty thép lớn ở Việt Nam.
 - **Superfluous**: Thông tin về các tình hình chung của thị trường trái phiếu doanh nghiệp có thể không cần thiết cho chủ đề này.
 - **Truy vấn bổ sung**: Cần tìm các số liệu cụ thể về chi phí sản xuất của các công ty thép lớn tại Việt Nam để có cái nhìn chính xác hơn.","retrival_vector_db, search_web",,0
-Bài phân tích chiến lược mở rộng mạng lưới của Viettel,"### Phân Tích Chiến Lược Mở Rộng Mạng Lưới của Viettel
+Bài phân tích chiến lược mở rộng mạng lưới của Viettel,dễ,"### Phân Tích Chiến Lược Mở Rộng Mạng Lưới của Viettel
 
 #### 1. Chiến Lược Tăng Cường Cơ Sở Hạ Tầng
 Viettel, một trong những nhà cung cấp dịch vụ viễn thông lớn nhất Việt Nam, đã triển khai hàng loạt chiến lược nhằm mở rộng mạng lưới và cải thiện chất lượng dịch vụ. Công ty đã tập trung vào việc đầu tư vào cơ sở hạ tầng công nghệ thông tin và viễn thông, bao gồm việc nâng cấp mạng 4G và phát triển ứng dụng 5G.
@@ -1472,7 +1472,7 @@ Với chiến lược mở rộng quy mô và đổi mới công nghệ này, Vi
 ### Truy Vấn Tìm Kiếm Bổ Sung
 - Tìm kiếm số liệu cụ thể về tăng trưởng doanh thu và thị phần của Viettel trong năm 2023 và 2024.
 - Tìm hiểu về phản ứng của thị trường và khách hàng đối với các dịch vụ mới của Viettel.","retrival_vector_db, search_web",,0
-Thông tin mới về đợt phát hành trái phiếu Chính phủ Việt Nam,"Thông tin mới nhất về đợt phát hành trái phiếu Chính phủ Việt Nam năm 2023 cho thấy một số điểm đáng chú ý:
+Thông tin mới về đợt phát hành trái phiếu Chính phủ Việt Nam,dễ,"Thông tin mới nhất về đợt phát hành trái phiếu Chính phủ Việt Nam năm 2023 cho thấy một số điểm đáng chú ý:
 
 1. **Tổng khối lượng phát hành**: Tính đến hết tháng 8/2023, tổng khối lượng phát hành trái phiếu Chính phủ đạt 230.511 tỷ đồng, hoàn thành 57,6% kế hoạch năm 2023. Hoạt động huy động vốn này chủ yếu tập trung vào các kỳ hạn trái phiếu 10 và 15 năm, chiếm khoảng 82,7% tổng khối lượng phát hành.
 
@@ -1491,7 +1491,7 @@ Các thông tin trên có thể tham khảo thêm tại các liên kết sau:
 ### Truy vấn tìm kiếm bổ sung:
 - Lãi suất hiện tại của trái phiếu Chính phủ trong các đợt phát hành gần đây là gì?
 - Tình hình phát hành trái phiếu Chính phủ trong quý IV/2023 và dự báo cho năm 2024.",search_web,,0
-Các tin tức về ngành ngân hàng bán lẻ tại Việt Nam,"Dưới đây là một số tin tức nổi bật về ngành ngân hàng bán lẻ tại Việt Nam trong thời gian gần đây:
+Các tin tức về ngành ngân hàng bán lẻ tại Việt Nam,dễ,"Dưới đây là một số tin tức nổi bật về ngành ngân hàng bán lẻ tại Việt Nam trong thời gian gần đây:
 
 1. **Thị trường trái phiếu doanh nghiệp**:
    - Theo ông Lê Hồng Khang, Giám đốc Phân tích tại FiinRatings, nhu cầu huy động vốn của doanh nghiệp và nền kinh tế trong năm 2025 là rất lớn. Hiện nay, thị trường trái phiếu doanh nghiệp chủ yếu dựa vào các ngân hàng thương mại, dẫn đến sự thiếu hụt sự tham gia của các tổ chức đầu tư phi ngân hàng. Cụ thể, tỷ lệ các nhà đầu tư tổ chức phi ngân hàng nắm giữ trái phiếu chỉ đạt khoảng 10-15%, thấp hơn nhiều so với các nước phát triển (40-50%). (Nguồn: [Tin tức chứng khoán](https://www.tinnhanhchungkhoan.vn/thi-truong-trai-phieu-doanh-nghiep-khat-tay-choi-lon-post365320.html))
@@ -1514,7 +1514,7 @@ Tóm lại, ngành ngân hàng bán lẻ tại Việt Nam đang phải đối m�
 ### Truy vấn tìm kiếm bổ sung
 - ""Cập nhật chiến lược ngân hàng bán lẻ tại Việt Nam 2025""
 - ""Sự phát triển của ngân hàng số tại Việt Nam""",retrival_vector_db,,0
-Tin nóng về kết quả kinh doanh PNJ quý I/2025,"Theo thông tin cập nhật mới nhất, Công ty Cổ phần Vàng Bạc Đá Quý Phú Nhuận (PNJ) đã công bố kết quả kinh doanh quý I năm 2025 với những số liệu cụ thể như sau:
+Tin nóng về kết quả kinh doanh PNJ quý I/2025,dễ,"Theo thông tin cập nhật mới nhất, Công ty Cổ phần Vàng Bạc Đá Quý Phú Nhuận (PNJ) đã công bố kết quả kinh doanh quý I năm 2025 với những số liệu cụ thể như sau:
 
 - **Doanh thu thuần** đạt **9.635 tỷ đồng**, giảm **23,5%** so với cùng kỳ năm 2024.
 - **Lợi nhuận sau thuế** đạt **678 tỷ đồng**, giảm **8,1%** so với cùng kỳ năm trước.
@@ -1531,7 +1531,7 @@ Nguồn tham khảo:
 
 Bổ sung truy vấn:
 - Tìm hiểu thêm về các giai pháp kinh doanh mới mà PNJ có thể áp dụng để cải thiện tình hình kinh doanh.","retrival_vector_db, search_web",,0
-Bài viết phân tích tác động của giá xăng dầu lên CPI Việt Nam,"Giá xăng dầu có ảnh hưởng sâu sắc đến chỉ số giá tiêu dùng (CPI) tại Việt Nam, và đây là một số điểm nổi bật về tác động này:
+Bài viết phân tích tác động của giá xăng dầu lên CPI Việt Nam,dễ,"Giá xăng dầu có ảnh hưởng sâu sắc đến chỉ số giá tiêu dùng (CPI) tại Việt Nam, và đây là một số điểm nổi bật về tác động này:
 
 1. **Tăng giá xăng dầu dẫn đến tăng CPI**: Theo số liệu từ Tổng cục Thống kê, giá xăng dầu tăng mạnh là một trong những nguyên nhân chính dẫn đến sự gia tăng CPI. Ví dụ, trong tháng 4/2024, giá xăng dầu tăng theo xu hướng giá nhiên liệu thế giới đã khiến CPI tăng 0,07% so với tháng trước đó ([Nhịp sống kinh tế](https://vneconomy.vn/techconnect/cpi-thang-4-tang-do-tac-dong-cua-gia-xang-dau.htm)).
 
@@ -1550,7 +1550,7 @@ Các nghiên cứu cho thấy rằng việc quản lý giá xăng dầu một c�
 ### Truy vấn tìm kiếm bổ sung:
 - Các biện pháp của Chính phủ Việt Nam nhằm kiểm soát giá xăng dầu và CPI.
 - Tình hình CPI hiện tại và dự báo tương lai liên quan đến giá xăng dầu.",search_web,,0
-Tin tức mới nhất về chiến dịch tái cơ cấu ngân hàng BIDV,"Hiện tại, thông tin mới nhất về chiến dịch tái cơ cấu ngân hàng Việt Nam Đầu tư và Phát triển (BIDV) chủ yếu liên quan đến các phương án tái cơ cấu tài sản của ngân hàng này. Dưới đây là một số điểm nổi bật:
+Tin tức mới nhất về chiến dịch tái cơ cấu ngân hàng BIDV,dễ,"Hiện tại, thông tin mới nhất về chiến dịch tái cơ cấu ngân hàng Việt Nam Đầu tư và Phát triển (BIDV) chủ yếu liên quan đến các phương án tái cơ cấu tài sản của ngân hàng này. Dưới đây là một số điểm nổi bật:
 
 1. **Danh mục Tài sản và Phương án Tái Cơ Cấu**:
    - BIDV đang thực hiện tái cơ cấu tài sản đảm bảo cho lô trái phiếu DUCMA12020 với nhiều công ty con và tỷ lệ sở hữu khác nhau. Một số công ty như Công ty TNHH đầu tư Phú Thịnh Phát và Công ty TNHH đầu tư bất động sản du lịch Hoàng Trường có tỷ lệ sở hữu lần lượt là 17,114% và 26,622%. Các phương án tái cơ cấu chủ yếu bao gồm giải chấp, giữ nguyên tình trạng tài sản và cho phép chuyển nhượng cho bên thứ ba.
@@ -1571,7 +1571,7 @@ Tin tức mới nhất về chiến dịch tái cơ cấu ngân hàng BIDV,"Hi�
 ### Truy Vấn Tìm Kiếm Bổ Sung
 - Cần tìm kiếm thêm thông tin về các kết quả cụ thể từ chiến dịch tái cơ cấu của BIDV trong những tháng gần đây.
 - Tìm kiếm phản ứng của các nhà đầu tư và thị trường đối với chiến dịch tái cơ cấu của BIDV.",retrival_vector_db,,0
-Các bài báo nói về chuyển đổi số trong ngân hàng Việt Nam,"Dưới đây là một số bài báo liên quan đến chủ đề chuyển đổi số trong ngành ngân hàng tại Việt Nam, mà tôi đã tìm thấy:
+Các bài báo nói về chuyển đổi số trong ngân hàng Việt Nam,dễ,"Dưới đây là một số bài báo liên quan đến chủ đề chuyển đổi số trong ngành ngân hàng tại Việt Nam, mà tôi đã tìm thấy:
 
 1. **Quỹ trái phiếu hồi phục** - Bài báo này đề cập đến hiệu suất đầu tư của quỹ LHBF trong bối cảnh chuyển đổi số trong lĩnh vực tài chính. Hiệu suất đạt 39,38% với việc phân bổ tài sản vào trái phiếu doanh nghiệp và cổ phiếu. Ngân hàng cũng là một trong những lĩnh vực nổi bật trong thị trường này.
    - [Chi tiết](https://www.tinnhanhchungkhoan.vn/quy-trai-phieu-hoi-phuc-post364971.html)
@@ -1591,7 +1591,7 @@ Các bài báo trên đều nêu bật sự chuyển mình của ngành ngân h�
 ### Truy vấn tìm kiếm bổ sung:
 - ""Công nghệ chuyển đổi số trong ngân hàng Việt Nam 2023""
 - ""Tác động của chuyển đổi số đến dịch vụ ngân hàng tại Việt Nam""",retrival_vector_db,,0
-Tin tức về xu hướng đầu tư vào fintech tại Việt Nam,"### Xu Hướng Đầu Tư Vào Fintech Tại Việt Nam
+Tin tức về xu hướng đầu tư vào fintech tại Việt Nam,dễ,"### Xu Hướng Đầu Tư Vào Fintech Tại Việt Nam
 
 Trong bối cảnh thị trường tài chính hiện tại, sự phát triển của lĩnh vực fintech tại Việt Nam đang diễn ra mạnh mẽ với nhiều xu hướng đáng chú ý. Dưới đây là tổng hợp những thông tin chính về xu hướng đầu tư vào fintech tại Việt Nam:
 
@@ -1617,7 +1617,7 @@ Xu hướng đầu tư vào fintech tại Việt Nam đang chuyển mình mạnh
 ### Truy Vấn Tìm Kiếm Bổ Sung
 - Tìm hiểu sâu hơn về các doanh nghiệp fintech hàng đầu tại Việt Nam và sản phẩm dịch vụ của họ.
 - Xem xét phản hồi của người tiêu dùng về các dịch vụ fintech hiện tại.",retrival_vector_db,,0
-Các bài phân tích về tác động của EVFTA đến xuất khẩu Việt Nam,"Dưới đây là một số bài phân tích về tác động của Hiệp định Thương mại tự do Việt Nam - Liên minh châu Âu (EVFTA) đến xuất khẩu Việt Nam:
+Các bài phân tích về tác động của EVFTA đến xuất khẩu Việt Nam,dễ,"Dưới đây là một số bài phân tích về tác động của Hiệp định Thương mại tự do Việt Nam - Liên minh châu Âu (EVFTA) đến xuất khẩu Việt Nam:
 
 1. **[Đánh giá tác động của Hiệp định EVFTA tới Việt Nam](https://moit.gov.vn/tin-tuc/thi-truong-nuoc-ngoai/danh-gia-tac-dong-cua-hiep-dinh-evfta-toi-viet-nam.html)**: Bài viết nhấn mạnh rằng EVFTA dự kiến sẽ làm tăng kim ngạch xuất khẩu của Việt Nam ra thế giới từ 5,21% đến 21,95% trong các giai đoạn khác nhau sau khi hiệp định có hiệu lực.
 
@@ -1639,7 +1639,7 @@ Nói chung, EVFTA dự kiến sẽ tạo ra nhiều cơ hội cho xuất khẩu 
 ### Truy vấn tìm kiếm bổ sung:
 - ""Thách thức khi thực hiện EVFTA đối với xuất khẩu Việt Nam""
 - ""Chính sách hỗ trợ doanh nghiệp Việt Nam sau khi ký EVFTA""",search_web,,0
-Tin nóng về mua bán sáp nhập (M&A) giữa các doanh nghiệp FDI tại Việt Nam,"Dưới đây là một số thông tin nóng về hoạt động M&A (mua bán và sáp nhập) trong bối cảnh doanh nghiệp FDI (đầu tư trực tiếp nước ngoài) tại Việt Nam:
+Tin nóng về mua bán sáp nhập (M&A) giữa các doanh nghiệp FDI tại Việt Nam,dễ,"Dưới đây là một số thông tin nóng về hoạt động M&A (mua bán và sáp nhập) trong bối cảnh doanh nghiệp FDI (đầu tư trực tiếp nước ngoài) tại Việt Nam:
 
 1. **Tình hình thị trường trái phiếu**:
    - Trong những năm gần đây, đặc biệt là từ 2024, thị trường trái phiếu doanh nghiệp tại Việt Nam đang chứng kiến sự hồi phục đáng kể, với nhiều đơn vị đầu tư và phát hành mới. Sự phục hồi này được kỳ vọng sẽ thu hút thêm các nhà đầu tư trong và ngoài nước nhờ vào sự ổn định về mặt lãi suất và tình hình kinh tế, tạo điều kiện thuận lợi cho các hoạt động M&A.
@@ -1664,7 +1664,7 @@ Tin nóng về mua bán sáp nhập (M&A) giữa các doanh nghiệp FDI tại V
 
 ### Truy vấn tìm kiếm bổ sung:
 - Thông tin về các thương vụ M&A lớn giữa các doanh nghiệp FDI tại Việt Nam trong năm 2024-2025.",retrival_vector_db,,0
-Bản tin kinh tế vĩ mô Việt Nam tháng 4/2025,"Bản tin kinh tế vĩ mô Việt Nam tháng 4/2025 cung cấp một số thông tin đáng chú ý về thị trường trái phiếu và tình hình kinh tế chung như sau:
+Bản tin kinh tế vĩ mô Việt Nam tháng 4/2025,dễ,"Bản tin kinh tế vĩ mô Việt Nam tháng 4/2025 cung cấp một số thông tin đáng chú ý về thị trường trái phiếu và tình hình kinh tế chung như sau:
 
 ### Thị Trường Trái Phiếu Doanh Nghiệp
 1. **Tình Hình Phát Hành**: Trong tháng 2/2025, thị trường trái phiếu doanh nghiệp ghi nhận 2 đợt phát hành trái phiếu riêng lẻ thành công với giá trị tổng cộng 2.100 tỷ đồng. Mặc dù đây là một con số thấp hơn so với cùng kỳ năm 2024, nhưng vẫn có cơ sở tích cực cho thị trường trong năm nay.
@@ -1682,7 +1682,7 @@ Bản tin kinh tế vĩ mô Việt Nam tháng 4/2025,"Bản tin kinh tế vĩ m�
 Năm 2025 hứa hẹn là một năm đầy thách thức nhưng cũng đầy cơ hội cho thị trường trái phiếu doanh nghiệp. Các chính sách mới và sự hồi phục của nền kinh tế có thể tạo ra động lực cho sự phát triển bền vững của thị trường trong thời gian tới. 
 
 Nếu bạn cần thêm thông tin cụ thể hơn hoặc về các lĩnh vực khác, xin hãy cho biết!",retrival_vector_db,,0
-Tin tức mới về chương trình hỗ trợ DN nhỏ và vừa của Chính phủ,"Dưới đây là một số tin tức mới về chương trình hỗ trợ doanh nghiệp nhỏ và vừa (DNVV) của Chính phủ Việt Nam trong năm 2024:
+Tin tức mới về chương trình hỗ trợ DN nhỏ và vừa của Chính phủ,dễ,"Dưới đây là một số tin tức mới về chương trình hỗ trợ doanh nghiệp nhỏ và vừa (DNVV) của Chính phủ Việt Nam trong năm 2024:
 
 1. **Chính sách hỗ trợ doanh nghiệp vừa và nhỏ**: Nghị định 80/2021/NĐ-CP và các chính sách khác đang được triển khai để hỗ trợ DNVV trong nhiều lĩnh vực khác nhau. Doanh nghiệp được hưởng nhiều quyền lợi và sự hỗ trợ nhằm phát triển bền vững. [Xem thêm](https://thesmile.vn/ho-tro-doanh-nghiep-vua-va-nho/).
 
@@ -1701,7 +1701,7 @@ Tin tức mới về chương trình hỗ trợ DN nhỏ và vừa của Chính 
 **Truy vấn tìm kiếm bổ sung để khắc phục thiếu sót:**
 - ""Tiêu chí đủ điều kiện nhận hỗ trợ DNVV năm 2024""
 - ""Các gói hỗ trợ cụ thể cho DNVV trong năm 2024""",search_web,,0
-Phân tích xu hướng giá bất động sản TP.HCM năm 2025,"Dựa trên một số nguồn thông tin hiện có, xu hướng giá bất động sản tại TP.HCM vào năm 2025 được dự báo sẽ có những biến động tích cực. Dưới đây là phân tích chi tiết:
+Phân tích xu hướng giá bất động sản TP.HCM năm 2025,dễ,"Dựa trên một số nguồn thông tin hiện có, xu hướng giá bất động sản tại TP.HCM vào năm 2025 được dự báo sẽ có những biến động tích cực. Dưới đây là phân tích chi tiết:
 
 1. **Mức Tăng Trưởng**:
    - Theo dự báo từ các chuyên gia, giá bất động sản TP.HCM sẽ tăng từ 8-10% trong năm 2025. Điều này dự kiến sẽ xảy ra ở cả thị trường sơ cấp (các dự án mới) và thứ cấp (mua bán lại) [1](https://tapchicongthuong.vn/gia-bat-dong-san-tp-ho-chi-minh-du-bao-tang-8-10--trong-nam-2025-132161.htm).
@@ -1725,7 +1725,7 @@ Năm 2025 được kỳ vọng sẽ là một năm phát triển tích cực cho
 ### Truy vấn Tìm Kiếm Bổ Sung
 - Tìm hiểu thêm về các khu vực cụ thể sẽ phát triển mạnh mẽ hơn trong năm 2025.
 - Xem xét các dự án hạ tầng lớn có thể tác động đến giá bất động sản.",search_web,,0
-Tin tức về việc nâng hạng tín nhiệm quốc gia của Việt Nam,"Vào ngày 8 tháng 12 năm 2023, tổ chức xếp hạng tín nhiệm Fitch Ratings đã quyết định nâng hạng tín nhiệm quốc gia dài hạn của Việt Nam từ mức BB lên BB+, với triển vọng ""Ổn định"". Đây là một tín hiệu tích cực và cho thấy sự công nhận về vị thế kinh tế của Việt Nam trong bối cảnh toàn cầu có nhiều biến động.
+Tin tức về việc nâng hạng tín nhiệm quốc gia của Việt Nam,dễ,"Vào ngày 8 tháng 12 năm 2023, tổ chức xếp hạng tín nhiệm Fitch Ratings đã quyết định nâng hạng tín nhiệm quốc gia dài hạn của Việt Nam từ mức BB lên BB+, với triển vọng ""Ổn định"". Đây là một tín hiệu tích cực và cho thấy sự công nhận về vị thế kinh tế của Việt Nam trong bối cảnh toàn cầu có nhiều biến động.
 
 Cách đây không lâu, vào năm 2022, các tổ chức xếp hạng khác như Moody's và S&P cũng đã nâng hạng tín nhiệm cho Việt Nam, với Moody's nâng từ Ba3 lên Ba2 và S&P nâng từ BB lên BB+. Sự cải thiện này được đánh giá là kết quả của việc thực hiện các biện pháp kinh tế đồng bộ và hiệu quả của Chính phủ Việt Nam.
 
@@ -1739,7 +1739,7 @@ Việc nâng hạng tín nhiệm không chỉ mang lại lợi ích cho nền ki
 - **Missing**: Có thể cần thêm thông tin về các biện pháp cụ thể mà chính phủ đã thực hiện để đạt được sự nâng hạng.
 - **Superfluous**: Không có thông tin thừa trong phần trả lời.
 - **Truy vấn bổ sung**: Cần tìm hiểu thêm về các biện pháp cụ thể và kế hoạch của chính phủ để cải thiện xếp hạng tín nhiệm trong tương lai.",search_web,,0
-Bài viết về lộ trình tăng trưởng ngành hàng không Việt Nam,"Ngành hàng không Việt Nam đang nằm trong quá trình phục hồi và tăng trưởng mạnh mẽ sau giai đoạn khó khăn do dịch COVID-19. Dưới đây là một số điểm nổi bật về lộ trình tăng trưởng của ngành hàng không Việt Nam trong thời gian tới:
+Bài viết về lộ trình tăng trưởng ngành hàng không Việt Nam,dễ,"Ngành hàng không Việt Nam đang nằm trong quá trình phục hồi và tăng trưởng mạnh mẽ sau giai đoạn khó khăn do dịch COVID-19. Dưới đây là một số điểm nổi bật về lộ trình tăng trưởng của ngành hàng không Việt Nam trong thời gian tới:
 
 1. **Tăng trưởng mạnh mẽ sau dịch**: Theo dự báo, năm 2023 sẽ chứng kiến sự tăng trưởng vượt bậc về lượng hành khách. Cụ thể, lượng khách nội địa dự kiến sẽ tăng đến 231% so với cùng kỳ năm 2022, đạt mức tăng trưởng kép 8,9% trong giai đoạn từ 2023-2025. Điều này thể hiện sự phục hồi rõ rệt của ngành hàng không nội địa sau hơn hai năm bị ảnh hưởng bởi đại dịch.
 
@@ -1767,7 +1767,7 @@ Ngành hàng không Việt Nam đang hứa hẹn sẽ tiếp tục phát triển
 ### Truy vấn tìm kiếm bổ sung:
 - ""doanh thu các hãng hàng không Việt Nam 2023""
 - ""tác động của cơ sở hạ tầng hàng không đến tăng trưởng""",search_web,,0
-Tin nóng về tình hình bán lẻ điện máy tại Việt Nam,"Dưới đây là một số thông tin nóng về tình hình bán lẻ điện máy tại Việt Nam trong năm 2024:
+Tin nóng về tình hình bán lẻ điện máy tại Việt Nam,dễ,"Dưới đây là một số thông tin nóng về tình hình bán lẻ điện máy tại Việt Nam trong năm 2024:
 
 1. **Tăng trưởng trong ngành bán lẻ**: Những tháng đầu năm 2024, thị trường bán lẻ ghi nhận nhiều tín hiệu khởi sắc, với các doanh nghiệp như AEON dự kiến mở thêm nhiều cửa hàng, đặc biệt trong lĩnh vực điện máy. (Nguồn: [VTV](https://vtv.vn/kinh-te/thi-truong-ban-le-ghi-nhan-nhieu-tin-hieu-khoi-sac-2-thang-dau-nam-20240304230315344.htm))
 
@@ -1784,7 +1784,7 @@ Tin nóng về tình hình bán lẻ điện máy tại Việt Nam,"Dưới đâ
 ### Truy vấn tìm kiếm bổ sung:
 - ""Xu hướng tiêu dùng và chiến lược thị trường bán lẻ điện máy 2024""
 - ""Các thương hiệu lớn trong thị trường điện máy tại Việt Nam 2024""",search_web,,0
-Tin tức về thị trường chứng khoán phái sinh Việt Nam,"Tình hình thị trường chứng khoán phái sinh tại Việt Nam gần đây đã có một số thông tin đáng chú ý:
+Tin tức về thị trường chứng khoán phái sinh Việt Nam,dễ,"Tình hình thị trường chứng khoán phái sinh tại Việt Nam gần đây đã có một số thông tin đáng chú ý:
 
 1. **Sự Phát Triển Quy Mô**: Theo các chuyên gia, thị trường chứng khoán phái sinh Việt Nam cần tiếp tục được cải thiện về chiều sâu và sự tham gia của các nhà đầu tư tổ chức. Hiện tại, thị trường này chủ yếu phụ thuộc vào các ngân hàng thương mại và chưa thu hút được nhiều nhà đầu tư lớn như quỹ hưu trí và công ty bảo hiểm.
 
@@ -1803,7 +1803,7 @@ Thông tin này cho thấy rằng, mặc dù thị trường chứng khoán phá
 ### Truy vấn tìm kiếm bổ sung:
 - ""Chi tiết về các chỉ số thị trường chứng khoán phái sinh Việt Nam""
 - ""Xu hướng của thị trường chứng khoán phái sinh trong năm 2025""",retrival_vector_db,,0
-Bài phân tích cơ hội đầu tư ngành năng lượng tái tạo Việt Nam,"Ngành năng lượng tái tạo tại Việt Nam đang trở thành một lĩnh vực hấp dẫn cho các nhà đầu tư trong và ngoài nước. Dưới đây là một số phân tích về cơ hội đầu tư trong ngành này:
+Bài phân tích cơ hội đầu tư ngành năng lượng tái tạo Việt Nam,dễ,"Ngành năng lượng tái tạo tại Việt Nam đang trở thành một lĩnh vực hấp dẫn cho các nhà đầu tư trong và ngoài nước. Dưới đây là một số phân tích về cơ hội đầu tư trong ngành này:
 
 ### 1. Tình trạng và nhu cầu năng lượng
 
@@ -1838,7 +1838,7 @@ Dự báo trong những năm tới, ngành năng lượng tái tạo tại Việ
 ### Kết luận
 
 Ngành năng lượng tái tạo tại Việt Nam đang có nhiều cơ hội phát triển, nhưng đi kèm với đó là không ít thách thức. Các nhà đầu tư nên cân nhắc kỹ lưỡng trước khi ra quyết định để tối ưu hóa lợi nhuận và đóng góp vào sự phát triển bền vững của ngành này.",,,0
-Tin tức về biến động giá vàng SJC trong tháng 5/2025,"Dưới đây là thông tin về biến động giá vàng SJC trong tháng 5/2025:
+Tin tức về biến động giá vàng SJC trong tháng 5/2025,dễ,"Dưới đây là thông tin về biến động giá vàng SJC trong tháng 5/2025:
 
 1. **Giá vàng SJC trong tháng 5**:
    - Vào ngày 5/5/2025, giá vàng SJC ghi nhận ở mức khoảng **117,8 triệu đồng/lượng** mua vào và **119,8 triệu đồng/lượng** bán ra, giảm **1,5 triệu đồng/lượng** so với cuối tuần trước. Đây là mức giảm khá mạnh ngay sau kỳ nghỉ lễ.
@@ -1860,7 +1860,7 @@ Tin tức về biến động giá vàng SJC trong tháng 5/2025,"Dưới đây 
 - **superfluous**: Thông tin về giá vàng quá chi tiết so với chỉ số giá chính.
 
 Nếu bạn cần thêm thông tin hoặc phân tích cụ thể, hãy cho tôi biết!","retrival_vector_db, search_web",,0
-Tác động của chính sách tiền tệ thắt chặt đến doanh nghiệp Việt Nam,"Chính sách tiền tệ thắt chặt tại Việt Nam trong năm 2023 đã có những tác động lớn đến hoạt động của doanh nghiệp, thể hiện qua các khía cạnh sau:
+Tác động của chính sách tiền tệ thắt chặt đến doanh nghiệp Việt Nam,dễ,"Chính sách tiền tệ thắt chặt tại Việt Nam trong năm 2023 đã có những tác động lớn đến hoạt động của doanh nghiệp, thể hiện qua các khía cạnh sau:
 
 1. **Tăng chi phí vay vốn**: Khi chính sách tiền tệ thắt chặt, lãi suất có xu hướng tăng cao. Điều này dẫn đến việc chi phí vay vốn của các doanh nghiệp cũng tăng, làm giảm khả năng tiếp cận nguồn vốn cho hoạt động sản xuất kinh doanh. Các doanh nghiệp nhỏ và vừa, vốn đã gặp nhiều khó khăn, sẽ bị ảnh hưởng nặng nề hơn.
 
@@ -1885,7 +1885,7 @@ Tổng thể, chính sách tiền tệ thắt chặt có thể mang lại lợi 
   
 #### Truy vấn tìm kiếm bổ sung:
 - ""Giải pháp cho doanh nghiệp Việt Nam trong bối cảnh chính sách tiền tệ thắt chặt 2023""",search_web,,0
-Các bài viết về xu hướng bán lẻ trực tuyến tại Việt Nam,"Hiện tại, không có thông tin trực tiếp về xu hướng bán lẻ trực tuyến tại Việt Nam trong các bài viết tìm được. Tuy nhiên, có một số thông tin có thể liên quan gián tiếp đến lĩnh vực tài chính và đầu tư, có thể ảnh hưởng đến bán lẻ trực tuyến.
+Các bài viết về xu hướng bán lẻ trực tuyến tại Việt Nam,dễ,"Hiện tại, không có thông tin trực tiếp về xu hướng bán lẻ trực tuyến tại Việt Nam trong các bài viết tìm được. Tuy nhiên, có một số thông tin có thể liên quan gián tiếp đến lĩnh vực tài chính và đầu tư, có thể ảnh hưởng đến bán lẻ trực tuyến.
 
 1. **Thị trường trái phiếu doanh nghiệp** - Một bài viết nhấn mạnh rằng thị trường trái phiếu doanh nghiệp ở Việt Nam đang thiếu sự tham gia của các nhà đầu tư tổ chức ngoài ngân hàng. Điều này cho thấy một thách thức lớn đối với tài trợ cho các doanh nghiệp bán lẻ trực tuyến, vì nhiều doanh nghiệp nhỏ và vừa có thể dựa vào nguồn vốn từ trái phiếu để mở rộng hoạt động của họ.
 
@@ -1902,7 +1902,7 @@ Như vậy, những thông tin trên cho thấy rằng mặc dù không có bài
 ### Truy vấn tìm kiếm bổ sung:
 - ""Xu hướng bán lẻ trực tuyến Việt Nam 2025""
 - ""Thị trường thương mại điện tử Việt Nam 2025""",retrival_vector_db,,0
-Phân tích các yếu tố ảnh hưởng đến FDI vào ngành công nghiệp ô tô,"Đầu tư trực tiếp nước ngoài (FDI) vào ngành công nghiệp ô tô ở Việt Nam chịu ảnh hưởng từ nhiều yếu tố khác nhau, bao gồm các yếu tố kinh tế, chính trị, xã hội và công nghệ. Dưới đây là phân tích một số yếu tố chính:
+Phân tích các yếu tố ảnh hưởng đến FDI vào ngành công nghiệp ô tô,dễ,"Đầu tư trực tiếp nước ngoài (FDI) vào ngành công nghiệp ô tô ở Việt Nam chịu ảnh hưởng từ nhiều yếu tố khác nhau, bao gồm các yếu tố kinh tế, chính trị, xã hội và công nghệ. Dưới đây là phân tích một số yếu tố chính:
 
 ### 1. **Chính sách của Chính phủ**
 - **Khuyến khích FDI**: Việt Nam đã triển khai nhiều chính sách khuyến khích FDI, đặc biệt trong lĩnh vực công nghiệp ô tô. Điều này bao gồm việc giảm thuế, tạo điều kiện thuận lợi cho doanh nghiệp nước ngoài.
@@ -1935,7 +1935,7 @@ Phân tích các yếu tố ảnh hưởng đến FDI vào ngành công nghiệp
 FDI vào ngành công nghiệp ô tô tại Việt Nam có tiềm năng lớn nhờ vào sự thuận lợi về chính sách và thị trường. Tuy nhiên, các nhà đầu tư cũng cần cân nhắc kỹ lưỡng về các yếu tố cạnh tranh, chi phí và môi trường chính trị để đưa ra quyết định hợp lý. 
 
 Để có cái nhìn chi tiết hơn về tình hình FDI vào ngành ô tô, có thể cần khảo sát thêm dữ liệu từ các báo cáo quốc tế hoặc cơ quan chính phủ liên quan.",,,0
-Tin tức về xu hướng thị trường trái phiếu doanh nghiệp Việt Nam,"### Xu hướng thị trường trái phiếu doanh nghiệp Việt Nam
+Tin tức về xu hướng thị trường trái phiếu doanh nghiệp Việt Nam,dễ,"### Xu hướng thị trường trái phiếu doanh nghiệp Việt Nam
 
 Thị trường trái phiếu doanh nghiệp Việt Nam đang trải qua những biến đổi đáng chú ý, với nhiều yếu tố ảnh hưởng đến sự phát triển và sự tham gia của các nhà đầu tư.
 
@@ -1954,7 +1954,7 @@ Thị trường trái phiếu doanh nghiệp Việt Nam đang trải qua những
 **Nguồn tham khảo**: 
 - [Thị trường trái phiếu doanh nghiệp “khát” tay chơi lớn](https://www.tinnhanhchungkhoan.vn/thi-truong-trai-phieu-doanh-nghiep-khat-tay-choi-lon-post365320.html)
 - [Quỹ trái phiếu hồi phục](https://www.tinnhanhchungkhoan.vn/quy-trai-phieu-hoi-phuc-post364971.html)",retrival_vector_db,,0
-Tin nóng về sự biến động của VN-Index trong tháng 5/2025,"Hiện tại chưa có thông tin cụ thể về sự biến động của VN-Index trong tháng 5/2025. Tuy nhiên, có một số tin tức liên quan đến thị trường tài chính và trái phiếu doanh nghiệp mà bạn có thể quan tâm:
+Tin nóng về sự biến động của VN-Index trong tháng 5/2025,dễ,"Hiện tại chưa có thông tin cụ thể về sự biến động của VN-Index trong tháng 5/2025. Tuy nhiên, có một số tin tức liên quan đến thị trường tài chính và trái phiếu doanh nghiệp mà bạn có thể quan tâm:
 
 1. **Tình hình thị trường trái phiếu doanh nghiệp**: Theo báo cáo của Hiệp hội Thị trường trái phiếu Việt Nam (VBMA), trong tháng 2/2025 đã ghi nhận hai đợt phát hành trái phiếu doanh nghiệp riêng lẻ với tổng giá trị 2.100 tỷ đồng. Dù tình hình thị trường tài chính có nhiều thay đổi, dự báo rằng thị trường trái phiếu sẽ tiếp tục cải thiện, nhờ vào các điều chỉnh trong luật và cải thiện lòng tin của nhà đầu tư.
 
@@ -1971,7 +1971,7 @@ Dựa trên các thông tin này, có thể nói thị trường tài chính đa
 ### Truy vấn tìm kiếm bổ sung:
 - Tình hình cụ thể của VN-Index trong tháng 5/2025.
 - Phân tích xu hướng cổ phiếu chính trong tháng 5/2025.",retrival_vector_db,,0
-Trích xuất báo cáo tình hình kinh tế 6 tháng đầu năm 2025,"Dựa trên thông tin tìm được, dưới đây là tóm tắt về tình hình kinh tế Việt Nam trong 6 tháng đầu năm 2025:
+Trích xuất báo cáo tình hình kinh tế 6 tháng đầu năm 2025,khó,"Dựa trên thông tin tìm được, dưới đây là tóm tắt về tình hình kinh tế Việt Nam trong 6 tháng đầu năm 2025:
 
 1. **Tình hình tổng quan**:
    - Tăng trưởng GDP của Việt Nam trong năm 2025 được dự báo đạt 6,8% theo Ngân hàng Thế giới, với nhiều các chỉ số kinh tế khả quan được ghi nhận trong nửa đầu năm [Nguồn](https://vietnamfinance.vn/bao-cao-diem-lai-tinh-hinh-kinh-te-viet-nam-thang-3-2025-d123658.html).
@@ -1995,7 +1995,7 @@ Trích xuất báo cáo tình hình kinh tế 6 tháng đầu năm 2025,"Dựa t
 ### Truy vấn tìm kiếm bổ sung:
 1. Thông tin về tỷ lệ thất nghiệp và lạm phát trong 6 tháng đầu năm 2025.
 2. Các chỉ tiêu cụ thể khác về tình hình kinh tế - xã hội của Việt Nam trong nửa đầu năm 2025.",search_web,,0
-Tìm 5 bài viết chi tiết về gói kích thích kinh tế Việt Nam và tổng hợp ý kiến chuyên gia,"Dưới đây là tổng hợp 5 bài viết chi tiết về gói kích thích kinh tế tại Việt Nam cùng với những ý kiến chuyên gia được trích dẫn trong các bài viết:
+Tìm 5 bài viết chi tiết về gói kích thích kinh tế Việt Nam và tổng hợp ý kiến chuyên gia,khó,"Dưới đây là tổng hợp 5 bài viết chi tiết về gói kích thích kinh tế tại Việt Nam cùng với những ý kiến chuyên gia được trích dẫn trong các bài viết:
 
 1. **Bài viết: [Thị trường trái phiếu doanh nghiệp “khát” tay chơi lớn](https://www.tinnhanhchungkhoan.vn/thi-truong-trai-phieu-doanh-nghiep-khat-tay-choi-lon-post365320.html)**
    - **Nội dung chính**: Ông Lê Hồng Khang, Giám đốc Phân tích tại FiinRatings nhận định rằng nhu cầu huy động vốn của doanh nghiệp rất lớn, nhưng sự tham gia của các nhà đầu tư tổ chức như quỹ hưu trí và công ty bảo hiểm vẫn thấp.
@@ -2025,7 +2025,7 @@ Tìm 5 bài viết chi tiết về gói kích thích kinh tế Việt Nam và t�
 - ""gói kích thích kinh tế Việt Nam 2025 chi tiết và tác động""
 - ""nhận định của chuyên gia về các gói kích thích kinh tế Việt Nam""
 - ""thông tin về ngân sách và các kế hoạch phát triển kinh tế 2025 tại Việt Nam""",retrival_vector_db,,0
-"Trước tiên tìm tin về lạm phát, sau đó lấy phân tích chuyên sâu từ cơ sở dữ liệu","### Tin tức về Lạm phát Việt Nam năm 2023
+"Trước tiên tìm tin về lạm phát, sau đó lấy phân tích chuyên sâu từ cơ sở dữ liệu",khó,"### Tin tức về Lạm phát Việt Nam năm 2023
 
 1. **Kiểm soát Lạm phát**: Năm 2023, tỷ lệ lạm phát bình quân của Việt Nam đạt 3,25%, nằm trong mục tiêu kiểm soát lạm phát mà Quốc hội đưa ra ở mức 4,5%. Đây là năm thứ 12 liên tiếp Việt Nam duy trì tỷ lệ lạm phát dưới mức mục tiêu, góp phần đảm bảo ổn định kinh tế vĩ mô và tạo nền tảng tăng trưởng vững chắc. [Xem thêm chi tiết](https://tapchinganhang.gov.vn/nhin-lai-thanh-cong-trong-kiem-soat-lam-phat-cua-viet-nam-nam-2023-va-trien-vong-lam-phat-nam-2024-10561.html).
 
@@ -2048,7 +2048,7 @@ Tìm 5 bài viết chi tiết về gói kích thích kinh tế Việt Nam và t�
 ### Truy vấn tìm kiếm bổ sung
 - ""Chính sách tiền tệ hiện tại của Việt Nam về lạm phát 2023""
 - ""Ảnh hưởng của chi phí sản xuất đến lạm phát năm 2023""","retrival_vector_db, search_web",,0
-Lấy tin tức mới nhất về cổ phiếu VHM rồi so sánh với phân tích cũ,"### Tin tức mới nhất về cổ phiếu VHM 
+Lấy tin tức mới nhất về cổ phiếu VHM rồi so sánh với phân tích cũ,khó,"### Tin tức mới nhất về cổ phiếu VHM 
 
 Từ thông tin tìm được, VHM (Vinhomes) đang hoạt động trong bối cảnh thị trường trái phiếu doanh nghiệp có nhiều biến động. Gần đây, VHM được nhắc đến liên quan đến việc đầu tư trái phiếu với tỷ lệ hiệu suất khá cao, đặc biệt trong tháng 1/2025. Mặc dù có một số chương trình phát hành trái phiếu thất bại trong tháng trước, nhìn chung, thị trường trái phiếu đã ghi nhận nhiều điểm tích cực và có xu hướng phục hồi.
 
@@ -2097,7 +2097,7 @@ Khi so sánh thông tin hiện tại với các phân tích cũ:
 - **Superfluous:** Các chi tiết tiện ích trong phân tích có thể rút ngắn lại để tập trung vào các điểm chính hơn.
 
 Tôi sẽ tìm hiểu thêm về kết quả kinh doanh gần nhất của VHM và các phân tích gần đây về triển vọng thị trường để hoàn thiện thông tin này.","retrival_vector_db, history_price",,0
-Tìm tin về chiến lược phát triển ngân hàng số rồi lấy lịch sử giá CTG,"### Tin Tức về Chiến Lược Phát Triển Ngân Hàng Số tại Việt Nam
+Tìm tin về chiến lược phát triển ngân hàng số rồi lấy lịch sử giá CTG,khó,"### Tin Tức về Chiến Lược Phát Triển Ngân Hàng Số tại Việt Nam
 
 1. **Thách thức và Triển vọng Ngân hàng số Việt Nam**  
    - **Nội dung**: Bài viết từ CEO Cake trình bày thách thức và cơ hội trong phát triển ngân hàng số tại Việt Nam. Dự án Next Gen AI Bank sẽ được khởi động vào năm 2023, đánh dấu chiến lược dài hạn cho ngân hàng số tại Việt Nam. [Đọc thêm](https://vnba.org.vn/vi/thach-thuc-va-trien-vong-ngan-hang-so-viet-nam--goc-nhin-tu-ceo-cake-16632.htm)
@@ -2134,7 +2134,7 @@ Dưới đây là bảng tóm tắt lịch sử giá cổ phiếu CTG từ ngày
 
 1. ""Phân tích sâu về chiến lược ngân hàng số của từng ngân hàng lớn tại Việt Nam 2023""
 2. ""Tác động của ngân hàng số đến thị trường tài chính Việt Nam""","search_web, history_price",,0
-Tìm các bài phân tích về thị trường chứng khoán Việt Nam và lịch giá VN30,"## Phân Tích Thị Trường Chứng Khoán Việt Nam
+Tìm các bài phân tích về thị trường chứng khoán Việt Nam và lịch giá VN30,khó,"## Phân Tích Thị Trường Chứng Khoán Việt Nam
 
 Dưới đây là tóm tắt về các bài phân tích gần đây liên quan đến thị trường chứng khoán Việt Nam, đặc biệt là trái phiếu doanh nghiệp:
 
@@ -2181,7 +2181,7 @@ Dưới đây là dữ liệu lịch giá VN30 từ ngày 3 tháng 1 2023 đến
 ### Truy Vấn Tìm Kiếm Bổ Sung
 - Tìm thêm thông tin về các yếu tố tác động đến giá VN30 trong năm 2023.
 - Tìm hiểu về dự báo giá VN30 trong năm 2024 và các yếu tố hỗ trợ.","retrival_vector_db, history_price",,0
-Tìm báo cáo đánh giá tín nhiệm của Moody’s về Việt Nam và các phân tích liên quan,"Dưới đây là các thông tin liên quan đến đánh giá tín nhiệm của Moody's về Việt Nam:
+Tìm báo cáo đánh giá tín nhiệm của Moody’s về Việt Nam và các phân tích liên quan,khó,"Dưới đây là các thông tin liên quan đến đánh giá tín nhiệm của Moody's về Việt Nam:
 
 1. **Xếp hạng tín nhiệm của Moody's**: Moody's đã nâng xếp hạng tín nhiệm dài hạn của Việt Nam từ ""Ba3"" lên ""Ba2"" vào ngày 6 tháng 9 năm 2022, và giữ triển vọng ở mức ổn định. Việc nâng cấp này phản ánh triển vọng tăng trưởng lâu dài mạnh mẽ của Việt Nam, khả năng thương mại linh hoạt, và sức hấp dẫn của đất nước đối với các nhà đầu tư nước ngoài. ([Nguồn](https://theinvestor.vn/moodys-ratings-affirms-vietnams-ba2-rating-maintains-stable-outlook-d11916.html))
 
@@ -2198,7 +2198,7 @@ Tìm báo cáo đánh giá tín nhiệm của Moody’s về Việt Nam và các
 ### Truy vấn tìm kiếm bổ sung:
 - ""Phân tích tác động của xếp hạng tín nhiệm Moody's đối với nền kinh tế Việt Nam""
 - ""Doanh nghiệp Việt Nam hưởng lợi từ xếp hạng tín nhiệm Ba2 của Moody's""",search_web,,0
-Lấy tin tức về năng lượng sạch rồi tìm mã GAS để xem lịch sử giá,"### Tin tức về năng lượng sạch
+Lấy tin tức về năng lượng sạch rồi tìm mã GAS để xem lịch sử giá,khó,"### Tin tức về năng lượng sạch
 
 1. **Chủ đề Dự án Sun City**:
    - Tại dự án, vốn chủ sở hữu đạt 216,6 tỷ đồng, hệ số nợ phải trả/vốn chủ sở hữu ở mức 12,98 lần, tương ứng nợ phải trả đạt 2.811,5 tỷ đồng. [Đọc thêm](https://www.tinnhanhchungkhoan.vn/chu-du-an-du-an-sun-city-quy-mo-10540-ty-dong-lui-thoi-han-trai-phieu-post365228.html).
@@ -2231,7 +2231,7 @@ Dưới đây là một phần lịch sử giá cổ phiếu GAS từ tháng 1 n
 > Lưu ý: Bảng trên chỉ đại diện cho giá trị của các cổ phiếu GAS trong một số ngày nhất định. Có 498 ngày dữ liệu giá cổ phiếu GAS từ năm 2022 đến 2023.
 
 Các bạn có thể tìm hiểu thêm về lịch sử giá GAS qua [liên kết này](https://topi.vn/co-phieu-gas.html).","listing_symbol, retrival_vector_db, search_web, history_price",,0
-Tìm bài viết về thị trường bán lẻ và sau đó lấy phân tích về cổ phiếu MWG,"### Thị Trường Bán Lẻ Việt Nam 2023
+Tìm bài viết về thị trường bán lẻ và sau đó lấy phân tích về cổ phiếu MWG,khó,"### Thị Trường Bán Lẻ Việt Nam 2023
 
 1. **Quy mô thị trường bán lẻ đã vượt 180 tỷ USD trong năm 2023**: Theo báo cáo từ ATKearney, thị trường bán lẻ Việt Nam đã đạt quy mô 180 tỷ USD trong năm 2023 và dự báo sẽ tiếp tục tăng trưởng trong những năm tới. [Xem thêm](https://baomoi.com/quy-mo-thi-truong-ban-le-viet-nam-vuot-180-ty-usd-trong-nam-2023-c47794557.epi)
 
@@ -2252,7 +2252,7 @@ Cổ phiếu MWG đang là một trong những cổ phiếu quan trọng của n
 - **Triển vọng tương lai**: Với xu hướng gia tăng tiêu dùng và sự phát triển của thương mại điện tử, cổ phiếu MWG có tiềm năng tăng trưởng mạnh mẽ trong thời gian tới. Tuy vậy, nhà đầu tư cần theo dõi kỹ lưỡng các yếu tố tác động của thị trường và biến động kinh tế.
 
 Nếu bạn cần thêm thông tin chi tiết về lịch sử giá cổ phiếu MWG hay các phân tích chuyên sâu hơn, xin vui lòng cho tôi biết!","listing_symbol, retrival_vector_db, search_web",,0
-Tìm tin cơ cấu lại vốn Nhà nước rồi lấy lịch sử giá các mã liên quan,"### Tin Về Cơ Cấu Lại Vốn Nhà Nước
+Tìm tin cơ cấu lại vốn Nhà nước rồi lấy lịch sử giá các mã liên quan,khó,"### Tin Về Cơ Cấu Lại Vốn Nhà Nước
 
 1. **Cơ cấu lại Tổng công ty Đầu tư và Kinh doanh vốn Nhà nước (SCIC)**:
    - **Ngày ban hành**: 17/7/2024.
@@ -2302,7 +2302,7 @@ Dưới đây là lịch sử giá của một số cổ phiếu có liên quan:
 
 ### Kết Luận
 Bạn có thể xem thêm thông tin chi tiết về cơ cấu lại vốn nhà nước từ các nguồn tin đã nêu trên. Nếu cần thêm thông tin cụ thể về các mã cổ phiếu khác hoặc dữ liệu lịch sử giá liên quan đến các mã khác, xin vui lòng cho biết!","listing_symbol, search_web, history_price",,0
-Tìm xu hướng tỷ lệ nợ công Việt Nam và bài phân tích kinh tế,"### Xu hướng tỷ lệ nợ công Việt Nam 2023
+Tìm xu hướng tỷ lệ nợ công Việt Nam và bài phân tích kinh tế,khó,"### Xu hướng tỷ lệ nợ công Việt Nam 2023
 
 1. **Tỷ lệ nợ công hiện tại**: Tính đến cuối năm 2023, tỷ lệ nợ công của Việt Nam ước đạt khoảng 37-40% GDP. Tỷ lệ nợ Chính phủ khoảng 34-38% GDP. So với mức trần quy định của Quốc hội là 60%, tỷ lệ này vẫn được xem là an toàn và bền vững.
 
@@ -2333,7 +2333,7 @@ Việt Nam đã xử lý nợ công một cách cẩn trọng và có những ch
 #### Tìm kiếm bổ sung:
 - ""Các biện pháp cải cách nợ công Việt Nam 2023"".
 - ""Tác động của nợ công đến tăng trưởng kinh tế Việt Nam 2023"".","retrival_vector_db, search_web",,0
-Tìm tin tức về chính sách miễn giảm thuế rồi lấy bình luận chuyên gia,"### Tin tức về chính sách miễn giảm thuế năm 2023
+Tìm tin tức về chính sách miễn giảm thuế rồi lấy bình luận chuyên gia,khó,"### Tin tức về chính sách miễn giảm thuế năm 2023
 
 1. **Giảm thuế GTGT xuống 8%**: Ngày 30/6/2023, Chính phủ Việt Nam đã ban hành Nghị định 44/2023/NĐ-CP quy định việc giảm thuế giá trị gia tăng (GTGT) xuống 8% từ ngày 01/7/2023 đến hết ngày 31/12/2023. Mục tiêu của chính sách này là hỗ trợ doanh nghiệp trong bối cảnh khó khăn kinh tế. ([chi tiết](https://xaydungchinhsach.chinhphu.vn/chinh-phu-giam-thue-gia-tri-gia-tang-119230630181751761.htm))
 

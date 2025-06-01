@@ -25,7 +25,7 @@ from utils.analysis_helper import (
     save_failed_cases_analysis
 )
 
-def create_visualization_charts(results_df, base_path="evaluation_analysis/results/visualizations"):
+def create_visualization_charts(results_df, base_path="results/visualizations"):
     """Tạo tất cả biểu đồ và lưu riêng biệt"""
     base_path = Path(base_path)
     
@@ -139,7 +139,71 @@ def create_visualization_charts(results_df, base_path="evaluation_analysis/resul
     plt.savefig(base_path / "difficulty_analysis.png", dpi=300, bbox_inches='tight')
     plt.close()
     
-    # 5. Overall Dashboard (4-panel view)
+    # 5. Precision và Recall Analysis (riêng biệt)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
+    fig.suptitle('Phân tích Precision và Recall - Hành vi chọn Tool', fontsize=16, fontweight='bold')
+    
+    # Precision analysis
+    precision_pivot = results_df.pivot(index='Agent', columns='Difficulty', values='Precision')
+    x = np.arange(len(precision_pivot.index))
+    width = 0.35
+    
+    easy_precision = precision_pivot['dễ'].values
+    hard_precision = precision_pivot['khó'].values
+    
+    bars1 = ax1.bar(x - width/2, easy_precision, width, label='Dễ', color='lightgreen', alpha=0.8)
+    bars2 = ax1.bar(x + width/2, hard_precision, width, label='Khó', color='darkgreen', alpha=0.8)
+    
+    ax1.set_xlabel('Agent', fontsize=12)
+    ax1.set_ylabel('Precision', fontsize=12)
+    ax1.set_title('Precision - Tỉ lệ tool được chọn là cần thiết\n|Texp ∩ Tact| / |Tact|', fontsize=12, fontweight='bold')
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(precision_pivot.index, rotation=45)
+    ax1.legend()
+    ax1.grid(axis='y', alpha=0.3)
+    ax1.set_ylim(0, 1.05)
+    
+    # Add value labels on bars
+    for bars in [bars1, bars2]:
+        for bar in bars:
+            height = bar.get_height()
+            ax1.annotate(f'{height:.3f}',
+                        xy=(bar.get_x() + bar.get_width() / 2, height),
+                        xytext=(0, 3), textcoords="offset points",
+                        ha='center', va='bottom', fontsize=9)
+    
+    # Recall analysis
+    recall_pivot = results_df.pivot(index='Agent', columns='Difficulty', values='Recall')
+    
+    easy_recall = recall_pivot['dễ'].values
+    hard_recall = recall_pivot['khó'].values
+    
+    bars3 = ax2.bar(x - width/2, easy_recall, width, label='Dễ', color='lightcoral', alpha=0.8)
+    bars4 = ax2.bar(x + width/2, hard_recall, width, label='Khó', color='darkred', alpha=0.8)
+    
+    ax2.set_xlabel('Agent', fontsize=12)
+    ax2.set_ylabel('Recall', fontsize=12)
+    ax2.set_title('Recall - Tỉ lệ tool cần thiết đã được tìm thấy\n|Texp ∩ Tact| / |Texp|', fontsize=12, fontweight='bold')
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(recall_pivot.index, rotation=45)
+    ax2.legend()
+    ax2.grid(axis='y', alpha=0.3)
+    ax2.set_ylim(0, 1.05)
+    
+    # Add value labels on bars
+    for bars in [bars3, bars4]:
+        for bar in bars:
+            height = bar.get_height()
+            ax2.annotate(f'{height:.3f}',
+                        xy=(bar.get_x() + bar.get_width() / 2, height),
+                        xytext=(0, 3), textcoords="offset points",
+                        ha='center', va='bottom', fontsize=9)
+    
+    plt.tight_layout()
+    plt.savefig(base_path / "precision_recall_analysis.png", dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    # 6. Overall Dashboard (4-panel view)
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
     fig.suptitle('Dashboard Tổng quan - So sánh hiệu suất các Agent', fontsize=18, fontweight='bold')
     
@@ -159,21 +223,21 @@ def create_visualization_charts(results_df, base_path="evaluation_analysis/resul
     ax.tick_params(axis='x', rotation=45)
     ax.legend(title='Độ khó')
     
-    # Panel 3: Tool Fail Rate
+    # Panel 3: Precision
     ax = axes[1, 0]
-    fail_rate_pivot = results_df.pivot(index='Agent', columns='Difficulty', values='Tool_Fail_Rate')
-    fail_rate_pivot.plot(kind='bar', ax=ax, color=['#FFB366', '#FF8C42'])
-    ax.set_title('Tool Fail Rate (Thấp hơn = Tốt hơn)', fontweight='bold')
-    ax.set_ylabel('Fail Rate')
+    precision_pivot.plot(kind='bar', ax=ax, color=['#90EE90', '#228B22'])
+    ax.set_title('Precision (Cao hơn = Ít gọi thừa)', fontweight='bold')
+    ax.set_ylabel('Precision')
     ax.tick_params(axis='x', rotation=45)
     ax.legend(title='Độ khó')
     
-    # Panel 4: Overall Heatmap
+    # Panel 4: Recall
     ax = axes[1, 1]
-    overview_data = results_df.groupby('Agent')[['Accuracy', 'F1_Score']].mean()
-    overview_data['Tool_Success'] = 1 - results_df.groupby('Agent')['Tool_Fail_Rate'].mean()
-    sns.heatmap(overview_data.T, annot=True, fmt='.3f', cmap='RdYlGn', ax=ax)
-    ax.set_title('Tổng quan (Cao hơn = Tốt hơn)', fontweight='bold')
+    recall_pivot.plot(kind='bar', ax=ax, color=['#FFB6C1', '#DC143C'])
+    ax.set_title('Recall (Cao hơn = Ít bỏ sót)', fontweight='bold')
+    ax.set_ylabel('Recall')
+    ax.tick_params(axis='x', rotation=45)
+    ax.legend(title='Độ khó')
     
     plt.tight_layout()
     plt.savefig(base_path / "overall_dashboard.png", dpi=300, bbox_inches='tight')
@@ -181,7 +245,7 @@ def create_visualization_charts(results_df, base_path="evaluation_analysis/resul
     
     print(f"📊 Created all visualizations in {base_path}")
 
-def create_technical_details_report(results_df, analyzer, base_path="evaluation_analysis/results/detailed_reports"):
+def create_technical_details_report(results_df, analyzer, base_path="results/detailed_reports"):
     """Tạo báo cáo chi tiết kỹ thuật"""
     base_path = Path(base_path)
     
@@ -192,16 +256,19 @@ def create_technical_details_report(results_df, analyzer, base_path="evaluation_
         f.write("📊 PHƯƠNG PHÁP TÍNH TOÁN:\n")
         f.write("-" * 30 + "\n")
         f.write("1. ACCURACY:\n")
-        f.write("   - Công thức: (Số câu có failed_tools_count = 0) / Tổng số câu\n")
-        f.write("   - Ý nghĩa: Tỉ lệ agent gọi tools hoàn toàn đúng, không có lỗi\n\n")
+        f.write("   - Công thức: (Số câu gọi tools đúng hoàn toàn như ground truth) / Tổng số câu\n")
+        f.write("   - Ý nghĩa: Tỉ lệ agent gọi đúng tất cả tools cần thiết và không gọi thừa\n")
+        f.write("   - Ground truth: Dựa trên synthetic_news.csv\n\n")
         
-        f.write("2. F1 SCORE:\n")
-        f.write("   - Dựa trên ground truth từ synthetic_news.csv\n")
-        f.write("   - TP: Tools được gọi đúng và cần thiết\n")
-        f.write("   - FP: Tools được gọi nhưng không cần thiết (thừa)\n")
-        f.write("   - FN: Tools cần thiết nhưng không được gọi (thiếu)\n")
-        f.write("   - Precision = TP / (TP + FP)\n")
-        f.write("   - Recall = TP / (TP + FN)\n")
+        f.write("2. F1 SCORE, PRECISION & RECALL:\n")
+        f.write("   - Dựa hoàn toàn trên ground truth từ synthetic_news.csv\n")
+        f.write("   - Texp: Danh sách tools kỳ vọng (từ ground truth)\n")
+        f.write("   - Tact: Danh sách tools agent trả về (loại bỏ failed tools)\n")
+        f.write("   - TP: |Texp ∩ Tact| - Tools được gọi đúng và cần thiết\n")
+        f.write("   - FP: |Tact - Texp| - Tools được gọi nhưng không cần thiết (thừa)\n")
+        f.write("   - FN: |Texp - Tact| - Tools cần thiết nhưng không được gọi (thiếu)\n")
+        f.write("   - Precision = TP / (TP + FP) = |Texp ∩ Tact| / |Tact|\n")
+        f.write("   - Recall = TP / (TP + FN) = |Texp ∩ Tact| / |Texp|\n")
         f.write("   - F1 = 2 * (Precision * Recall) / (Precision + Recall)\n\n")
         
         f.write("3. TOOL FAIL RATE:\n")
@@ -238,7 +305,7 @@ def create_technical_details_report(results_df, analyzer, base_path="evaluation_
         for tool in sorted(all_tools):
             f.write(f"   - {tool}\n")
 
-def create_full_analysis_report(results_df, base_path="evaluation_analysis/results/detailed_reports"):
+def create_full_analysis_report(results_df, base_path="results/detailed_reports"):
     """Tạo báo cáo phân tích đầy đủ"""
     base_path = Path(base_path)
     
@@ -302,10 +369,10 @@ def main():
     
     # Tạo cấu trúc thư mục
     print("\n📁 Tạo cấu trúc thư mục...")
-    create_folder_structure()
+    create_folder_structure("results")
     
     # Initialize analyzer
-    analyzer = AgentAnalyzer("data_eval/results")
+    analyzer = AgentAnalyzer("../evaluation/data_eval/results")
     
     # Load data
     print("\n📥 Loading dữ liệu...")
@@ -313,7 +380,7 @@ def main():
         print("❌ Không thể load dữ liệu agent!")
         return
     
-    if not analyzer.load_ground_truth("data_eval/synthetic_data/synthetic_news.csv"):
+    if not analyzer.load_ground_truth("../evaluation/data_eval/synthetic_data/synthetic_news.csv"):
         print("❌ Không thể load ground truth!")
         return
     
@@ -333,7 +400,7 @@ def main():
         
         # Save raw data
         print("\n💿 Lưu raw data...")
-        results_df.to_csv("evaluation_analysis/results/raw_data/complete_results.csv", index=False)
+        results_df.to_csv("results/raw_data/complete_results.csv", index=False)
         save_failed_cases_analysis(failed_cases_df)
         
         # Create detailed reports
@@ -347,12 +414,12 @@ def main():
         print("\n📊 Tạo biểu đồ...")
         create_visualization_charts(results_df)
     
-    print(f"\n✅ HOÀN THÀNH! Tất cả kết quả đã được lưu trong thư mục evaluation_analysis/results/")
+    print(f"\n✅ HOÀN THÀNH! Tất cả kết quả đã được lưu trong thư mục results/")
     print("\n📋 Cách xem kết quả:")
-    print("   • Xem ranking nhanh: evaluation_analysis/results/rankings/overall_ranking.txt")
-    print("   • Xem báo cáo tóm tắt: evaluation_analysis/results/detailed_reports/executive_summary.txt")
-    print("   • Xem biểu đồ: evaluation_analysis/results/visualizations/")
-    print("   • Dữ liệu để phân tích thêm: evaluation_analysis/results/raw_data/complete_results.csv")
+    print("   • Xem ranking nhanh: results/rankings/overall_ranking.txt")
+    print("   • Xem báo cáo tóm tắt: results/detailed_reports/executive_summary.txt")
+    print("   • Xem biểu đồ: results/visualizations/")
+    print("   • Dữ liệu để phân tích thêm: results/raw_data/complete_results.csv")
     
     return results_df
 

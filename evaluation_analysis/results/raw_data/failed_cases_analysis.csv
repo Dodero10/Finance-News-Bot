@@ -1,0 +1,10 @@
+Agent,Query,Difficulty,Failed_Tools,Failed_Count,All_Tools
+React,Tìm tin cơ cấu lại vốn Nhà nước rồi lấy lịch sử giá các mã liên quan,khó,"history_price: Error: ValueError('Invalid symbol. Your symbol format is not recognized!')
+ Please fix your mistakes., history_price: Error: ValueError('Invalid symbol. Your symbol format is not recognized!')
+ Please fix your mistakes., history_price: Error: ValueError('Invalid derivative or bond symbol. Symbol must be in format of VN30F1M, VN30F2024, GB10F2024, or for company bonds, e.g., BAB122032')
+ Please fix your mistakes.",3,"retrival_vector_db, listing_symbol"
+ReWOO,Cho tôi biết mã chứng khoán của VinFast và lịch sử giá cổ phiếu của VinFast trong tháng này.,khó,"history_price: Invalid derivative or bond symbol. Symbol must be in format of VN30F1M, VN30F2024, GB10F2024, or for company bonds, e.g., BAB122032",1,
+ReWOO,Cho mã MB Bank rồi lấy giá lịch sử tháng 4/2025.,khó,history_price: Invalid symbol. Your symbol format is not recognized!,1,
+ReWOO,Tìm tin cơ cấu lại vốn Nhà nước rồi lấy lịch sử giá các mã liên quan,khó,history_price: Invalid symbol. Your symbol format is not recognized!,1,search_web
+Reflexion,Cho tôi biết mã chứng khoán của VinFast và lịch sử giá cổ phiếu của VinFast trong tháng này.,khó,"history_price: Error: TypeError(""Quote.__init__() missing 1 required positional argument: 'symbol_id'"")
+ Please fix your mistakes.",1,"listing_symbol, time_now, search_web, history_price"

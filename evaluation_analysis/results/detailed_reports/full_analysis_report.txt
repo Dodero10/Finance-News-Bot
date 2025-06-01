@@ -1,0 +1,63 @@
+📊 BÁO CÁO PHÂN TÍCH ĐẦY ĐỦ - SO SÁNH HIỆU SUẤT CÁC AGENT
+================================================================================
+
+📅 Thời gian tạo báo cáo: 2025-06-01 21:20:57
+
+📋 TỔNG QUAN DỮ LIỆU:
+----------------------------------------
+• Tổng số mẫu đánh giá: 368
+• Số agent được so sánh: 4
+• Số độ khó: 2
+• Metrics đánh giá: Accuracy, F1 Score, Precision, Recall, Tool Fail Rate
+
+📊 BẢNG KẾT QUẢ CHI TIẾT:
+----------------------------------------
+      Agent Difficulty  Accuracy  F1_Score  Precision  Recall  Tool_Fail_Rate  Sample_Count
+      React         dễ    0.2162    0.6337     0.9697  0.4706          0.0000            37
+      React        khó    0.1818    0.7257     0.9247  0.5972          0.0185            55
+      ReWOO         dễ    0.3784    0.7636     1.0000  0.6176          0.0000            37
+      ReWOO        khó    0.2909    0.7080     0.9756  0.5556          0.0189            55
+  Reflexion         dễ    0.3243    0.7222     0.9750  0.5735          0.0000            37
+  Reflexion        khó    0.2545    0.7592     0.9208  0.6458          0.0182            55
+Multi-Agent         dễ    0.5946    0.7907     0.6538  1.0000          0.0000            37
+Multi-Agent        khó    0.3273    0.7549     0.6351  0.9306          0.0000            55
+
+📈 PHÂN TÍCH THEO AGENT:
+----------------------------------------
+
+🤖 Multi-Agent:
+   • Accuracy: 0.4609 ± 0.1890
+   • F1 Score: 0.7728 ± 0.0253
+   • Tool Fail Rate: 0.0000 ± 0.0000
+
+🤖 ReWOO:
+   • Accuracy: 0.3346 ± 0.0619
+   • F1 Score: 0.7358 ± 0.0394
+   • Tool Fail Rate: 0.0094 ± 0.0133
+
+🤖 React:
+   • Accuracy: 0.1990 ± 0.0243
+   • F1 Score: 0.6797 ± 0.0651
+   • Tool Fail Rate: 0.0093 ± 0.0131
+
+🤖 Reflexion:
+   • Accuracy: 0.2894 ± 0.0493
+   • F1 Score: 0.7407 ± 0.0261
+   • Tool Fail Rate: 0.0091 ± 0.0129
+
+📊 PHÂN TÍCH THEO ĐỘ KHÓ:
+----------------------------------------
+
+📝 Câu dễ:
+   • Accuracy trung bình: 0.3784
+   • F1 Score trung bình: 0.7276
+   • Tool Fail Rate trung bình: 0.0000
+   • Agent tốt nhất (Accuracy): Multi-Agent
+   • Agent tốt nhất (F1): Multi-Agent
+
+📝 Câu khó:
+   • Accuracy trung bình: 0.2636
+   • F1 Score trung bình: 0.7370
+   • Tool Fail Rate trung bình: 0.0139
+   • Agent tốt nhất (Accuracy): Multi-Agent
+   • Agent tốt nhất (F1): Reflexion

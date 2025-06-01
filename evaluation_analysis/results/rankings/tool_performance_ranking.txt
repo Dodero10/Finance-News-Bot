@@ -1,0 +1,19 @@
+🎯 XẾP HẠNG TOOL PERFORMANCE (Thấp fail rate → Cao fail rate)
+============================================================
+
+1. Multi-Agent:
+   - Success Rate: 1.0000 (100.00%)
+   - Fail Rate: 0.0000 (0.00%)
+
+2. Reflexion:
+   - Success Rate: 0.9909 (99.09%)
+   - Fail Rate: 0.0091 (0.91%)
+
+3. React:
+   - Success Rate: 0.9907 (99.07%)
+   - Fail Rate: 0.0093 (0.93%)
+
+4. ReWOO:
+   - Success Rate: 0.9906 (99.06%)
+   - Fail Rate: 0.0094 (0.94%)
+

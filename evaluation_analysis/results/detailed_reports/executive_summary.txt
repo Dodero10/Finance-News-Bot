@@ -1,0 +1,17 @@
+📋 TÓM TẮT ĐIỀU HÀNH - ĐÁNH GIÁ HIỆU SUẤT AGENT
+============================================================
+
+🏆 KẾT QUẢ CHÍNH:
+• Agent tốt nhất về Accuracy: Multi-Agent (0.461)
+• Agent tốt nhất về F1 Score: Multi-Agent (0.773)
+• Agent tin cậy nhất (ít lỗi): Multi-Agent (1.000)
+
+📊 THỐNG KÊ TỔNG QUAN:
+• Tổng số câu hỏi đánh giá: 184 (mỗi agent)
+• Số agent được đánh giá: 4
+• Accuracy trung bình: 0.321
+• F1 Score trung bình: 0.732
+• Tool Success Rate trung bình: 0.993
+
+💡 KHUYẾN NGHỊ:
+• Multi-Agent là lựa chọn tốt nhất cho tất cả metrics

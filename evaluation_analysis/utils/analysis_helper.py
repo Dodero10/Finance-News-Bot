@@ -90,28 +90,52 @@ class AgentAnalyzer:
         return set()
     
     def calculate_accuracy(self, df):
-        """Tính accuracy - tỉ lệ gọi tools hoàn toàn đúng"""
+        """Tính accuracy - tỉ lệ gọi tools hoàn toàn đúng dựa trên ground truth"""
+        correct_count = 0
         total_questions = len(df)
-        correct_tool_calls = len(df[df['failed_tools_count'] == 0])
-        return correct_tool_calls / total_questions if total_questions > 0 else 0
-    
-    def calculate_f1_metrics(self, df):
-        """Tính F1, Precision, Recall dựa trên ground truth"""
-        tp = fp = fn = 0
         
         for _, row in df.iterrows():
             required_tools = self.get_required_tools(row['input'])
             used_tools = self.parse_tools_used(row['tools'])
             
-            # Loại bỏ failed tools
+            # Loại bỏ failed tools khỏi used_tools
             if row['failed_tools_count'] > 0 and not pd.isna(row['failed_tools']):
                 failed_tools = self.parse_tools_used(row['failed_tools'])
                 used_tools = used_tools - failed_tools
             
-            tp += len(required_tools & used_tools)  # Tools đúng
-            fp += len(used_tools - required_tools)  # Tools thừa
-            fn += len(required_tools - used_tools)  # Tools thiếu
+            # Kiểm tra xem có gọi đúng hoàn toàn không
+            if used_tools == required_tools:
+                correct_count += 1
         
+        return correct_count / total_questions if total_questions > 0 else 0
+    
+    def calculate_f1_metrics(self, df):
+        """
+        Tính F1, Precision, Recall dựa trên ground truth từ synthetic_news.csv
+        
+        Precision = |Texp ∩ Tact| / |Tact| - Tỉ lệ tool được chọn là cần thiết
+        Recall = |Texp ∩ Tact| / |Texp| - Tỉ lệ tool cần thiết đã được tìm thấy
+        F1 = 2 * (Precision * Recall) / (Precision + Recall)
+        """
+        tp = fp = fn = 0
+        
+        for _, row in df.iterrows():
+            # Lấy tools cần thiết từ ground truth (Texp)
+            required_tools = self.get_required_tools(row['input'])
+            # Lấy tools agent đã gọi (Tact)
+            used_tools = self.parse_tools_used(row['tools'])
+            
+            # Loại bỏ failed tools khỏi Tact
+            if row['failed_tools_count'] > 0 and not pd.isna(row['failed_tools']):
+                failed_tools = self.parse_tools_used(row['failed_tools'])
+                used_tools = used_tools - failed_tools
+            
+            # Tính TP, FP, FN
+            tp += len(required_tools & used_tools)  # Tools đúng (gọi đúng và cần thiết)
+            fp += len(used_tools - required_tools)  # Tools thừa (gọi nhưng không cần)
+            fn += len(required_tools - used_tools)  # Tools thiếu (cần nhưng không gọi)
+        
+        # Tính metrics
         precision = tp / (tp + fp) if (tp + fp) > 0 else 0
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0
         f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
@@ -172,7 +196,7 @@ class AgentAnalyzer:
         
         return pd.DataFrame(failed_cases)
 
-def create_folder_structure(base_path="evaluation_analysis/results"):
+def create_folder_structure(base_path="results"):
     """Tạo cấu trúc thư mục"""
     base_path = Path(base_path)
     
@@ -189,7 +213,7 @@ def create_folder_structure(base_path="evaluation_analysis/results"):
         folder_path.mkdir(parents=True, exist_ok=True)
         print(f"📁 Created folder: {folder_path}")
 
-def save_metrics_separately(results_df, base_path="evaluation_analysis/results/metrics"):
+def save_metrics_separately(results_df, base_path="results/metrics"):
     """Lưu từng metric vào file riêng"""
     base_path = Path(base_path)
     
@@ -211,7 +235,7 @@ def save_metrics_separately(results_df, base_path="evaluation_analysis/results/m
     
     print(f"💾 Saved metrics to {base_path}")
 
-def create_individual_rankings(results_df, base_path="evaluation_analysis/results/rankings"):
+def create_individual_rankings(results_df, base_path="results/rankings"):
     """Tạo file ranking riêng cho từng metric"""
     base_path = Path(base_path)
     
@@ -238,6 +262,34 @@ def create_individual_rankings(results_df, base_path="evaluation_analysis/result
             f.write(f"{i}. {agent}: {row['F1_Score']:.4f}\n")
             f.write(f"   - Precision: {row['Precision']:.4f}\n")
             f.write(f"   - Recall: {row['Recall']:.4f}\n\n")
+    
+    # Precision ranking
+    with open(base_path / "precision_ranking.txt", 'w', encoding='utf-8') as f:
+        f.write("🎯 XẾP HẠNG PRECISION (Cao nhất → Thấp nhất)\n")
+        f.write("="*50 + "\n")
+        f.write("📊 Precision = |Texp ∩ Tact| / |Tact|\n")
+        f.write("💡 Tỉ lệ tool được chọn là cần thiết (ít gọi thừa)\n\n")
+        for i, (agent, row) in enumerate(summary.sort_values('Precision', ascending=False).iterrows(), 1):
+            f.write(f"{i}. {agent}: {row['Precision']:.4f} ({row['Precision']*100:.2f}%)\n")
+            if row['Precision'] < 0.7:
+                f.write("   ⚠️  Thường gọi tools thừa\n")
+            elif row['Precision'] > 0.9:
+                f.write("   ✅ Rất ít gọi tools thừa\n")
+            f.write("\n")
+    
+    # Recall ranking
+    with open(base_path / "recall_ranking.txt", 'w', encoding='utf-8') as f:
+        f.write("🎯 XẾP HẠNG RECALL (Cao nhất → Thấp nhất)\n")
+        f.write("="*50 + "\n")
+        f.write("📊 Recall = |Texp ∩ Tact| / |Texp|\n")
+        f.write("💡 Tỉ lệ tool cần thiết đã được tìm thấy (ít bỏ sót)\n\n")
+        for i, (agent, row) in enumerate(summary.sort_values('Recall', ascending=False).iterrows(), 1):
+            f.write(f"{i}. {agent}: {row['Recall']:.4f} ({row['Recall']*100:.2f}%)\n")
+            if row['Recall'] < 0.7:
+                f.write("   ⚠️  Thường bỏ sót tools cần thiết\n")
+            elif row['Recall'] > 0.9:
+                f.write("   ✅ Rất ít bỏ sót tools\n")
+            f.write("\n")
     
     # Tool performance ranking
     with open(base_path / "tool_performance_ranking.txt", 'w', encoding='utf-8') as f:
@@ -269,7 +321,7 @@ def create_individual_rankings(results_df, base_path="evaluation_analysis/result
     
     print(f"📊 Created rankings in {base_path}")
 
-def save_detailed_reports(results_df, failed_cases_df, base_path="evaluation_analysis/results/detailed_reports"):
+def save_detailed_reports(results_df, failed_cases_df, base_path="results/detailed_reports"):
     """Tạo các báo cáo chi tiết"""
     base_path = Path(base_path)
     
@@ -313,7 +365,7 @@ def save_detailed_reports(results_df, failed_cases_df, base_path="evaluation_ana
     
     print(f"📄 Created detailed reports in {base_path}")
 
-def save_failed_cases_analysis(failed_cases_df, base_path="evaluation_analysis/results/raw_data"):
+def save_failed_cases_analysis(failed_cases_df, base_path="results/raw_data"):
     """Lưu phân tích các trường hợp thất bại"""
     base_path = Path(base_path)
     failed_cases_df.to_csv(base_path / "failed_cases_analysis.csv", index=False)

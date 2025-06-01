@@ -1,0 +1,17 @@
+🎯 XẾP HẠNG PRECISION (Cao nhất → Thấp nhất)
+==================================================
+📊 Precision = |Texp ∩ Tact| / |Tact|
+💡 Tỉ lệ tool được chọn là cần thiết (ít gọi thừa)
+
+1. ReWOO: 0.9878 (98.78%)
+   ✅ Rất ít gọi tools thừa
+
+2. Reflexion: 0.9479 (94.79%)
+   ✅ Rất ít gọi tools thừa
+
+3. React: 0.9472 (94.72%)
+   ✅ Rất ít gọi tools thừa
+
+4. Multi-Agent: 0.6445 (64.45%)
+   ⚠️  Thường gọi tools thừa
+
