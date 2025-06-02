@@ -1,5 +1,0 @@
-Agent,Total Queries,Flexible Accuracy,F1 Score,Precision,Recall
-Multi-Agent,92,0.4457,0.7878,0.7283,0.9339
-ReWOO,92,0.2935,0.7104,0.9257,0.6101
-Reflexion,92,0.2391,0.7296,0.9348,0.6451
-ReAct,92,0.2174,0.6960,0.8967,0.6056

@@ -1,9 +1,0 @@
-Agent,Difficulty,Accuracy,Sample_Count
-React,dễ,1.0,37
-React,khó,0.9818181818181818,55
-ReWOO,dễ,1.0,37
-ReWOO,khó,0.9454545454545454,55
-Reflexion,dễ,1.0,37
-Reflexion,khó,0.9818181818181818,55
-Multi-Agent,dễ,0.918918918918919,37
-Multi-Agent,khó,0.8727272727272727,55

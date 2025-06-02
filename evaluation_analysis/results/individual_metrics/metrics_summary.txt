@@ -1,0 +1,74 @@
+INDIVIDUAL METRIC ANALYSIS SUMMARY
+==================================================
+
+OVERALL PERFORMANCE SUMMARY:
+------------------------------
+Multi-Agent:
+  Accuracy:  0.461
+  Precision: 0.644
+  Recall:    0.965
+  F1 Score:  0.773
+
+ReWOO:
+  Accuracy:  0.335
+  Precision: 0.988
+  Recall:    0.587
+  F1 Score:  0.736
+
+React:
+  Accuracy:  0.199
+  Precision: 0.947
+  Recall:    0.534
+  F1 Score:  0.680
+
+Reflexion:
+  Accuracy:  0.289
+  Precision: 0.948
+  Recall:    0.610
+  F1 Score:  0.741
+
+PERFORMANCE BY DIFFICULTY:
+------------------------------
+EASY QUERIES (Dễ):
+Multi-Agent: Acc=0.595, P=0.654, R=1.000, F1=0.791
+ReWOO: Acc=0.378, P=1.000, R=0.618, F1=0.764
+React: Acc=0.216, P=0.970, R=0.471, F1=0.634
+Reflexion: Acc=0.324, P=0.975, R=0.574, F1=0.722
+
+HARD QUERIES (Khó):
+Multi-Agent: Acc=0.327, P=0.635, R=0.931, F1=0.755
+ReWOO: Acc=0.291, P=0.976, R=0.556, F1=0.708
+React: Acc=0.182, P=0.925, R=0.597, F1=0.726
+Reflexion: Acc=0.255, P=0.921, R=0.646, F1=0.759
+
+==================================================
+RANKINGS BY METRIC:
+==================================================
+
+ACCURACY RANKING:
+--------------------
+1. Multi-Agent: 0.461
+2. ReWOO: 0.335
+3. Reflexion: 0.289
+4. React: 0.199
+
+PRECISION RANKING:
+--------------------
+1. ReWOO: 0.988
+2. Reflexion: 0.948
+3. React: 0.947
+4. Multi-Agent: 0.644
+
+RECALL RANKING:
+--------------------
+1. Multi-Agent: 0.965
+2. Reflexion: 0.610
+3. ReWOO: 0.587
+4. React: 0.534
+
+F1_SCORE RANKING:
+--------------------
+1. Multi-Agent: 0.773
+2. Reflexion: 0.741
+3. ReWOO: 0.736
+4. React: 0.680
