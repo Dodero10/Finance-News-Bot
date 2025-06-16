@@ -1,23 +1,24 @@
 FIGURE DESCRIPTIONS
 ==============================
 
-accuracy_analysis.png:
-  - Panel A: Overall accuracy across all queries
-  - Panel B: Accuracy comparison between easy vs hard queries
-  - Shows percentage of queries with perfect tool selection
+ACCURACY VISUALIZATIONS:
+accuracy_overall.png: Overall accuracy across all queries
+accuracy_by_difficulty.png: Accuracy comparison between easy vs hard queries
 
-precision_analysis.png:
-  - Panel A: Overall precision across all queries
-  - Panel B: Precision comparison between easy vs hard queries
-  - Shows proportion of selected tools that were relevant
+PRECISION VISUALIZATIONS:
+precision_overall.png: Overall precision across all queries
+precision_by_difficulty.png: Precision comparison between easy vs hard queries
 
-recall_analysis.png:
-  - Panel A: Overall recall across all queries
-  - Panel B: Recall comparison between easy vs hard queries
-  - Shows proportion of relevant tools successfully identified
+RECALL VISUALIZATIONS:
+recall_overall.png: Overall recall across all queries
+recall_by_difficulty.png: Recall comparison between easy vs hard queries
 
-f1_analysis.png:
-  - Panel A: Overall F1 score across all queries
-  - Panel B: F1 score comparison between easy vs hard queries
-  - Shows harmonic mean of precision and recall
+F1 SCORE VISUALIZATIONS:
+f1_overall.png: Overall F1 score across all queries
+f1_by_difficulty.png: F1 score comparison between easy vs hard queries
 
+INTERPRETATION:
+- Accuracy: Percentage of queries with perfect tool selection
+- Precision: Proportion of selected tools that were relevant
+- Recall: Proportion of relevant tools successfully identified
+- F1 Score: Harmonic mean of precision and recall

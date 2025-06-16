@@ -22,7 +22,7 @@ from src.agents.configuration import Configuration
 from src.agents.state import InputState, State
 from src.agents.tools import search_web, retrival_vector_db, listing_symbol, history_price, time_now
 from src.agents.utils import load_chat_model
-from src.agents.prompts import SUPERVISOR_PROMPT, RESEARCH_AGENT_PROMPT, FINANCE_AGENT_PROMPT
+from src.agents.prompts import SUPERVISOR_PROMPT, RESEARCH_AGENT_PROMPT, FINANCE_AGENT_PROMPT, SYNTHESIS_AGENT_PROMPT
 
 # Load environment variables
 load_dotenv()
@@ -39,6 +39,7 @@ langfuse_handler = CallbackHandler()
 RESEARCH_AGENT = "research_agent"
 FINANCE_AGENT = "finance_agent"
 SUPERVISOR = "supervisor"
+SYNTHESIS_AGENT = "synthesis_agent"
 
 # Define tools for each agent
 RESEARCH_TOOLS = [search_web, retrival_vector_db]
@@ -53,8 +54,8 @@ class MultiAgentState(State):
 
 class RouteResponse(BaseModel):
     """Response model for supervisor routing decisions."""
-    next_agent: Literal["research_agent", "finance_agent", "FINISH"] = Field(
-        description="The next agent to route to or FINISH if complete"
+    next_agent: Literal["research_agent", "finance_agent", "synthesis_agent", "FINISH"] = Field(
+        description="The next agent to route to, synthesis_agent to combine results, or FINISH if complete"
     )
     reasoning: str = Field(
         description="Brief explanation of why this choice was made"
@@ -81,7 +82,25 @@ async def supervisor_node(state: MultiAgentState) -> Dict[str, any]:
     
     # Add context about which agents have been used
     agent_status = f"\nĐã sử dụng agents: {', '.join(agents_used) if agents_used else 'Chưa có agent nào'}"
-    prompt = SUPERVISOR_PROMPT.format(messages=messages_str + agent_status)
+    
+    # Enhanced supervisor prompt with synthesis strategy
+    enhanced_prompt = SUPERVISOR_PROMPT + """
+
+SYNTHESIS STRATEGY:
+- "synthesis_agent": 
+  * Khi đã thu thập đủ thông tin từ các chuyên gia (research_agent VÀ/HOẶC finance_agent)
+  * Cần tổng hợp và kết hợp thông tin để đưa ra câu trả lời hoàn chỉnh
+  * BẮT BUỘC sử dụng khi có thông tin từ nhiều agents cần được tích hợp
+  * Chỉ sử dụng SAU KHI đã có đủ thông tin cần thiết
+
+QUY TẮC MỚI:
+1. Nếu đã có thông tin từ CẢ research_agent VÀ finance_agent → PHẢI chọn "synthesis_agent"
+2. Nếu có thông tin từ 1 agent và đủ để trả lời → có thể chọn "synthesis_agent" hoặc "FINISH"
+3. CHỈ chọn "FINISH" khi câu hỏi rất đơn giản và không cần tổng hợp
+
+"""
+    
+    prompt = enhanced_prompt.format(messages=messages_str + agent_status)
     
     response = await structured_llm.ainvoke([
         {"role": "system", "content": prompt}
@@ -182,6 +201,60 @@ async def finance_agent_node(state: MultiAgentState) -> Dict[str, any]:
         "agents_used": state.agents_used | {FINANCE_AGENT}
     }
 
+async def synthesis_agent_node(state: MultiAgentState) -> Dict[str, any]:
+    """Synthesis agent that combines results from all previous agents."""
+    
+    configuration = Configuration(
+        model="openai/gpt-4o-mini",
+        system_prompt=SYNTHESIS_AGENT_PROMPT,
+    )
+    
+    model = load_chat_model(configuration.model)
+    
+    # Extract original user query
+    user_messages = [msg for msg in state.messages if isinstance(msg, HumanMessage)]
+    original_query = getattr(user_messages[-1], 'content', 'No query specified') if user_messages else "No query specified"
+    
+    # Collect results from specialized agents (exclude supervisor and tool messages)
+    agent_results = []
+    
+    for msg in state.messages:
+        if isinstance(msg, AIMessage) and hasattr(msg, 'name'):
+            # Include content from research and finance agents (exclude tool calls)
+            if msg.name in [RESEARCH_AGENT, FINANCE_AGENT]:
+                # Skip messages that are just tool calls
+                if not (hasattr(msg, 'tool_calls') and msg.tool_calls):
+                    content = getattr(msg, 'content', '')
+                    if content.strip():  # Only include non-empty content
+                        agent_results.append(f"=== {msg.name.upper()} ===\n{content}")
+        elif hasattr(msg, 'name') and msg.name in ['search_web', 'retrival_vector_db', 'listing_symbol', 'history_price', 'time_now']:
+            # Include tool results for context
+            tool_result = getattr(msg, 'content', '')
+            if tool_result and len(str(tool_result)) > 50:  # Only include substantial tool results
+                agent_results.append(f"=== TOOL: {msg.name.upper()} ===\n{str(tool_result)[:500]}...")
+    
+    # Format the synthesis prompt
+    agent_results_text = "\n\n".join(agent_results) if agent_results else "Không có thông tin từ các chuyên gia."
+    
+    synthesis_prompt = SYNTHESIS_AGENT_PROMPT.format(
+        agent_results=agent_results_text,
+        original_query=original_query
+    )
+    
+    response = cast(
+        AIMessage,
+        await model.ainvoke([
+            {"role": "system", "content": synthesis_prompt}
+        ])
+    )
+    
+    response.name = SYNTHESIS_AGENT
+    
+    return {
+        "messages": [response],
+        "agents_used": state.agents_used | {SYNTHESIS_AGENT}
+    }
+
 def route_after_supervisor(state: MultiAgentState) -> str:
     """Route to the next agent based on supervisor's decision."""
     
@@ -191,6 +264,8 @@ def route_after_supervisor(state: MultiAgentState) -> str:
         return RESEARCH_AGENT
     elif state.current_agent == "finance_agent":
         return FINANCE_AGENT
+    elif state.current_agent == "synthesis_agent":
+        return SYNTHESIS_AGENT
     else:
         return END
 
@@ -220,6 +295,8 @@ def route_after_tools(state: MultiAgentState) -> str:
         return RESEARCH_AGENT
     elif last_ai_message and last_ai_message.name == FINANCE_AGENT:
         return FINANCE_AGENT
+    elif last_ai_message and last_ai_message.name == SYNTHESIS_AGENT:
+        return SYNTHESIS_AGENT
     
     # Fallback to supervisor
     return SUPERVISOR
@@ -230,6 +307,7 @@ builder = StateGraph(MultiAgentState, input=InputState, config_schema=Configurat
 builder.add_node(SUPERVISOR, supervisor_node)
 builder.add_node(RESEARCH_AGENT, research_agent_node)
 builder.add_node(FINANCE_AGENT, finance_agent_node)
+builder.add_node(SYNTHESIS_AGENT, synthesis_agent_node)
 builder.add_node("tools", ToolNode(RESEARCH_TOOLS + FINANCE_TOOLS))
 
 builder.add_edge("__start__", SUPERVISOR)
@@ -240,6 +318,7 @@ builder.add_conditional_edges(
     {
         RESEARCH_AGENT: RESEARCH_AGENT,
         FINANCE_AGENT: FINANCE_AGENT,
+        SYNTHESIS_AGENT: SYNTHESIS_AGENT,
         END: END
     }
 )
@@ -263,11 +342,21 @@ builder.add_conditional_edges(
 )
 
 builder.add_conditional_edges(
+    SYNTHESIS_AGENT,
+    route_after_agent,
+    {
+        "tools": "tools",
+        SUPERVISOR: SUPERVISOR
+    }
+)
+
+builder.add_conditional_edges(
     "tools",
     route_after_tools,
     {
         RESEARCH_AGENT: RESEARCH_AGENT,
         FINANCE_AGENT: FINANCE_AGENT,
+        SYNTHESIS_AGENT: SYNTHESIS_AGENT,
         SUPERVISOR: SUPERVISOR
     }
 )
@@ -301,7 +390,7 @@ async def main():
             if "messages" in result:
                 workflow_steps = []
                 for idx, msg in enumerate(result["messages"]):
-                    if hasattr(msg, 'name') and msg.name in [SUPERVISOR, RESEARCH_AGENT, FINANCE_AGENT]:
+                    if hasattr(msg, 'name') and msg.name in [SUPERVISOR, RESEARCH_AGENT, FINANCE_AGENT, SYNTHESIS_AGENT]:
                         content = getattr(msg, 'content', '')
                         content_preview = content[:150] + "..." if len(str(content)) > 150 else str(content)
                         workflow_steps.append(f"Step {idx+1} - {msg.name.upper()}: {content_preview}")
@@ -310,7 +399,7 @@ async def main():
                     print(step)
             
             # Print TOOLS USED
-            print("\n=== 🛠️ TOOLS USED ===")
+            print("\n=== 🔧 TOOLS USED ===")
             if "messages" in result:
                 tool_calls = []
                 tool_results = []
@@ -355,7 +444,7 @@ async def main():
                 final_response = None
                 for msg in reversed(final_messages):
                     if isinstance(msg, AIMessage) and hasattr(msg, 'name'):
-                        if msg.name in [RESEARCH_AGENT, FINANCE_AGENT] and not (hasattr(msg, 'tool_calls') and msg.tool_calls):
+                        if msg.name in [RESEARCH_AGENT, FINANCE_AGENT, SYNTHESIS_AGENT] and not (hasattr(msg, 'tool_calls') and msg.tool_calls):
                             final_response = msg
                             break
                     elif isinstance(msg, AIMessage) and not hasattr(msg, 'name') and not (hasattr(msg, 'tool_calls') and msg.tool_calls):
@@ -386,6 +475,14 @@ async def main():
                     content_preview = content[:100] + "..." if len(str(content)) > 100 else str(content)
                     tool_info = f" | Tools: {len(msg.tool_calls)}" if hasattr(msg, 'tool_calls') and msg.tool_calls else ""
                     print(f"  {idx+1}. {msg_type}: {content_preview}{tool_info}")
+            
+            # Log agent workflow for debugging
+            if "messages" in result:
+                agents_used = set()
+                for msg in result["messages"]:
+                    if hasattr(msg, 'name') and msg.name in [SUPERVISOR, RESEARCH_AGENT, FINANCE_AGENT, SYNTHESIS_AGENT]:
+                        agents_used.add(msg.name)
+                print(f"Agents used: {', '.join(agents_used)}")
             
         except Exception as e:
             print(f"❌ Error processing query: {e}")

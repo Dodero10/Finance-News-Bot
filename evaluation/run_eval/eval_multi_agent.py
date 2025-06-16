@@ -29,6 +29,7 @@ OUTPUT_CSV = os.path.join(project_root, "evaluation", "data_eval", "results", "m
 RESEARCH_AGENT = "research_agent"
 FINANCE_AGENT = "finance_agent"
 SUPERVISOR = "supervisor"
+SYNTHESIS_AGENT = "synthesis_agent"
 
 
 def read_queries(csv_path):
@@ -116,7 +117,7 @@ def extract_final_output_from_multi_agent(result):
     for msg in reversed(final_messages):
         if isinstance(msg, AIMessage) and hasattr(msg, 'name'):
             # Skip supervisor messages and tool call messages
-            if (msg.name in [RESEARCH_AGENT, FINANCE_AGENT] and 
+            if (msg.name in [RESEARCH_AGENT, FINANCE_AGENT, SYNTHESIS_AGENT] and 
                 not (hasattr(msg, 'tool_calls') and msg.tool_calls)):
                 final_response = msg
                 break
@@ -154,7 +155,7 @@ async def eval_multi_agent(queries):
             if "messages" in result:
                 agents_used = set()
                 for msg in result["messages"]:
-                    if hasattr(msg, 'name') and msg.name in [SUPERVISOR, RESEARCH_AGENT, FINANCE_AGENT]:
+                    if hasattr(msg, 'name') and msg.name in [SUPERVISOR, RESEARCH_AGENT, FINANCE_AGENT, SYNTHESIS_AGENT]:
                         agents_used.add(msg.name)
                 print(f"Agents used: {', '.join(agents_used)}")
             

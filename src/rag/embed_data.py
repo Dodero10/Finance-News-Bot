@@ -11,7 +11,7 @@ def main():
     parser.add_argument(
         "--input", 
         type=str, 
-        default="data/chunks/test.json_improved_chunks.json",
+        default="data/chunks/quoc_te.json_improved_chunks.json",
         help="Path to the input chunks JSON file"
     )
     parser.add_argument(

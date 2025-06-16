@@ -7,10 +7,8 @@ from chromadb.utils import embedding_functions
 from openai import OpenAI
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
-# Initialize OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def get_embedding_model():
@@ -115,7 +113,7 @@ def sanitize_metadata(metadata: Dict[str, Any]) -> Dict[str, Any]:
 def embed_and_store_chunks(
     file_path: str,
     collection,
-    batch_size: int = 100
+    batch_size: int = 256
 ):
     """
     Embeds chunks from a JSON file and stores them in a ChromaDB collection.

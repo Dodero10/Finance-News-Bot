@@ -7,30 +7,25 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
-# Initialize OpenAI client
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-# Get current time in Vietnam timezone
 def get_vietnam_time():
     vietnam_tz = pytz.timezone('Asia/Ho_Chi_Minh')
     current_time = datetime.now(vietnam_tz).strftime('%Y-%m-%d %H:%M:%S')
     return current_time
 
-# Generate a random date within a range
 def random_date(start_date, end_date):
     delta = end_date - start_date
     random_days = random.randrange(delta.days)
     return start_date + timedelta(days=random_days)
 
-# Format dates for the API calls
 def format_date(date):
     return date.strftime("%Y-%m-%d")
 
 # Load stock symbols and company names
-def load_stock_data(csv_file="evaluation/docs/list_symbol_organ_name.csv"):
+def load_stock_data(csv_file="evaluation/data_eval/list_symbol_organ_name.csv"):
     df = pd.read_csv(csv_file)
     # Filter out rows where the organ name is empty
     df = df[df['organ_name'].notna() & (df['organ_name'] != '')]
@@ -80,7 +75,7 @@ def get_tools_description():
     ]
     return tools_description
 
-# Generate a variety of query types
+
 def get_query_types():
     query_types = [
         # Simple queries for one stock over a specific period
