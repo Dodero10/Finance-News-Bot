@@ -234,17 +234,14 @@ def route_after_agent(state: MultiAgentState) -> str:
     
     last_message = state.messages[-1]
     
-    # If agent used tools, continue with tool execution
     if isinstance(last_message, AIMessage) and hasattr(last_message, 'tool_calls') and last_message.tool_calls:
         return "tools"
     
-    # Otherwise, go back to supervisor for next decision
     return SUPERVISOR
 
 def route_after_tools(state: MultiAgentState) -> str:
     """Route after tools execution."""
     
-    # Determine which agent the tools belonged to based on the last AI message
     last_ai_message = None
     for msg in reversed(state.messages):
         if isinstance(msg, AIMessage) and hasattr(msg, 'name'):
@@ -258,7 +255,6 @@ def route_after_tools(state: MultiAgentState) -> str:
     elif last_ai_message and last_ai_message.name == SYNTHESIS_AGENT:
         return SYNTHESIS_AGENT
     
-    # Fallback to supervisor
     return SUPERVISOR
 
 # Build the graph directly (similar to react_agent_graph.py)
@@ -321,7 +317,6 @@ builder.add_conditional_edges(
     }
 )
 
-# Compile the builder into an executable graph
 graph = builder.compile(name="Multi-Agent Finance System")
 
 async def main():
@@ -336,7 +331,6 @@ async def main():
         print(f"TEST CASE {i}")
         print('='*80)
         
-        # Print INPUT
         print("\n=== 📥 INPUT ===")
         print(f"User: {query}")
         
@@ -345,7 +339,6 @@ async def main():
                 "messages": [HumanMessage(content=query)]
             }, config={"callbacks": [langfuse_handler]})
             
-            # Print AGENT WORKFLOW
             print("\n=== 🔄 AGENT WORKFLOW ===")
             if "messages" in result:
                 workflow_steps = []
@@ -358,14 +351,12 @@ async def main():
                 for step in workflow_steps:
                     print(step)
             
-            # Print TOOLS USED
             print("\n=== 🔧 TOOLS USED ===")
             if "messages" in result:
                 tool_calls = []
                 tool_results = []
                 
                 for msg in result["messages"]:
-                    # Collect tool calls
                     if isinstance(msg, AIMessage) and hasattr(msg, 'tool_calls') and msg.tool_calls:
                         for tool_call in msg.tool_calls:
                             agent_name = getattr(msg, 'name', 'Unknown Agent')
@@ -375,7 +366,6 @@ async def main():
                                 'args': tool_call.get('args', {})
                             })
                     
-                    # Collect tool results
                     if hasattr(msg, 'name') and msg.name in ['search_web', 'retrival_vector_db', 'listing_symbol', 'history_price', 'time_now']:
                         tool_results.append({
                             'tool': msg.name,
@@ -396,11 +386,9 @@ async def main():
                         print(f"  {idx}. {tool_result['tool']}:")
                         print(f"     {tool_result['result_preview']}")
             
-            # Print FINAL OUTPUT
             print("\n=== 📤 FINAL OUTPUT ===")
             if "messages" in result:
                 final_messages = result["messages"]
-                # Get the last meaningful response (not supervisor routing)
                 final_response = None
                 for msg in reversed(final_messages):
                     if isinstance(msg, AIMessage) and hasattr(msg, 'name'):
@@ -417,10 +405,8 @@ async def main():
                 else:
                     print("No final response found.")
                     
-                # Print all messages for debugging
                 print("\n=== 🔍 ALL MESSAGES (DEBUG) ===")
                 for idx, msg in enumerate(final_messages):
-                    # Safely get message type and name
                     msg_name = getattr(msg, 'name', None)
                     msg_type_attr = getattr(msg, 'type', None)
                     
@@ -436,7 +422,6 @@ async def main():
                     tool_info = f" | Tools: {len(msg.tool_calls)}" if hasattr(msg, 'tool_calls') and msg.tool_calls else ""
                     print(f"  {idx+1}. {msg_type}: {content_preview}{tool_info}")
             
-            # Log agent workflow for debugging
             if "messages" in result:
                 agents_used = set()
                 for msg in result["messages"]:

@@ -5,7 +5,6 @@ import asyncio
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Add project root to sys.path
 project_root = str(Path(__file__).parent.parent.parent)
 sys.path.insert(0, project_root)
 
@@ -41,7 +40,6 @@ def extract_tools_and_failures(messages):
     failed_tools = []
     
     for msg in messages:
-        # AIMessage with tool_calls (OpenAI format)
         if isinstance(msg, AIMessage) and hasattr(msg, "tool_calls") and msg.tool_calls:
             for tool_call in msg.tool_calls:
                 if isinstance(tool_call, dict) and "name" in tool_call:
@@ -49,7 +47,6 @@ def extract_tools_and_failures(messages):
                 elif hasattr(tool_call, "name"):
                     successful_tools.add(tool_call.name)
         
-        # Check for invalid_tool_calls (failed tool calls)
         if isinstance(msg, AIMessage) and hasattr(msg, "invalid_tool_calls") and msg.invalid_tool_calls:
             for invalid_tool_call in msg.invalid_tool_calls:
                 if isinstance(invalid_tool_call, dict):
@@ -61,20 +58,15 @@ def extract_tools_and_failures(messages):
                     error_msg = getattr(invalid_tool_call, "error", "Unknown error")
                     failed_tools.append(f"{tool_name}: {error_msg}")
         
-        # ToolMessage with error status (LangGraph format)
         if hasattr(msg, "name") and getattr(msg, "name", None):
-            # Check if this is a successful tool result
             successful_tools.add(getattr(msg, "name"))
             
-            # Check for error status in ToolMessage
             if hasattr(msg, "status") and getattr(msg, "status") == "error":
                 tool_name = getattr(msg, "name")
                 error_content = getattr(msg, "content", "Unknown error")
                 failed_tools.append(f"{tool_name}: {error_content}")
-                # Remove from successful tools if it failed
                 successful_tools.discard(tool_name)
         
-        # Check for ToolMessage with error in additional_kwargs
         if (hasattr(msg, "additional_kwargs") and 
             isinstance(getattr(msg, "additional_kwargs"), dict) and 
             "error" in getattr(msg, "additional_kwargs")):
@@ -85,7 +77,6 @@ def extract_tools_and_failures(messages):
             else:
                 error_msg = str(error_info)
             failed_tools.append(f"{tool_name}: {error_msg}")
-            # Remove from successful tools if it failed
             successful_tools.discard(tool_name)
     
     return list(successful_tools), failed_tools
@@ -101,17 +92,14 @@ async def eval_react_agent(queries):
                 "messages": [HumanMessage(content=query)]
             }, config={"callbacks": [langfuse_handler], "tags": tag})
 
-            # Extract output
             output = ""
             if "messages" in result:
                 messages = result["messages"]
                 if messages:
-                    # Get the last message which contains the final response
                     final_message = messages[-1]
                     if isinstance(final_message, AIMessage):
                         output = final_message.content
                 
-                # Extract both successful and failed tools
                 successful_tools, failed_tools = extract_tools_and_failures(messages)
             else:
                 output = str(result)

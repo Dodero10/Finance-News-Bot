@@ -25,7 +25,6 @@ langfuse_handler = CallbackHandler()
 INPUT_CSV = os.path.join(project_root, "evaluation", "data_eval", "synthetic_data", "synthetic_news.csv")
 OUTPUT_CSV = os.path.join(project_root, "evaluation", "data_eval", "results", "multi_agent_eval_results.csv")
 
-# Agent names from multi_agent.py
 RESEARCH_AGENT = "research_agent"
 FINANCE_AGENT = "finance_agent"
 SUPERVISOR = "supervisor"
@@ -48,19 +47,15 @@ def extract_tools_and_failures_from_multi_agent(result):
     
     if "messages" in result:
         for msg in result["messages"]:
-            # AIMessage with tool_calls (OpenAI format)
             if isinstance(msg, AIMessage) and hasattr(msg, "tool_calls") and msg.tool_calls:
                 for tool_call in msg.tool_calls:
                     if isinstance(tool_call, dict) and "name" in tool_call:
-                        # Only add actual tool names, not agent names
                         if tool_call["name"] in ['search_web', 'retrival_vector_db', 'listing_symbol', 'history_price', 'time_now']:
                             successful_tools.add(tool_call["name"])
                     elif hasattr(tool_call, "name"):
-                        # Only add actual tool names, not agent names
                         if tool_call.name in ['search_web', 'retrival_vector_db', 'listing_symbol', 'history_price', 'time_now']:
                             successful_tools.add(tool_call.name)
             
-            # Check for invalid_tool_calls (failed tool calls)
             if isinstance(msg, AIMessage) and hasattr(msg, "invalid_tool_calls") and msg.invalid_tool_calls:
                 for invalid_tool_call in msg.invalid_tool_calls:
                     if isinstance(invalid_tool_call, dict):
@@ -72,21 +67,16 @@ def extract_tools_and_failures_from_multi_agent(result):
                         error_msg = getattr(invalid_tool_call, "error", "Unknown error")
                         failed_tools.append(f"{tool_name}: {error_msg}")
             
-            # ToolMessage with error status (LangGraph format)
             if hasattr(msg, "name") and getattr(msg, "name", None):
-                # Only add actual tool names, not agent names
                 if msg.name in ['search_web', 'retrival_vector_db', 'listing_symbol', 'history_price', 'time_now']:
                     successful_tools.add(getattr(msg, "name"))
                     
-                    # Check for error status in ToolMessage
                     if hasattr(msg, "status") and getattr(msg, "status") == "error":
                         tool_name = getattr(msg, "name")
                         error_content = getattr(msg, "content", "Unknown error")
                         failed_tools.append(f"{tool_name}: {error_content}")
-                        # Remove from successful tools if it failed
                         successful_tools.discard(tool_name)
             
-            # Check for ToolMessage with error in additional_kwargs
             if (hasattr(msg, "additional_kwargs") and 
                 isinstance(getattr(msg, "additional_kwargs"), dict) and 
                 "error" in getattr(msg, "additional_kwargs")):
@@ -97,7 +87,6 @@ def extract_tools_and_failures_from_multi_agent(result):
                 else:
                     error_msg = str(error_info)
                 failed_tools.append(f"{tool_name}: {error_msg}")
-                # Remove from successful tools if it failed
                 successful_tools.discard(tool_name)
     
     return list(successful_tools), failed_tools
@@ -112,17 +101,14 @@ def extract_final_output_from_multi_agent(result):
     if not final_messages:
         return ""
     
-    # Get the last meaningful response (not supervisor routing)
     final_response = None
     for msg in reversed(final_messages):
         if isinstance(msg, AIMessage) and hasattr(msg, 'name'):
-            # Skip supervisor messages and tool call messages
             if (msg.name in [RESEARCH_AGENT, FINANCE_AGENT, SYNTHESIS_AGENT] and 
                 not (hasattr(msg, 'tool_calls') and msg.tool_calls)):
                 final_response = msg
                 break
         elif isinstance(msg, AIMessage) and not hasattr(msg, 'name'):
-            # Generic AI message without tool calls
             if not (hasattr(msg, 'tool_calls') and msg.tool_calls):
                 final_response = msg
                 break
@@ -130,7 +116,6 @@ def extract_final_output_from_multi_agent(result):
     if final_response:
         return getattr(final_response, 'content', '')
     else:
-        # Fallback to last message
         return getattr(final_messages[-1], 'content', str(final_messages[-1]))
 
 
@@ -139,19 +124,15 @@ async def eval_multi_agent(queries):
     for idx, query in enumerate(queries):
         print(f"Đang chạy đến dòng số {idx+1}/{len(queries)} trong dataset...")
         print(f"Query: {query}")
-        try:
-            # Multi-agent expects messages format
+        try:    
             result = await multi_agent_graph.ainvoke({
                 "messages": [HumanMessage(content=query)]
             }, config={"callbacks": [langfuse_handler], "tags": tag})
 
-            # Extract output - Multi-agent has complex message structure
             output = extract_final_output_from_multi_agent(result)
                 
-            # Extract both successful and failed tools from Multi-agent specific structure
             successful_tools, failed_tools = extract_tools_and_failures_from_multi_agent(result)
             
-            # Log agent workflow for debugging
             if "messages" in result:
                 agents_used = set()
                 for msg in result["messages"]:
