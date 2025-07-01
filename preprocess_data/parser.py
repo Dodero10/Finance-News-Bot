@@ -5,13 +5,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Initialize the model
 model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", api_key=os.getenv("GOOGLE_API_KEY"))
 
-# Download and encode the image
 image_data = base64.b64encode(httpx.get("https://image.tinnhanhchungkhoan.vn/w640/Uploaded/2025/wpxlcdjwi/2025_03_16/1-5394-555.png").content).decode("utf-8")
 
-# Create a message with the image
 message = HumanMessage(
     content=[
         {"type": "text", "text": "Parse image and return the content in markdown format"},
@@ -22,8 +19,6 @@ message = HumanMessage(
     ],
 )
 
-# Invoke the model with the message
 response = model.invoke([message])
 
-# Print the model's response
 print(response.content)

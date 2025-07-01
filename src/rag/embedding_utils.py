@@ -12,16 +12,9 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def get_embedding_model():
-    """
-    Returns the cheapest OpenAI embedding model.
-    Currently, this is 'text-embedding-3-small'.
-    """
     return "text-embedding-3-small"
 
 def get_openai_ef():
-    """
-    Returns an OpenAI embedding function for ChromaDB.
-    """
     openai_ef = embedding_functions.OpenAIEmbeddingFunction(
         api_key=os.getenv("OPENAI_API_KEY"),
         model_name=get_embedding_model()
@@ -31,12 +24,8 @@ def get_openai_ef():
 def create_chroma_client(persist_directory: str = "finance_news_vector_db"):
     """
     Creates and returns a ChromaDB client with the specified persist directory.
-    
     Args:
         persist_directory: Directory where ChromaDB will store data
-        
-    Returns:
-        A ChromaDB client
     """
     return chromadb.PersistentClient(path=persist_directory)
 
@@ -47,21 +36,16 @@ def create_collection(client, collection_name: str = "finance_news"):
     Args:
         client: ChromaDB client
         collection_name: Name of the collection
-        
-    Returns:
-        A ChromaDB collection
     """
     openai_ef = get_openai_ef()
     
     try:
-        # Try to get existing collection
         collection = client.get_collection(
             name=collection_name,
             embedding_function=openai_ef
         )
         print(f"Using existing collection: {collection_name}")
     except:
-        # Create new collection if it doesn't exist
         collection = client.create_collection(
             name=collection_name,
             embedding_function=openai_ef
@@ -123,22 +107,17 @@ def embed_and_store_chunks(
         collection: ChromaDB collection
         batch_size: Number of chunks to process at once
     """
-    # Load chunks from JSON file
     with open(file_path, 'r', encoding='utf-8') as f:
         chunks = json.load(f)
     
-    # Process chunks in batches
     for i in tqdm(range(0, len(chunks), batch_size)):
         batch = chunks[i:i+batch_size]
         
-        # Prepare data for ChromaDB
         ids = [f"chunk_{i+j}" for j in range(len(batch))]
         documents = [chunk["content"] for chunk in batch]
         
-        # Sanitize metadata to ensure compatibility with ChromaDB
         metadatas = [sanitize_metadata(chunk["metadata"]) for chunk in batch]
         
-        # Add documents to collection
         collection.add(
             ids=ids,
             documents=documents,
@@ -165,14 +144,12 @@ def retrieve_similar_chunks(
     Returns:
         List of retrieved documents and their metadata
     """
-    # Query the collection
     results = collection.query(
         query_texts=[query],
         n_results=n_results,
         where=filter_criteria
     )
     
-    # Format results
     retrieved_results = []
     for i in range(len(results["documents"][0])):
         retrieved_results.append({
@@ -201,7 +178,6 @@ def get_context_for_rag(
     Returns:
         Formatted context string for RAG
     """
-    # Retrieve similar chunks
     retrieved_chunks = retrieve_similar_chunks(
         collection=collection,
         query=query,
@@ -209,13 +185,11 @@ def get_context_for_rag(
         filter_criteria=filter_criteria
     )
     
-    # Format context
     context = ""
     for i, chunk in enumerate(retrieved_chunks):
         context += f"\n--- Document {i+1} ---\n"
         context += f"Content: {chunk['content']}\n"
         
-        # Add metadata
         context += "Metadata:\n"
         for key, value in chunk["metadata"].items():
             context += f"  - {key}: {value}\n"
@@ -244,14 +218,11 @@ def retrieve_from_db(
     Returns:
         Either formatted context string or list of retrieved chunks
     """
-    # Create ChromaDB client
     client = create_chroma_client(db_path)
     
-    # Get collection
     collection = create_collection(client, collection_name)
     
     if return_formatted:
-        # Return formatted context for RAG
         return get_context_for_rag(
             query=query,
             collection=collection,
@@ -259,7 +230,6 @@ def retrieve_from_db(
             filter_criteria=filter_criteria
         )
     else:
-        # Return raw chunks
         return retrieve_similar_chunks(
             collection=collection,
             query=query,

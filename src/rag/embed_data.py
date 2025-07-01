@@ -29,19 +29,16 @@ def main():
     parser.add_argument(
         "--batch_size", 
         type=int, 
-        default=100,
+        default=512,
         help="Batch size for processing chunks"
     )
     
     args = parser.parse_args()
     
-    # Create ChromaDB client
     client = create_chroma_client(args.db_path)
     
-    # Create or get collection
     collection = create_collection(client, args.collection)
     
-    # Embed and store chunks
     embed_and_store_chunks(
         file_path=args.input,
         collection=collection,

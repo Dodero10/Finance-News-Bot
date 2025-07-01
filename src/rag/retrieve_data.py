@@ -35,14 +35,11 @@ def main():
     
     args = parser.parse_args()
     
-    # Create ChromaDB client
     client = create_chroma_client(args.db_path)
     
-    # Get collection
     collection = create_collection(client, args.collection)
     
     print(args.query)
-    # Get context for RAG
     context = get_context_for_rag(
         query=args.query,
         collection=collection,
