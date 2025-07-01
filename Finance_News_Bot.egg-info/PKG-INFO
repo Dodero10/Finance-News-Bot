@@ -14,148 +14,112 @@ Requires-Dist: langchain>=0.2.14
 Requires-Dist: langchain-fireworks>=0.1.7
 Requires-Dist: python-dotenv>=1.0.1
 Requires-Dist: langchain-tavily>=0.1
+Requires-Dist: langfuse
 Provides-Extra: dev
 Requires-Dist: mypy>=1.11.1; extra == "dev"
 Requires-Dist: ruff>=0.6.1; extra == "dev"
 Dynamic: license-file
 
-# Finance News Bot
+# Bot Tin Tức Tài Chính
 
-<<<<<<< HEAD
-Finance News Bot is a modular system for crawling, processing, indexing, and querying Vietnamese financial news articles. It leverages advanced Retrieval Augmented Generation (RAG) techniques and modern LLMs to provide powerful search and summarization capabilities over financial news data.
+Hệ thống phân tích tin tức tài chính Việt Nam được hỗ trợ bởi AI sử dụng kiến trúc đa agent **LangGraph** với pipeline RAG toàn diện cho việc trả lời câu hỏi tài chính thông minh.
 
-## Features
+## 🌟 Tính Năng Chính
 
-- Automated crawling of financial news from sources like [TinNhanhChungKhoan](https://www.tinnhanhchungkhoan.vn)
-- Modular RAG pipeline using LangGraph and LangChain
-- Support for various chunk types (paragraphs, tables, images)
-- Embedding and vector database support (ChromaDB, sentence-transformers)
-- Configurable LLM provider (Google, OpenAI, Hugging Face)
-- Type-safe implementation with Pydantic models
-- Command-line and (optionally) web UI for interaction
+### 🤖 **Kiến Trúc Đa Agent**
+- **Agent Giám Sát**: Định tuyến nhiệm vụ và điều phối thông minh
+- **Agent Nghiên Cứu**: Tìm kiếm web và truy xuất tin tức dựa trên RAG  
+- **Agent Tài Chính**: Dữ liệu và phân tích thị trường chứng khoán Việt Nam
 
-## Quick Start
+### 📈 **Tích Hợp Dữ Liệu Tài Chính Việt Nam**
+- Dữ liệu thị trường chứng khoán Việt Nam thời gian thực qua **vnstock**
+- Phân tích giá lịch sử với nhiều nguồn dữ liệu (VCI, TCBS, MSN)
+- Danh sách công ty và chỉ số tài chính
+- Tìm kiếm và theo dõi mã chứng khoán
 
-### 1. Install Dependencies
+### 🛠️ **Bộ Công Cụ Toàn Diện**
+- **Tìm Kiếm Web**: Thông tin thời gian thực qua Tavily Search
+- **Cơ Sở Dữ Liệu Vector**: Tìm kiếm ngữ nghĩa qua kho tin tức tài chính
+- **Dữ Liệu Cổ Phiếu**: Lịch sử giá, thông tin công ty, mã thị trường
+- **Dịch Vụ Thời Gian**: Hỗ trợ múi giờ Việt Nam
 
-```bash
-pip install -r requirements.txt
-```
+### 📊 **Framework Đánh Giá Mạnh Mẽ**
+- Tạo dữ liệu tổng hợp để kiểm thử
+- Đánh giá đa chỉ số (độ chính xác, precision, recall, F1)
+- So sánh và phân tích hiệu suất agent
+- Công cụ benchmark toàn diện
 
-### 2. Setup Environment
+## 🚀 Bắt Đầu Nhanh
 
-- Copy the example environment file and update it with your API keys:
-  ```bash
-  cp rag/.env.example .env
-  ```
-- Edit `.env` with your credentials:
-  ```
-  OPENAI_API_KEY=your_openai_api_key
-  GOOGLE_API_KEY=your_google_api_key
-  HUGGINGFACE_TOKEN=your_huggingface_token
-  LLM_PROVIDER=google  # or 'openai'
-  ```
+### Yêu Cầu Tiên Quyết
+- Python 3.11+
+- API keys cho các nhà cung cấp LLM (khuyến nghị OpenAI)
+- Thiết lập cơ sở dữ liệu vector ChromaDB
 
-### 3. (Optional) Setup ChromeDriver for Crawling
+### Cài Đặt
 
-- Download ChromeDriver matching your Chrome version
-- Place it at: `E:\Thesis\Crawl\chromedriver-win64\chromedriver.exe`
+1. **Clone repository**
+   ```bash
+   git clone https://github.com/Dodero10/Finance-News-Bot.git
+   cd Finance-News-Bot
+   ```
 
-### 4. Crawl Financial News
-
-```bash
-python crawl.py
-```
-Output will be saved to `tinnhanhchungkhoan_quoc_te.json`.
-
-### 5. Preprocess and Chunk Data
-
-```bash
-python run_chunking.py
-```
-
-### 6. Index Chunks
-
-```bash
-python run_naive_rag.py index --file chunks/your_chunks.json --collection finance_news
-```
-
-### 7. Query the System
-
-```bash
-python run_naive_rag.py query --collection finance_news --query "Your question here"
-```
-
-## Directory Structure
-
-- `crawl/` – Web crawlers for news sources
-- `preprocessing/` – Data cleaning and chunking scripts
-- `chunks/` – Processed and chunked data
-- `rag/` – RAG pipeline and related utilities
-- `frontend/` – (If present) Web UI for interaction
-- `data/`, `index_store/` – Data and index storage
-- `workflow/`, `scripts/`, `analysis/` – Additional utilities, analysis, and workflow automation
-
-## Requirements
-
-- Python 3.8+
-- See [requirements.txt](requirements.txt) for full dependency list
-
-## Documentation
-
-- For more details, see the [Chainlit Documentation](https://docs.chainlit.io) if you are using the Chainlit UI.
-- For RAG pipeline details, see the code and comments in the `rag/` directory.
-
-## Notes
-
-This project is under active development. Features, usage, and documentation may evolve.
-=======
-Finance News Bot is an end-to-end pipeline for crawling, processing, and enriching financial news articles, with a focus on Vietnamese sources such as [TinNhanhChungKhoan](https://www.tinnhanhchungkhoan.vn).
-
-## Features
-
-- **Automated Crawling**: Scrapes news articles (text, metadata, images) using Selenium and BeautifulSoup.
-- **Image Content Extraction**: Uses Google Gemini (via Langchain) to parse image content and enrich articles with structured image metadata.
-- **Data Preprocessing**: Utilities for cleaning, fixing, and transforming JSON datasets, including handling missing or problematic images.
-- **Modular Design**: Clear separation of crawling, preprocessing, and workflow components for easy extension and maintenance.
-
-## Project Structure
-
-- `crawl/` — Contains the main crawler (`crawl.py`) for collecting articles.
-- `preprocessing/` — Scripts for image extraction, fixing null images, and other data enrichment tasks. Includes its own README for details.
-- `data/` — Stores raw and processed JSON datasets.
-- `workflow/` — Advanced agentic and RAG pipelines (under development).
-- `requirements.txt` — Python dependencies.
-- `.env` — Store your Google Gemini API keys here.
-
-## Quick Start
-
-1. **Install dependencies:**
+2. **Cài đặt dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Set up ChromeDriver:**
-   - Download ChromeDriver matching your Chrome version
-   - Place it at: `E:\Thesis\Crawl\chromedriver-win64\chromedriver.exe`
-
-3. **Add your Google Gemini API key:**
-   - Create a `.env` file in the project root:
-     ```
-     GOOGLE_API_KEY=your_api_key_here
-     ```
-
-4. **Run the crawler:**
+3. **Thiết lập môi trường**
    ```bash
-   python crawl/crawl.py
+   cp .env.example .env
+   # Thêm API keys vào .env:
+   # OPENAI_API_KEY=your_openai_key
+   # TAVILY_API_KEY=your_tavily_key
+   # LANGFUSE_PUBLIC_KEY=your_langfuse_key (tùy chọn)
+   # LANGFUSE_SECRET_KEY=your_langfuse_secret (tùy chọn)
    ```
-   Output will be saved to `data/tinnhanhchungkhoan_quoc_te.json`
 
-5. **Process images in crawled data (optional):**
-   See `preprocessing/README.md` for advanced image processing and metadata enrichment using Gemini.
+### Chạy Hệ Thống
 
-## Notes
+#### **LangGraph Server (Khuyến Nghị)**
+```bash
+langgraph dev
+```
+Lệnh này khởi động LangGraph development server với tất cả agents có sẵn.
 
-- This project is under active development. For advanced features and workflows, check the `workflow/` and `preprocessing/` directories.
-- For details on image parsing and metadata, see `preprocessing/README.md`.
->>>>>>> feat/preprocessing
+#### **Chạy Agent Riêng Lẻ**
+```bash
+# Hệ Thống Đa Agent
+python -m src.agents.multi_agent
+```
+
+## 🎯 Các Agent Có Sẵn
+
+### **Hệ Thống Đa Agent** (Chính)
+Hệ thống phối hợp với các agent chuyên biệt cho phân tích tài chính toàn diện:
+- Định tuyến nhiệm vụ thông minh dựa trên loại câu hỏi
+- Khả năng xử lý song song
+- Tổng hợp thông tin giữa các agent
+- Quản lý workflow thích ứng
+
+### **ReAct Agent** 
+Agent Lý luận và Hành động với tích hợp công cụ để giải quyết vấn đề từng bước.
+
+### **ReWOO Agent**
+Agent Lý luận Không Quan sát cho việc lập kế hoạch và thực thi hiệu quả.
+
+### **Reflexion Agent**
+Agent tự sửa lỗi học từ phản hồi và cải thiện câu trả lời.
+
+## 🛠️ Công Cụ & Khả Năng
+
+### **Công Cụ Nghiên Cứu**
+- `search_web`: Tìm kiếm web thời gian thực qua Tavily
+- `retrival_vector_db`: Tìm kiếm ngữ nghĩa qua tin tức tài chính Việt Nam
+
+### **Công Cụ Tài Chính**  
+- `listing_symbol`: Tra cứu mã chứng khoán Việt Nam
+- `history_price`: Dữ liệu giá lịch sử (nhiều nguồn)
+- `time_now`: Tiện ích múi giờ Việt Nam
+
+

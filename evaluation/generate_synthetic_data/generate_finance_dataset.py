@@ -24,10 +24,8 @@ def random_date(start_date, end_date):
 def format_date(date):
     return date.strftime("%Y-%m-%d")
 
-# Load stock symbols and company names
 def load_stock_data(csv_file="evaluation/data_eval/list_symbol_organ_name.csv"):
     df = pd.read_csv(csv_file)
-    # Filter out rows where the organ name is empty
     df = df[df['organ_name'].notna() & (df['organ_name'] != '')]
     return df
 
@@ -48,7 +46,7 @@ def get_tools_description():
                     "type": "str"
                 },
                 "source": {
-                    "description": "The source from which to retrieve the data (VCI, TCBS, MSN)",
+                    "description": "The source from which to retrieve the data",
                     "type": "str",
                     "default": "VCI"
                 },
@@ -78,35 +76,16 @@ def get_tools_description():
 
 def get_query_types():
     query_types = [
-        # Simple queries for one stock over a specific period
-        "single_stock_history",
-        
-        # Queries for comparing multiple stocks
-        "compare_stocks",
-        
-        # Queries about time
-        "current_time",
-        
-        # Queries for listing all stocks
-        "list_all_stocks",
-        
-        # Queries for stock with different intervals (daily, weekly, monthly, etc.)
-        "interval_data",
-        
-        # Queries combining listing and history
-        "combined_listing_history",
-        
-        # Queries for a company by name rather than symbol
-        "company_name_lookup",
-        
-        # Queries for stock data with specific source
-        "specific_source",
-        
-        # Queries asking for short timeframes (days)
-        "short_timeframe",
-        
-        # Queries asking for long timeframes (months, year)
-        "long_timeframe"
+        "single_stock_history", # Simple queries for one stock over a specific period
+        "compare_stocks", # Queries for comparing multiple stocks
+        "current_time", # Queries about time
+        "list_all_stocks", # Queries for listing all stocks
+        "interval_data", # Queries for stock with different intervals (daily, weekly, monthly, etc.)
+        "combined_listing_history", # Queries combining listing and history
+        "company_name_lookup", # Queries for a company by name rather than symbol
+        "specific_source", # Queries for stock data with specific source
+        "short_timeframe", # Queries asking for short timeframes (days)
+        "long_timeframe" # Queries asking for long timeframes (months, year)
     ]
     return query_types
 
@@ -116,18 +95,14 @@ def generate_query_prompts(symbols_df, num_samples=10):
     tools = get_tools_description()
     query_types = get_query_types()
     
-    # Generate end date (today) and start date (2 years ago)
     end_date = datetime.today()
-    start_date = end_date - timedelta(days=730)  # 2 years back to allow for longer ranges
+    start_date = end_date - timedelta(days=730)
     
-    # Ensure we use a good mix of query types
     selected_query_types = []
     for i in range(num_samples):
         if i < len(query_types):
-            # For the first batch, use each type once to ensure diversity
             selected_query_types.append(query_types[i])
         else:
-            # After covering all types once, choose randomly
             selected_query_types.append(random.choice(query_types))
     
     for i in range(num_samples):
@@ -135,75 +110,58 @@ def generate_query_prompts(symbols_df, num_samples=10):
         
         # Configure parameters based on query type
         if query_type == "compare_stocks":
-            # Select 2-3 stocks for comparison
             num_symbols = random.randint(2, 3)
             timeframe = "short" if random.random() < 0.5 else "long"
         elif query_type == "single_stock_history":
-            # Just one stock
             num_symbols = 1
             timeframe = "medium"
         elif query_type == "current_time":
-            # Time query doesn't need stocks
             num_symbols = 0
             timeframe = "none"
         elif query_type == "list_all_stocks":
-            # Listing doesn't need specific stocks
             num_symbols = 0
             timeframe = "none"
         elif query_type == "interval_data":
-            # One stock with focus on interval
             num_symbols = 1
             timeframe = "short" if random.random() < 0.7 else "medium"
         elif query_type == "combined_listing_history":
-            # One stock but will require both tools
             num_symbols = 1
             timeframe = "medium"
         elif query_type == "company_name_lookup":
-            # One stock, focus on company name
             num_symbols = 1
             timeframe = "none"
         elif query_type == "specific_source":
-            # One stock, focus on data source
             num_symbols = 1
             timeframe = "medium"
         elif query_type == "short_timeframe":
-            # One stock, short timeframe
             num_symbols = 1
             timeframe = "short"
         elif query_type == "long_timeframe":
-            # One stock, long timeframe
             num_symbols = 1
             timeframe = "long"
         else:
-            # Default
             num_symbols = 1
             timeframe = "medium"
         
-        # Select random symbols if needed
         if num_symbols > 0:
             selected_symbols = symbols_df.sample(num_symbols)
         else:
-            # For queries that don't need specific stocks, still provide context
             selected_symbols = pd.DataFrame()
         
-        # Generate date range appropriate for the timeframe
         if timeframe == "short":
-            # 1-14 days
             random_duration = random.randint(1, 14)
             random_end = random_date(end_date - timedelta(days=30), end_date)
             random_start = random_end - timedelta(days=random_duration)
         elif timeframe == "medium":
-            # 15-60 days
             random_duration = random.randint(15, 60)
             random_end = random_date(end_date - timedelta(days=90), end_date)
             random_start = random_end - timedelta(days=random_duration)
         elif timeframe == "long":
-            # 61-365 days
             random_duration = random.randint(61, 365)
             random_end = end_date - timedelta(days=random.randint(0, 30))
             random_start = random_end - timedelta(days=random_duration)
         else:
-            # No timeframe needed (e.g., for current time queries)
+            # No timeframe needed (current time queries)
             random_start = end_date - timedelta(days=30)
             random_end = end_date
         
@@ -243,7 +201,7 @@ def generate_query_prompts(symbols_df, num_samples=10):
     
     return prompts
 
-# Generate synthetic dataset using OpenAI
+# Generate synthetic dataset
 def generate_synthetic_dataset(prompts, model="gpt-4.1-nano"):
     dataset = []
     
@@ -345,8 +303,7 @@ Create a question that would require using one or more of these tools. The quest
     
     return dataset
 
-# Save dataset to CSV
-def save_dataset(dataset, filename="finance_synthetic_dataset.csv"):
+def save_dataset(dataset, filename="test_gen_synthetic.csv"):
     df = pd.DataFrame(dataset)
     df.to_csv(filename, index=False)
     print(f"Dataset saved to {filename}")

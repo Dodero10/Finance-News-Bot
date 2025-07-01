@@ -84,14 +84,15 @@ def listing_symbol():
 
 
 IntervalType = Literal['1m', '5m', '15m', '30m', '1H', '1D', '1W', '1M']
+SourceType = Literal['VCI', 'TCBS', 'MSN']
 
-def history_price(symbol: str, source: str, start_date: str, end_date: str, interval: IntervalType) -> Optional[dict[str, Any]]:
+def history_price(symbol: str, source: SourceType, start_date: str, end_date: str, interval: IntervalType) -> Optional[dict[str, Any]]:
     """
     Retrieve historical price data for a given stock symbol.
     
     Args:
         symbol: The stock symbol to retrieve data for.
-        source: The source from which to retrieve the data. The symbol is from listing_symbol tool.
+        source: The source from which to retrieve the data. Default is 'VCI'.
         start_date: The start date for the historical data. Example: 2025-04-01
         end_date: The end date for the historical data. Example: 2025-04-01
         interval: The interval for the historical data. Default is '1D'.
