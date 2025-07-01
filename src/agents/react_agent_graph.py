@@ -8,7 +8,6 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 
-# Add the project root to Python path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.insert(0, project_root)
 
@@ -21,9 +20,6 @@ from src.agents.tools import TOOLS
 from src.agents.utils import load_chat_model
 from src.agents.prompts import REACT_AGENT_PROMPT
 
-
-
-# Load environment variables
 load_dotenv()
 
 langfuse = Langfuse(
@@ -94,27 +90,22 @@ graph = builder.compile(name="ReAct Agent")
 async def main():
     test_query = "Tin tức về giá cả cổ phiếu của công ty FPT trong tuần vừa qua"
     
-    # Print the input query
     print("\n=== INPUT ===")
     print(f"User: {test_query}")
     
-    # Get final result using invoke instead of stream
     result = await graph.ainvoke({
         "messages": [HumanMessage(content=test_query)]
     }, config={"callbacks": [langfuse_handler]})
     
     print("\n=== FINAL OUTPUT ===")
     
-    # Access the final message in the result
     if "messages" in result:
         messages = result["messages"]
         if messages:
-            # Get the last message which contains the final response
             final_message = messages[-1]
             if isinstance(final_message, AIMessage):
                 print(f"AI: {final_message.content}")
                 
-    # Show tools used during the conversation
     tool_messages = [msg for msg in result.get("messages", []) 
                     if hasattr(msg, "name") and getattr(msg, "name", None)]
     

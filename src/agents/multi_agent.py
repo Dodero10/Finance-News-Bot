@@ -18,7 +18,7 @@ from langfuse import Langfuse
 from langfuse.callback import CallbackHandler   
 
 from src.agents.configuration import Configuration
-from src.agents.state import InputState, State
+from src.agents.state import InputState, MultiAgentState
 from src.agents.tools import search_web, retrival_vector_db, listing_symbol, history_price, time_now
 from src.agents.utils import load_chat_model
 from src.agents.prompts import SUPERVISOR_PROMPT, RESEARCH_AGENT_PROMPT, FINANCE_AGENT_PROMPT, SYNTHESIS_AGENT_PROMPT
@@ -33,22 +33,13 @@ langfuse = Langfuse(
 
 langfuse_handler = CallbackHandler()
 
-# Define agent names
 RESEARCH_AGENT = "research_agent"
 FINANCE_AGENT = "finance_agent"
 SUPERVISOR = "supervisor"
 SYNTHESIS_AGENT = "synthesis_agent"
 
-# Define tools for each agent
 RESEARCH_TOOLS = [search_web, retrival_vector_db]
 FINANCE_TOOLS = [listing_symbol, history_price, time_now]
-
-@dataclass
-class MultiAgentState(State):
-    """Extended state for multi-agent coordination."""
-    current_agent: Optional[str] = None
-    task_completed: bool = False
-    agents_used: set = field(default_factory=set)
 
 class RouteResponse(BaseModel):
     """Response model for supervisor routing decisions."""
@@ -70,41 +61,20 @@ async def supervisor_node(state: MultiAgentState) -> Dict[str, any]:
     model = load_chat_model(configuration.model)
     structured_llm = model.with_structured_output(RouteResponse)
     
-    # Get agents already used from state
     agents_used = getattr(state, 'agents_used', set())
     
-    # Format messages for the prompt
     messages_str = "\n".join([
         f"{getattr(msg, 'type', type(msg).__name__)}: {getattr(msg, 'content', '')}" for msg in state.messages
     ])
     
-    # Add context about which agents have been used
     agent_status = f"\nĐã sử dụng agents: {', '.join(agents_used) if agents_used else 'Chưa có agent nào'}"
     
-    # Enhanced supervisor prompt with synthesis strategy
-    enhanced_prompt = SUPERVISOR_PROMPT + """
-
-SYNTHESIS STRATEGY:
-- "synthesis_agent": 
-  * Khi đã thu thập đủ thông tin từ các chuyên gia (research_agent VÀ/HOẶC finance_agent)
-  * Cần tổng hợp và kết hợp thông tin để đưa ra câu trả lời hoàn chỉnh
-  * BẮT BUỘC sử dụng khi có thông tin từ nhiều agents cần được tích hợp
-  * Chỉ sử dụng SAU KHI đã có đủ thông tin cần thiết
-
-QUY TẮC MỚI:
-1. Nếu đã có thông tin từ CẢ research_agent VÀ finance_agent → PHẢI chọn "synthesis_agent"
-2. Nếu có thông tin từ 1 agent và đủ để trả lời → có thể chọn "synthesis_agent" hoặc "FINISH"
-3. CHỈ chọn "FINISH" khi câu hỏi rất đơn giản và không cần tổng hợp
-
-"""
-    
-    prompt = enhanced_prompt.format(messages=messages_str + agent_status)
+    prompt = SUPERVISOR_PROMPT.format(messages=messages_str + agent_status)
     
     response = await structured_llm.ainvoke([
         {"role": "system", "content": prompt}
     ])
     
-    # Add supervisor response to messages
     supervisor_message = AIMessage(
         content=f"[SUPERVISOR] Routing to {response.next_agent}. Reasoning: {response.reasoning}",
         name=SUPERVISOR
@@ -127,7 +97,6 @@ async def research_agent_node(state: MultiAgentState) -> Dict[str, any]:
     
     model = load_chat_model(configuration.model).bind_tools(RESEARCH_TOOLS)
     
-    # Get the latest user message as the task
     user_messages = [msg for msg in state.messages if isinstance(msg, HumanMessage)]
     task = getattr(user_messages[-1], 'content', 'No task specified') if user_messages else "No task specified"
     
@@ -168,7 +137,6 @@ async def finance_agent_node(state: MultiAgentState) -> Dict[str, any]:
     
     model = load_chat_model(configuration.model).bind_tools(FINANCE_TOOLS)
     
-    # Get the latest user message as the task
     user_messages = [msg for msg in state.messages if isinstance(msg, HumanMessage)]
     task = getattr(user_messages[-1], 'content', 'No task specified') if user_messages else "No task specified"
     
@@ -209,29 +177,23 @@ async def synthesis_agent_node(state: MultiAgentState) -> Dict[str, any]:
     
     model = load_chat_model(configuration.model)
     
-    # Extract original user query
     user_messages = [msg for msg in state.messages if isinstance(msg, HumanMessage)]
     original_query = getattr(user_messages[-1], 'content', 'No query specified') if user_messages else "No query specified"
     
-    # Collect results from specialized agents (exclude supervisor and tool messages)
     agent_results = []
     
     for msg in state.messages:
         if isinstance(msg, AIMessage) and hasattr(msg, 'name'):
-            # Include content from research and finance agents (exclude tool calls)
             if msg.name in [RESEARCH_AGENT, FINANCE_AGENT]:
-                # Skip messages that are just tool calls
                 if not (hasattr(msg, 'tool_calls') and msg.tool_calls):
                     content = getattr(msg, 'content', '')
-                    if content.strip():  # Only include non-empty content
+                    if content.strip():
                         agent_results.append(f"=== {msg.name.upper()} ===\n{content}")
         elif hasattr(msg, 'name') and msg.name in ['search_web', 'retrival_vector_db', 'listing_symbol', 'history_price', 'time_now']:
-            # Include tool results for context
             tool_result = getattr(msg, 'content', '')
-            if tool_result and len(str(tool_result)) > 50:  # Only include substantial tool results
+            if tool_result and len(str(tool_result)) > 50:
                 agent_results.append(f"=== TOOL: {msg.name.upper()} ===\n{str(tool_result)[:500]}...")
     
-    # Format the synthesis prompt
     agent_results_text = "\n\n".join(agent_results) if agent_results else "Không có thông tin từ các chuyên gia."
     
     synthesis_prompt = SYNTHESIS_AGENT_PROMPT.format(

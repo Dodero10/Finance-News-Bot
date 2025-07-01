@@ -117,3 +117,9 @@ class ReWOOState(State):
     result: Optional[str] = None
     """The final answer after executing the plan and solving the task."""
 
+@dataclass
+class MultiAgentState(State):
+    """Extended state for multi-agent coordination."""
+    current_agent: Optional[str] = None
+    task_completed: bool = False
+    agents_used: set = field(default_factory=set)

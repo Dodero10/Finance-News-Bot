@@ -203,18 +203,15 @@ builder.add_conditional_edges("actor_reflect", route_after_actor_reflect)
 
 def route_from_tools(state: State) -> Literal["actor", "actor_reflect"]:
     """Route from tools back to the appropriate actor node"""
-    # Check recent messages to see which actor node we came from
     messages = state.messages
     for i in range(len(messages) - 1, -1, -1):
         msg = messages[i]
         if isinstance(msg, AIMessage) and msg.tool_calls:
-            # Look at the context to determine which actor called tools
-            # If we have a reflection in recent messages, we're in actor_reflect mode
             for j in range(i - 1, max(-1, i - 10), -1):
                 if isinstance(messages[j], AIMessage) and messages[j].additional_kwargs.get("reflection"):
                     return "actor_reflect"
             return "actor"
-    return "actor"  # Default fallback
+    return "actor"
 
 builder.add_conditional_edges("tools", route_from_tools)
 
@@ -224,22 +221,18 @@ graph = builder.compile(name="Reflexion Agent")
 async def main():
     test_query = "Tin tức về giá cả cổ phiếu của công ty FPT trong tuần vừa qua"
     
-    # Print the input query
     print("\n=== INPUT ===")
     print(f"User: {test_query}")
     
-    # Get final result using invoke
     result = await graph.ainvoke({
         "messages": [HumanMessage(content=test_query)]
     }, config={"callbacks": [langfuse_handler]})
     
     print("\n=== FINAL OUTPUT ===")
     
-    # Access the final message in the result
     if "messages" in result:
         messages = result["messages"]
         if messages:
-            # Get the last non-reflection message which contains the final response
             final_message = None
             for msg in reversed(messages):
                 if isinstance(msg, AIMessage) and not msg.additional_kwargs.get("reflection"):
@@ -249,7 +242,6 @@ async def main():
             if final_message:
                 print(f"AI: {final_message.content}")
                 
-    # Show tools used during the conversation
     tool_messages = [msg for msg in result.get("messages", []) 
                     if hasattr(msg, "name") and getattr(msg, "name", None)]
     
